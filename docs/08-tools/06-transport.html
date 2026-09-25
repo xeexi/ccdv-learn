@@ -44,6 +44,8 @@
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
 <a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
 <a class="itm toc-link on" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
+<a class="toc-link toc-sub" href="#transport-rule">つなぎ方ごとの決まり</a>
+<a class="toc-link toc-sub" href="#transport-scope">どこに置き、誰と共有するか</a>
 <a class="itm toc-link" href="../08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a>
 <a class="itm toc-link" href="../08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/09-q2.html"><span class="itm-n">8-9</span><span class="itm-t">理解度チェック ─ MCP と使い分け</span></a></nav>
@@ -57,7 +59,41 @@
   <h2>8-6　MCP のつなぎ方と置き場所</h2>
 </header>
 <p class="goal"><b>ゴール</b>手元での接続とネットワーク越しの接続を、置き場所と共有の仕方で選び分けられる。</p>
+<p class="lead">MCP のクライアントとサーバをつなぐ方式（トランスポート）は、公式には2つです。<b>手元で子のプロセスとして動かすか、ネットワークの向こうに置くか</b>で選びます。</p>
 <p class="task" data-s="mcp-server"><span class="tn">DOMAIN 8</span><b>MCP Server Development</b></p>
+
+<table class="tbl">
+  <thead><tr><th>観点</th><th>stdio</th><th>Streamable HTTP</th></tr></thead>
+  <tbody>
+    <tr><td data-l="観点">置き場所</td><td data-l="stdio">同じ機械の中</td><td data-l="Streamable HTTP">ネットワークの向こう</td></tr>
+    <tr><td data-l="観点">起動するのは</td><td data-l="stdio">クライアントが、子のプロセスとして起動する</td><td data-l="Streamable HTTP">サーバが、自分で動き続ける</td></tr>
+    <tr><td data-l="観点">通り道</td><td data-l="stdio">標準入出力（1行に1つの JSON-RPC）</td><td data-l="Streamable HTTP">1つの URL への HTTP のリクエスト</td></tr>
+    <tr><td data-l="観点">つなぐクライアント</td><td data-l="stdio">ふつうは1つ</td><td data-l="Streamable HTTP">多くのクライアント</td></tr>
+    <tr><td data-l="観点">認証</td><td data-l="stdio">鍵は環境変数から読む</td><td data-l="Streamable HTTP">HTTP の認証。OAuth が勧められている</td></tr>
+    <tr><td data-l="観点">向く使い方</td><td data-l="stdio">手元のファイルや道具を、自分だけで使う</td><td data-l="Streamable HTTP">社内の仕組みを、チームや複数のアプリで共有する</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>手元で1人が使うなら stdio、ネットワーク越しに皆で使うなら Streamable HTTP。</p>
+
+<h3 class="sub" id="transport-rule">つなぎ方ごとの決まり</h3>
+<p class="goal"><b>ゴール</b>それぞれのつなぎ方で守ることを言える。</p>
+<div class="detail">
+  <p>stdio では、標準出力がそのままやり取りの通り道です。<b>サーバが標準出力にログを書くと、やり取りが壊れます</b>。ログは標準エラーに出します。</p>
+  <p>ネットワーク越しのサーバは、どこからでも呼ばれうる入口になります。認証を付け、受け取ったトークンが自分宛てかを確かめます。手元で HTTP のサーバを動かすときは、外から届かないアドレス（<code>127.0.0.1</code>）で待ち受けます。</p>
+  <p>古い方式（HTTP と SSE を組み合わせたもの）は非推奨で、新しく作るサーバは Streamable HTTP を使います。公式の方式はこの2つですが、ソケット（Unix ドメインソケットや TCP）の上に独自のつなぎ方を作ることも、仕様上は認められています。</p>
+</div>
+
+<h3 class="sub" id="transport-scope">どこに置き、誰と共有するか</h3>
+<p class="goal"><b>ゴール</b>Claude Code で、MCP サーバの設定をどの範囲に置くかを選べる。</p>
+<table class="tbl">
+  <thead><tr><th>範囲</th><th>置き場所</th><th>効くところ</th></tr></thead>
+  <tbody>
+    <tr><td data-l="範囲"><b>local</b>（既定）</td><td data-l="置き場所">自分の設定（<code>~/.claude.json</code>）の、そのプロジェクトの欄</td><td data-l="効くところ">自分だけ・そのプロジェクトだけ</td></tr>
+    <tr><td data-l="範囲"><b>project</b></td><td data-l="置き場所">プロジェクト直下の <code>.mcp.json</code></td><td data-l="効くところ">バージョン管理で、チーム全員に配れる。使う前に承認を求められる</td></tr>
+    <tr><td data-l="範囲"><b>user</b></td><td data-l="置き場所">自分の設定（<code>~/.claude.json</code>）</td><td data-l="効くところ">自分の、すべてのプロジェクト</td></tr>
+  </tbody>
+</table>
+<p class="note">※ <code>.mcp.json</code> には鍵を直接書かず、<code>${API_KEY}</code> のように環境変数で書きます（読み込むときに展開される）。鍵の扱いは〈<a href="../07-security/05-secret.html">鍵と秘密の置き場所</a>〉で扱います。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/05-mcp.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/07-builtin.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +106,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -40,6 +40,9 @@
   <div class="toc-head">Domain 8</div>
   <nav class="toc-list"><a class="itm toc-link" href="../08-tools/01-define.html"><span class="itm-n">8-1</span><span class="itm-t">ツールを渡すとは、説明書を渡すこと</span></a>
 <a class="itm toc-link on" href="../08-tools/02-dispatch.html"><span class="itm-n">8-2</span><span class="itm-t">実行するのはアプリ ─ 呼び出しの配り方</span></a>
+<a class="toc-link toc-sub" href="#dispatch-harness">振り分ける部分 ─ ハーネス</a>
+<a class="toc-link toc-sub" href="#dispatch-side">クライアント側と、サーバ側</a>
+<a class="toc-link toc-sub" href="#dispatch-config">外のシステムにつなぐ設定</a>
 <a class="itm toc-link" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
 <a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
@@ -57,7 +60,52 @@
   <h2>8-2　実行するのはアプリ ─ 呼び出しの配り方</h2>
 </header>
 <p class="goal"><b>ゴール</b>tool_use を受けてからの流れと、クライアント側・サーバ側のツールの違いを説明できる。</p>
+<p class="cast" data-cast="app,claude,app"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">Claude は道具を「頼む」だけで、実行するのはアプリです。頼まれた呼び出しを、名前から自分の関数へ振り分けて実行し、結果を返す。この往復が、ツールを使う1周です。</p>
 <p class="task" data-s="tool-implementation"><span class="tn">DOMAIN 8</span><b>Tool Implementation</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">ツールを使う1周 ─ 実行しているのは、いつもアプリ</p>
+  <div class="fig-seq">
+    <div class="sq-head"><span class="sq-b s1">アプリ</span><span class="sq-a s1">Claude</span></div>
+    <div class="sq-body">
+      <div class="sq-row to-r s2"><span class="sq-lbl"><span class="sq-n">1</span>質問と、ツールの定義を送る</span></div>
+      <div class="sq-row to-l s3"><span class="sq-lbl"><span class="sq-n">2</span><code>tool_use</code>（名前と引数）を返して止まる</span><span class="sq-note">stop_reason も tool_use になる</span></div>
+      <div class="sq-self s4"><b><span class="sq-n">3</span>名前で関数を選び、実行する</b><ul><li>引数が形どおりかを確かめる</li><li>失敗したら、その旨を結果にする</li></ul></div>
+      <div class="sq-row to-r s5"><span class="sq-lbl"><span class="sq-n">4</span><code>tool_result</code> を返す</span><span class="sq-note">対応する id を付け、ここまでの履歴に足して送る</span></div>
+      <div class="sq-row to-l s6"><span class="sq-lbl"><span class="sq-n">5</span>結果を読んで、答えを返す</span><span class="sq-note">もう一度道具を頼むなら、2 に戻る</span></div>
+    </div>
+  </div>
+  <p class="fig-f">矢印は、処理の担当が移る向き。<b>道具を実行する番は、必ずアプリに回ってくる</b>。</p>
+</figure></div>
+
+<h3 class="sub" id="dispatch-harness">振り分ける部分 ─ ハーネス</h3>
+<p class="goal"><b>ゴール</b>アプリの中で、呼び出しを関数へ振り分ける部分の役目を言える。</p>
+<div class="detail">
+  <p><code>tool_use</code> を受け取って関数へ振り分け、結果を返す部分を<b>ハーネス</b>と呼びます。ここが担うのは、名前から関数を選ぶこと、引数を確かめること、失敗を結果の形にすること、そして<b>1つの応答に並んだ呼び出しの結果を、すべて1つのメッセージにまとめて返すこと</b>です。</p>
+  <p>このループは、SDK の tool runner に任せることもできます。道具の関数を渡すと、呼び出し・実行・結果の返送を繰り返し、Claude が道具を頼まなくなったところで止まります。</p>
+</div>
+
+<h3 class="sub" id="dispatch-side">クライアント側と、サーバ側</h3>
+<p class="goal"><b>ゴール</b>実行する場所で、ツールを見分けられる。</p>
+<table class="tbl">
+  <thead><tr><th>種類</th><th>実行する場所</th><th>例</th><th>アプリがすること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="種類"><b>クライアント側</b></td><td data-l="実行する場所">自分のアプリ</td><td data-l="例">自作のツール。Anthropic が形を決めた bash・text editor・memory も、実行はアプリ</td><td data-l="アプリがすること">実行して、<code>tool_result</code> を返す</td></tr>
+    <tr><td data-l="種類"><b>サーバ側</b></td><td data-l="実行する場所">Anthropic</td><td data-l="例">web search・web fetch・code execution</td><td data-l="アプリがすること"><code>tools</code> に宣言するだけ。結果は同じ応答の中に入って返る</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>サーバ側の道具は、Anthropic の中で呼び出しと実行を繰り返します。長くかかると、途中で止めた印（<code>pause_turn</code>）付きで応答が返るので、そのまま送り返して続けさせます。</p>
+</div>
+
+<h3 class="sub" id="dispatch-config">外のシステムにつなぐ設定</h3>
+<p class="goal"><b>ゴール</b>外のシステムへの接続の情報を、どこに置くかを言える。</p>
+<div class="detail">
+  <p>ツールの中身が社内の API やデータベースを呼ぶとき、<b>接続先・鍵・待ち時間の上限は、アプリ側の設定に置きます</b>。ツールの定義やプロンプトには書きません。Claude が見るのは名前・説明・入力の形だけで、鍵を知る必要はありません。</p>
+  <p>同じ接続を複数のアプリで使い回したいなら、ツールを MCP サーバとして切り出します（〈<a href="05-mcp.html">MCP サーバが出すもの</a>〉）。</p>
+</div>
+<p class="point"><b>ポイント</b>Claude は頼むだけで、実行も鍵もアプリの側にある。サーバ側の道具だけは、Anthropic が実行する。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/01-define.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/03-fail.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +118,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

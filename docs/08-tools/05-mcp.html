@@ -43,6 +43,8 @@
 <a class="itm toc-link" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
 <a class="itm toc-link on" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
+<a class="toc-link toc-sub" href="#mcp-three">3つの提供物 ─ 誰が使うと決めるか</a>
+<a class="toc-link toc-sub" href="#mcp-author">作って、アプリにつなぐ</a>
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
 <a class="itm toc-link" href="../08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a>
 <a class="itm toc-link" href="../08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a>
@@ -57,7 +59,45 @@
   <h2>8-5　MCP サーバが出すもの ─ ツール・リソース・プロンプト</h2>
 </header>
 <p class="goal"><b>ゴール</b>MCP サーバの3つの提供物を区別し、アプリからどう使われるかを説明できる。</p>
+<p class="cast" data-cast="mixed"></p>
+<p class="lead">ツールを1つのアプリの中に書くと、そのアプリでしか使えません。<b>MCP（Model Context Protocol）</b>は、道具や資料を<b>アプリの外のサーバとして</b>出すための共通の約束です。一度作れば、MCP に対応したどのアプリからもつなげます。</p>
 <p class="task" data-s="mcp-server"><span class="tn">DOMAIN 8</span><b>MCP Server Development</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">MCP の3つの役 ─ ホストは、サーバ1つにつきクライアントを1つ持つ</p>
+  <div class="fig-row flow" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">ホスト</b><span class="fig-note">Claude を使うアプリ。Claude Code、Claude Desktop、自作のアプリ</span></div>
+    <div class="fig-card s2"><b class="fig-h">クライアント</b><span class="fig-note">ホストの中の接続口。サーバ1つと1対1でつながる</span></div>
+    <div class="fig-card s3"><b class="fig-h">サーバ</b><span class="fig-note">道具・資料・定型の指示を出す。手元でも、遠くにあってもよい</span></div>
+  </div>
+  <p class="fig-f">サーバは会話の全体を見られず、ほかのサーバの中も見えない。<b>渡されたものだけ</b>を扱う。</p>
+</figure></div>
+
+<h3 class="sub" id="mcp-three">3つの提供物 ─ 誰が使うと決めるか</h3>
+<p class="goal"><b>ゴール</b>ツール・リソース・プロンプトを、使うと決める主体で見分けられる。</p>
+<table class="tbl">
+  <thead><tr><th>提供物</th><th>使うと決めるのは</th><th>中身</th><th>例</th></tr></thead>
+  <tbody>
+    <tr><td data-l="提供物"><b>ツール</b></td><td data-l="使うと決めるのは">モデル</td><td data-l="中身">動作を行う関数。Claude が呼ぶ</td><td data-l="例">API への書き込み、ファイルの作成</td></tr>
+    <tr><td data-l="提供物"><b>リソース</b></td><td data-l="使うと決めるのは">アプリ</td><td data-l="中身">URI で名指せる資料。アプリが文脈に添える</td><td data-l="例">ファイルの中身、変更の履歴</td></tr>
+    <tr><td data-l="提供物"><b>プロンプト</b></td><td data-l="使うと決めるのは">利用者</td><td data-l="中身">引数を取る定型の指示。利用者が選んで呼ぶ</td><td data-l="例">スラッシュコマンド、メニューの項目</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>ツールはモデルが、リソースはアプリが、プロンプトは利用者が「使う」と決める。1つのサーバが3つとも出せる。</p>
+
+<h3 class="sub" id="mcp-author">作って、アプリにつなぐ</h3>
+<p class="goal"><b>ゴール</b>MCP サーバを作ってから、アプリで使えるようになるまでの流れを言える。</p>
+<div class="detail">
+  <p>サーバは、公式の SDK（Python・TypeScript など）で書きます。関数に説明を付けてツールとして登録すれば、名前・説明・入力の形が、ツールの定義と同じ要領で公開されます。つなぐ側では、手元のサーバなら起動するコマンドを、遠くのサーバなら URL を、設定に書きます。</p>
+  <table class="tbl">
+    <thead><tr><th>つなぐ側</th><th>設定のしかた</th></tr></thead>
+    <tbody>
+      <tr><td data-l="つなぐ側">Claude Code</td><td data-l="設定のしかた"><code>claude mcp add</code> で登録する。道具は <code>mcp__サーバ名__ツール名</code> という名前で見え、リソースは <code>@</code> で、プロンプトはスラッシュコマンドとして呼べる</td></tr>
+      <tr><td data-l="つなぐ側">Messages API</td><td data-l="設定のしかた">MCP コネクタで、遠くのサーバの URL を渡す（ベータ）。使えるのはツールの呼び出しだけで、手元の stdio のサーバはつなげない</td></tr>
+      <tr><td data-l="つなぐ側">自作のアプリ</td><td data-l="設定のしかた">MCP の SDK でクライアントを持ち、サーバの道具の一覧を読んで、Claude へのツールの定義として渡す</td></tr>
+    </tbody>
+  </table>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/04-q1.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/06-transport.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

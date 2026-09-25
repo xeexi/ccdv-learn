@@ -46,6 +46,8 @@
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
 <a class="itm toc-link" href="../08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a>
 <a class="itm toc-link on" href="../08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a>
+<a class="toc-link toc-sub" href="#extend-skill">Skills は、必要になるまで読まない</a>
+<a class="toc-link toc-sub" href="#extend-choose">4つの手の選び方</a>
 <a class="itm toc-link itm-quiz" href="../08-tools/09-q2.html"><span class="itm-n">8-9</span><span class="itm-t">理解度チェック ─ MCP と使い分け</span></a></nav>
 </aside>
 <main class="doc">
@@ -57,7 +59,37 @@
   <h2>8-8　Skills か、MCP か</h2>
 </header>
 <p class="goal"><b>ゴール</b>手順の再利用と外のシステムへの接続で、Skills と MCP を使い分けられる。</p>
+<p class="lead">残る2つの手は、足すものが違います。<b>MCP は外のサービスへの接続を足し、Skills は知識と手順を足します。</b></p>
 <p class="task" data-s="agentic-customization"><span class="tn">DOMAIN 8</span><b>Agentic Customization</b></p>
+
+<table class="tbl">
+  <thead><tr><th>手</th><th>足すもの</th><th>形</th><th>向くとき</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手"><b>MCP</b></td><td data-l="足すもの">外のサービスへの接続（道具とデータ）</td><td data-l="形">アプリの外のサーバ。複数のアプリから共有できる</td><td data-l="向くとき">社内の仕組みを、いくつものアプリから使い回す</td></tr>
+    <tr><td data-l="手"><b>Skills</b></td><td data-l="足すもの">知識・手順・参照資料</td><td data-l="形">名前と説明を持つ SKILL.md と、付属の資料のフォルダ</td><td data-l="向くとき">決まった手順（報告書の書式、社内の作法など）を、必要なときだけ読ませる</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>MCP はつなぐ、Skills は教える。組み合わせるなら、MCP で接続し、Skills でその使い方を教える。</p>
+
+<h3 class="sub" id="extend-skill">Skills は、必要になるまで読まない</h3>
+<p class="goal"><b>ゴール</b>Skills を増やしても文脈を圧迫しにくい理由を言える。</p>
+<div class="detail">
+  <p>Skills は3段階で読み込まれます。ふだん文脈に入っているのは<b>名前と説明だけ</b>です。仕事がその Skill に当てはまると本文（SKILL.md）が読まれ、付属の資料は要るときだけ開かれます。だから Skills をたくさん用意しても、使っていないものは窓をほとんど食いません。</p>
+  <p>同じ形の Skill を Claude Code・Agent SDK・API から使えますが、置き場所は使う側ごとに違い、自作の Skill が自動で行き渡ることはありません。</p>
+</div>
+
+<h3 class="sub" id="extend-choose">4つの手の選び方</h3>
+<p class="goal"><b>ゴール</b>場面に合わせて、4つの手から1つを選べる。</p>
+<table class="tbl">
+  <thead><tr><th>選ぶ手</th><th>場面</th></tr></thead>
+  <tbody>
+    <tr><td data-l="選ぶ手">組み込みのツール</td><td data-l="場面">公開されている最新の情報を調べる、コードを動かす</td></tr>
+    <tr><td data-l="選ぶ手">自作のツール</td><td data-l="場面">このアプリだけで、社内の API を呼ぶ</td></tr>
+    <tr><td data-l="選ぶ手">MCP</td><td data-l="場面">同じ社内の仕組みを、複数のアプリから使う</td></tr>
+    <tr><td data-l="選ぶ手">Skills</td><td data-l="場面">決まった手順や作法を、必要なときに守らせる</td></tr>
+  </tbody>
+</table>
+<p class="note">※ 公式の例題にも、社内の REST API を複数のアプリから使い回す場面が出ます。戻り先は〈<a href="../09-summary/02-samples.html">公式の例題</a>〉にまとめてあります。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/07-builtin.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/09-q2.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +102,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

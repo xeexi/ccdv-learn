@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 8</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../08-tools/01-define.html"><span class="itm-n">8-1</span><span class="itm-t">ツールを渡すとは、説明書を渡すこと</span></a>
+<a class="toc-link toc-sub" href="#define-call">呼ばれると、応答は tool_use で止まる</a>
+<a class="toc-link toc-sub" href="#define-set">ツールの組をそろえる</a>
 <a class="itm toc-link" href="../08-tools/02-dispatch.html"><span class="itm-n">8-2</span><span class="itm-t">実行するのはアプリ ─ 呼び出しの配り方</span></a>
 <a class="itm toc-link" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
@@ -57,7 +59,59 @@
   <h2>8-1　ツールを渡すとは、説明書を渡すこと</h2>
 </header>
 <p class="goal"><b>ゴール</b>名前・説明・入力の形が選ばれ方をどう決めるかを説明し、ツールの組をそろえられる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">Claude は、ツールを自分で動かせません。アプリが渡すのは「こういう道具がある」という<b>説明書</b>で、Claude はそれを読み、使いたいときに「この道具を、この引数で」と頼みます。この仕組みがツール使用（関数呼び出し）です。</p>
 <p class="task" data-s="tool-implementation"><span class="tn">DOMAIN 8</span><b>Tool Implementation</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">ツールの定義 ─ リクエストの tools に並べる</p>
+  <pre class="code">{ <span class="k">"name"</span>: <span class="s">"get_order"</span>,<span class="n">1</span>
+  <span class="k">"description"</span>: <span class="s">"注文の状態を調べる。利用者が配送や注文の状況を尋ねたときに使う。"</span>,<span class="n">2</span>
+  <span class="k">"input_schema"</span>: {
+    <span class="k">"type"</span>: <span class="s">"object"</span>,
+    <span class="k">"properties"</span>: {
+      <span class="k">"order_id"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span>,
+        <span class="k">"description"</span>: <span class="s">"注文番号。例: A-1024"</span> },<span class="n">3</span>
+      <span class="k">"detail"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span>,
+        <span class="k">"enum"</span>: [<span class="s">"summary"</span>, <span class="s">"items"</span>] } },
+    <span class="k">"required"</span>: [<span class="s">"order_id"</span>] } }<span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>名前は、何をするかが分かる具体的なものにする。</span></li>
+    <li><span class="n">2</span><span>説明には「何をするか」だけでなく「いつ使うか」を書く。Claude は主にこれを読んで選ぶ。</span></li>
+    <li><span class="n">3</span><span>引数ごとにも説明を付ける。決まった値しか取らない引数は、<code>enum</code> で絞る。</span></li>
+    <li><span class="n">4</span><span>本当に必要な引数だけを <code>required</code> にする。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>Claude が見ているのは、名前・説明・入力の形の3つだけ。選び間違いの多くは、説明の書き方で直る。</p>
+
+<h3 class="sub" id="define-call">呼ばれると、応答は tool_use で止まる</h3>
+<p class="goal"><b>ゴール</b>ツールを渡したときに、応答がどう変わるかを言える。</p>
+<div class="detail">
+  <p>Claude がツールを使うと決めると、応答には答えの文章の代わりに <code>tool_use</code> という種類のブロック（道具の名前・引数・呼び出しごとの id）が入り、<code>stop_reason</code> も <code>tool_use</code> になります。<b>ここで止まるのは、実行するのがアプリだから</b>です。アプリが実行して結果を <code>tool_result</code> として返すと、Claude は続きを書けます（流れは〈<a href="02-dispatch.html">実行するのはアプリ</a>〉）。</p>
+  <table class="tbl">
+    <thead><tr><th><code>tool_choice</code></th><th>Claude の振る舞い</th></tr></thead>
+    <tbody>
+      <tr><td data-l="tool_choice"><code>auto</code>（既定）</td><td data-l="Claude の振る舞い">使うかどうかを、Claude が決める</td></tr>
+      <tr><td data-l="tool_choice"><code>any</code></td><td data-l="Claude の振る舞い">どれか1つは必ず使う</td></tr>
+      <tr><td data-l="tool_choice"><code>tool</code></td><td data-l="Claude の振る舞い">名前で指定した道具を、必ず使う</td></tr>
+      <tr><td data-l="tool_choice"><code>none</code></td><td data-l="Claude の振る舞い">使わない</td></tr>
+    </tbody>
+  </table>
+  <p>1つの応答に <code>tool_use</code> が複数並ぶこともあります（並列の呼び出し）。使うことを強制する指定（<code>any</code>・<code>tool</code>）を受け付けないモデルもあるので、そのときは <code>auto</code> にして、どの道具を使ってほしいかをプロンプトで伝えます。</p>
+</div>
+
+<h3 class="sub" id="define-set">ツールの組をそろえる</h3>
+<p class="goal"><b>ゴール</b>ツールの数と粒度を、選び間違いの起きにくい形に決められる。</p>
+<table class="tbl">
+  <thead><tr><th>起きること</th><th>直し方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="起きること">似た2つを取り違える</td><td data-l="直し方">説明に、違いと使い分けを書く。役目が重なるなら1つにまとめる</td></tr>
+    <tr><td data-l="起きること">数が多すぎて迷う</td><td data-l="直し方">その仕事に要るものだけに絞る。多いときは、必要な定義だけを探して読み込ませる（tool search）</td></tr>
+    <tr><td data-l="起きること">細かすぎて何度も呼ぶ</td><td data-l="直し方">いつも続けて使う操作は、1つの道具にまとめる</td></tr>
+    <tr><td data-l="起きること">引数を間違える</td><td data-l="直し方">型と <code>enum</code> で取りうる値を絞り、引数の説明に例を書く。<code>strict: true</code> を付けると、引数が形どおりになることを保証できる</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>ツールの組は「少なく、重ならず、名前と説明で見分けがつく」形にそろえる。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/12-q3.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/02-dispatch.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

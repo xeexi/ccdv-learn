@@ -41,6 +41,7 @@
   <nav class="toc-list"><a class="itm toc-link" href="../08-tools/01-define.html"><span class="itm-n">8-1</span><span class="itm-t">ツールを渡すとは、説明書を渡すこと</span></a>
 <a class="itm toc-link" href="../08-tools/02-dispatch.html"><span class="itm-n">8-2</span><span class="itm-t">実行するのはアプリ ─ 呼び出しの配り方</span></a>
 <a class="itm toc-link on" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
+<a class="toc-link toc-sub" href="#fail-approve">取り返しのつかない操作の前に、承認を挟む</a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
 <a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
@@ -57,7 +58,47 @@
   <h2>8-3　失敗の返し方と、承認の挟み方</h2>
 </header>
 <p class="goal"><b>ゴール</b>ツールの失敗を立て直せる形で返し、取り返しのつかない操作の前に承認を挟める。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">ツールは失敗します。握りつぶさず、<b>Claude が次の手を選べる形</b>で返します。</p>
 <p class="task" data-s="tool-implementation"><span class="tn">DOMAIN 8</span><b>Tool Implementation</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">悪い返し方 ─ 何が起きたか分からない</p>
+  <pre class="code">{ <span class="k">"type"</span>: <span class="s">"tool_result"</span>,
+  <span class="k">"tool_use_id"</span>: <span class="s">"toolu_01"</span>,
+  <span class="k">"content"</span>: <span class="s">"error"</span> }</pre>
+  <p class="codelabel">よい返し方 ─ 失敗と、次の手が分かる</p>
+  <pre class="code">{ <span class="k">"type"</span>: <span class="s">"tool_result"</span>,
+  <span class="k">"tool_use_id"</span>: <span class="s">"toolu_01"</span>,<span class="n">1</span>
+  <span class="k">"is_error"</span>: <span class="v">true</span>,<span class="n">2</span>
+  <span class="k">"content"</span>: <span class="s">"注文 A-1O24 は見つからない。英字の O と数字の 0 の取り違えかもしれない。"</span> }<span class="n">3</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>結果は、対応する呼び出しの id を付けて必ず返す。返さないと、次のリクエストがエラーになる。</span></li>
+    <li><span class="n">2</span><span>失敗したことを、<code>is_error</code> で示す。</span></li>
+    <li><span class="n">3</span><span>何が起きたかと、直す手がかりを書く。Claude はそれを読み、引数を直したり別の手に切り替えたりする。</span></li>
+  </ol>
+</div>
+<table class="tbl">
+  <thead><tr><th>失敗の種類</th><th>返し方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="失敗の種類">入力の誤り</td><td data-l="返し方">どこがどう違うかと、正しい形を書く。直せば通る</td></tr>
+    <tr><td data-l="失敗の種類">一時的な失敗</td><td data-l="返し方">混雑や待ち時間切れは、ツールの中で間を空けて再試行する。それでも駄目なら、一時的な失敗だと書いて返す</td></tr>
+    <tr><td data-l="失敗の種類">直らない失敗</td><td data-l="返し方">権限が無い、存在しない、など。再試行しても無駄だと分かるように書く</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>失敗は <code>is_error</code> と説明の文で返す。空の結果や「error」の一語では、Claude は次の手を選べない。</p>
+
+<h3 class="sub" id="fail-approve">取り返しのつかない操作の前に、承認を挟む</h3>
+<p class="goal"><b>ゴール</b>承認を挟む位置と、断られたときの返し方を言える。</p>
+<div class="detail">
+  <p>送信・削除・支払いのように<b>取り返しのつかない操作</b>は、実行の手前で人の承認を取ります。挟む場所はアプリの中で、<code>tool_use</code> を受けてから実行するまでの間です。断られたら実行せず、利用者が断ったことを結果に書いて返します。Claude はそれを読んで、別の進め方を考えます。</p>
+  <p>承認を挟みやすくするには、その操作を<b>専用のツールとして切り出します</b>。何でもできる bash の1行に紛れていると、アプリはどれが危ない操作かを見分けられません。<code>send_email</code> のような専用のツールなら、その呼び出しだけを止められます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「<code>system</code> プロンプトに、削除の前には必ず確認するよう書けば十分」</span>
+    <span class="t o">実際は</span><span>頼むだけでは、確率的に破られることがある。<b>アプリの側で、実行の手前に承認を挟んで止める</b>。</span>
+  </div>
+</div>
+<p class="note">※ Claude Code や Agent SDK では、承認の要否を権限の設定で決められます（〈<a href="../03-claude-code/02-run.html">Claude Code の動かし方</a>〉）。フックで確実に止める形は〈<a href="../07-security/04-hooks.html">壊す操作はフックで止める</a>〉で扱います。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/02-dispatch.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../08-tools/04-q1.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +111,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=212c3a25"></script>
-<script src="../assets/search-index.js?v=3b6a3f8c"></script>
+<script src="../assets/quiz-data.js?v=0c34ad23"></script>
+<script src="../assets/search-index.js?v=d6823bfa"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

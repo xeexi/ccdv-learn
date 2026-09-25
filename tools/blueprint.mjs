@@ -255,9 +255,26 @@ export const COVER = {
     "cache check-pointing": "キャッシュの区切り（cache check-pointing）" } },
   "api-mechanics": { sections: ["cache", "blocks", "data", "stream", "batch"], topics: {
     "caching": "cache_control" } },
-  "tool-implementation": { sections: ["define", "dispatch", "fail"], topics: {} },
-  "mcp-server": { sections: ["mcp", "transport"], topics: {} },
-  "agentic-customization": { sections: ["builtin", "extend"], topics: {} },
+  "tool-implementation": { sections: ["define", "dispatch", "fail"], topics: {
+    "tool use and function calling":                  "ツール使用（関数呼び出し）",
+    "configuration for external system interaction":  "外のシステムにつなぐ設定",
+    "tool description writing":                       "「いつ使うか」を書く",
+    "error handling":                                 "is_error",
+    "agentic harness dispatch":                       "ハーネス",
+    "client-side vs. server-side tools":              ["クライアント側", "サーバ側"],
+    "approval patterns":                              "承認を挟む",
+    "tool set construction best practices":           "ツールの組をそろえる" } },
+  "mcp-server": { sections: ["mcp", "transport"], topics: {
+    "server authoring":                    "公式の SDK",
+    "deployment":                          "置き場所",
+    "integration with Claude applications": ["claude mcp add", "MCP コネクタ"],
+    "MCP resources, tools, and prompts":   ["ツール", "リソース", "プロンプト"],
+    "stdio":                               "stdio",
+    "sockets":                             "ソケット",
+    "client vs. server":                   ["ホスト", "クライアント", "サーバ"] } },
+  "agentic-customization": { sections: ["builtin", "extend"], topics: {
+    "Tradeoffs among built-in Tools, custom Tools, Skills, and MCPs":      ["組み込みのツール", "自作のツール", "Skills", "MCP"],
+    "selecting and applying the appropriate approach for a given use case": "4つの手の選び方" } },
   "prompt-engineering": { sections: ["place", "clear", "refine"], topics: {} },
   "context-engineering": { sections: ["prune", "isolate"], topics: {} },
   "output-handling": { sections: ["struct", "doubt"], topics: {} },
@@ -350,6 +367,17 @@ export const GLOSSARY = [
   { d: "models", en: "cost modeling",                                   ja: "費用の見積もり" },
   { d: "models", en: "prompt caching",                                  ja: "プロンプトキャッシュ" },
   { d: "models", en: "cache check-pointing",                            ja: "キャッシュの区切りの置き方" },
+
+  { d: "tools", en: "tool use and function calling",                     ja: "ツール使用（関数呼び出し）" },
+  { d: "tools", en: "tool description writing",                          ja: "ツールの説明の書き方" },
+  { d: "tools", en: "tool set construction best practices",              ja: "ツールの組のそろえ方" },
+  { d: "tools", en: "agentic harness dispatch",                          ja: "ハーネスによる呼び出しの振り分け" },
+  { d: "tools", en: "client-side vs. server-side tools",                 ja: "クライアント側とサーバ側のツール" },
+  { d: "tools", en: "approval patterns",                                 ja: "承認の挟み方" },
+  { d: "tools", en: "server authoring",                                  ja: "MCP サーバの作成" },
+  { d: "tools", en: "MCP resources, tools, and prompts",                 ja: "MCP のリソース・ツール・プロンプト" },
+  { d: "tools", en: "stdio",                                             ja: "標準入出力でのつなぎ方（stdio）" },
+  { d: "tools", en: "Tradeoffs among built-in Tools, custom Tools, Skills, and MCPs", ja: "組み込み・自作・Skills・MCP の使い分け" },
 ];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
