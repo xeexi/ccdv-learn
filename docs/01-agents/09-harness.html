@@ -47,6 +47,8 @@
 <a class="itm toc-link itm-quiz" href="../01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a>
 <a class="itm toc-link" href="../01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a>
 <a class="itm toc-link on" href="../01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a>
+<a class="toc-link toc-sub" href="#harness-three">3つの作り方</a>
+<a class="toc-link toc-sub" href="#harness-why">自前で書く理由</a>
 <a class="itm toc-link" href="../01-agents/10-deploy.html"><span class="itm-n">1-10</span><span class="itm-t">どこで動かすか ─ 自前か、Anthropic が動かすか</span></a>
 <a class="itm toc-link" href="../01-agents/11-hooks.html"><span class="itm-n">1-11</span><span class="itm-t">決まった処理はフックで</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/12-q3.html"><span class="itm-n">1-12</span><span class="itm-t">理解度チェック ─ エージェントの作り方</span></a></nav>
@@ -60,7 +62,44 @@
   <h2>1-9　自前のループとハーネス</h2>
 </header>
 <p class="goal"><b>ゴール</b>ループを自分で書くときに要る部品と、SDK を使わない理由を説明できる。</p>
+<p class="lead">Claude を呼び、Claude が頼んだ道具を実行先へ振り分けるループを、ハーネスと呼びます。自分で書けば1周ごとの動きをすべて決められますが、<b>SDK が肩代わりしていた部品を、自分で用意する</b>ことになります。</p>
 <p class="task" data-s="agent-construction"><span class="tn">DOMAIN 1</span><b>Agent Construction with Claude</b></p>
+
+<table class="tbl">
+  <thead><tr><th>部品</th><th>役目</th></tr></thead>
+  <tbody>
+    <tr><td data-l="部品">振り分け</td><td data-l="役目">道具の名前から関数を選んで実行し、結果を返す（〈<a href="../08-tools/02-dispatch.html">実行するのはアプリ</a>〉）</td></tr>
+    <tr><td data-l="部品">関門</td><td data-l="役目">取り返しのつかない操作の前に、承認を挟む（〈<a href="../08-tools/03-fail.html">失敗の返し方と、承認の挟み方</a>〉）</td></tr>
+    <tr><td data-l="部品">失敗</td><td data-l="役目">道具の失敗を、<code>is_error</code> と説明の文で返す</td></tr>
+    <tr><td data-l="部品">止める</td><td data-l="役目">反復や費用の上限を置く（〈<a href="04-loop.html">ループの1周</a>〉）</td></tr>
+    <tr><td data-l="部品">窓</td><td data-l="役目">古い結果の刈り込みや圧縮で、窓を守る（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
+    <tr><td data-l="部品">記録</td><td data-l="役目">送ったもの・返ったもの・道具の結果を残し、後から追えるようにする</td></tr>
+    <tr><td data-l="部品">実行場所</td><td data-l="役目">道具を、隔離した環境（サンドボックス）で動かす</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>ハーネスは、Claude を呼ぶループと、その周りの部品の集まり。自前で書くなら、どの部品も自分の責任になる。</p>
+
+<h3 class="sub" id="harness-three">3つの作り方</h3>
+<p class="goal"><b>ゴール</b>手書きのループ・tool runner・Agent SDK を選び分けられる。</p>
+<table class="tbl">
+  <thead><tr><th>作り方</th><th>自分で書くもの</th><th>向くとき</th></tr></thead>
+  <tbody>
+    <tr><td data-l="作り方">手書き</td><td data-l="自分で書くもの">ループ全体と、すべての部品</td><td data-l="向くとき">1周ごとに、承認・記録・条件つきの実行を細かく決めたい</td></tr>
+    <tr><td data-l="作り方">tool runner</td><td data-l="自分で書くもの">道具の関数。ループと失敗の包みは SDK が持ち、回数の上限も指定できる</td><td data-l="向くとき">自分の道具を、手早くループで回したい</td></tr>
+    <tr><td data-l="作り方">Agent SDK</td><td data-l="自分で書くもの">許す道具と上限の設定</td><td data-l="向くとき">Claude Code と同じ道具とループを、そのまま使いたい</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="harness-why">自前で書く理由</h3>
+<p class="goal"><b>ゴール</b>SDK を使わずに自前で書く理由を挙げられる。</p>
+<div class="detail">
+  <p>自前で書くのは、<b>用意された部品では足りないか、合わないとき</b>です。自分の実行環境と独自の道具だけを使いたい、Claude Code の道具は要らない、1周ごとの承認・記録・再試行を細かく決めたい、今あるシステムの中にループを組み込みたい、といった場合です。</p>
+  <p>そうした理由が無いなら、用意された部品を使うほうが安全です。自前のハーネスは、すべての部品を自分で保守し続けることになります。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「ループを自前で書けば、そのぶん速く、安くなる」</span>
+    <span class="t o">実際は</span><span>送る中身が同じなら、費用は変わらない。<b>増えるのは、自分で保守する部品</b>のほう。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/08-sdk.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/10-deploy.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +112,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

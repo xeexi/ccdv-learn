@@ -49,6 +49,9 @@
 <a class="itm toc-link" href="../01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a>
 <a class="itm toc-link" href="../01-agents/10-deploy.html"><span class="itm-n">1-10</span><span class="itm-t">どこで動かすか ─ 自前か、Anthropic が動かすか</span></a>
 <a class="itm toc-link on" href="../01-agents/11-hooks.html"><span class="itm-n">1-11</span><span class="itm-t">決まった処理はフックで</span></a>
+<a class="toc-link toc-sub" href="#hooks-events">どの時点で動かすか</a>
+<a class="toc-link toc-sub" href="#hooks-block">止めるときは、終了コード 2</a>
+<a class="toc-link toc-sub" href="#hooks-sdk">Agent SDK では関数で書く</a>
 <a class="itm toc-link itm-quiz" href="../01-agents/12-q3.html"><span class="itm-n">1-12</span><span class="itm-t">理解度チェック ─ エージェントの作り方</span></a></nav>
 </aside>
 <main class="doc">
@@ -60,7 +63,59 @@
   <h2>1-11　決まった処理はフックで</h2>
 </header>
 <p class="goal"><b>ゴール</b>毎回必ず行う処理を、プロンプトではなくフックに置く理由を説明できる。</p>
+<p class="cast" data-cast="claude,hook,tool"><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">フック</span><span class="c-ar">→</span><span class="c-blue">ツール</span></p>
+<p class="lead">CLAUDE.md やプロンプトに書いた指示は、頼みごとです。多くの場合は守られても、必ずではありません。<b>毎回かならず行う処理</b>は、フックに置きます。フックは、決まった時点で自分のコードを必ず動かす、<span data-en="決定的">決定的（deterministic）</span>な仕組みです。</p>
 <p class="task" data-s="agent-construction"><span class="tn">DOMAIN 1</span><b>Agent Construction with Claude</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">編集のたびに整形する（.claude/settings.json）</p>
+  <pre class="code">{ <span class="k">"hooks"</span>: {
+  <span class="k">"PostToolUse"</span>: [{<span class="n">1</span>
+    <span class="k">"matcher"</span>: <span class="s">"Edit|Write"</span>,<span class="n">2</span>
+    <span class="k">"hooks"</span>: [{ <span class="k">"type"</span>: <span class="s">"command"</span>,
+      <span class="k">"command"</span>: <span class="s">".claude/hooks/format.sh"</span> }]<span class="n">3</span>
+  }] } }</pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>いつ動かすか。道具が動いた後（<code>PostToolUse</code>）。</span></li>
+    <li><span class="n">2</span><span>どの道具のときか。ファイルを編集・作成したときだけ。</span></li>
+    <li><span class="n">3</span><span>何を動かすか。道具の名前と引数が JSON で渡るので、編集されたファイルを整形する。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>プロンプトは確率で守られる頼みごと、フックは必ず動くコード。整形・検査・記録・禁止のように、毎回そうでなければ困ることはフックに置く。</p>
+
+<h3 class="sub" id="hooks-events">どの時点で動かすか</h3>
+<p class="goal"><b>ゴール</b>主なイベントと、その使いどころを言える。</p>
+<table class="tbl">
+  <thead><tr><th>イベント</th><th>動く時点</th><th>使いどころ</th></tr></thead>
+  <tbody>
+    <tr><td data-l="イベント"><code>SessionStart</code></td><td data-l="動く時点">始まったとき・再開したとき</td><td data-l="使いどころ">最新の状態や決まりごとを、文脈に足す</td></tr>
+    <tr><td data-l="イベント"><code>UserPromptSubmit</code></td><td data-l="動く時点">利用者の入力を受けたとき</td><td data-l="使いどころ">入力を確かめる。要る情報を足す</td></tr>
+    <tr><td data-l="イベント"><code>PreToolUse</code></td><td data-l="動く時点">道具が動く前</td><td data-l="使いどころ">止める。引数を書き換える</td></tr>
+    <tr><td data-l="イベント"><code>PostToolUse</code></td><td data-l="動く時点">道具が動いた後</td><td data-l="使いどころ">整形・検査・記録</td></tr>
+    <tr><td data-l="イベント"><code>Stop</code></td><td data-l="動く時点">答え終えようとしたとき</td><td data-l="使いどころ">条件を満たすまで、終わらせずに続けさせる</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>ほかにも、子が終わったとき（<code>SubagentStop</code>）や、圧縮の前（<code>PreCompact</code>）などに掛けられます。</p>
+</div>
+
+<h3 class="sub" id="hooks-block">止めるときは、終了コード 2</h3>
+<p class="goal"><b>ゴール</b>フックが処理を止める仕組みを言える。</p>
+<div class="detail">
+  <p>コマンドのフックは、終了コードで結果を伝えます。<b>0 は成功、2 は「止める」</b>です。<code>PreToolUse</code> で 2 を返すと道具は実行されず、標準エラーに書いた理由が Claude に渡ります。Claude はそれを読んで、別の進め方を考えます。</p>
+  <p><b>2 以外の失敗（1 など）では止まりません</b>。規則を守らせるためのフックは、2 で終えます。JSON を返せば、許可・拒否・人に確認の判定や、引数の書き換えもできます。</p>
+</div>
+
+<h3 class="sub" id="hooks-sdk">Agent SDK では関数で書く</h3>
+<p class="goal"><b>ゴール</b>Agent SDK でフックを書く形を言える。</p>
+<div class="detail">
+  <p>Agent SDK でも、同じイベントにフックを掛けられます。こちらは<b>自分のコードの中の関数</b>で、呼び出しの情報（道具の名前・引数など）を受け取り、許可・拒否・入力の書き換え・文脈の追加を返します。設定ファイルに書いたコマンドのフックも読み込まれます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「CLAUDE.md に『編集したら必ず整形する』と書けば、毎回整形される」</span>
+    <span class="t o">実際は</span><span>頼みごとなので、抜けることがある。<b>毎回必ずなら、編集の後に動くフックに置く</b>。</span>
+  </div>
+</div>
+<p class="note">※ 壊す操作を確実に止める使い方は〈<a href="../07-security/04-hooks.html">壊す操作はフックで止める</a>〉で扱います。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/10-deploy.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/12-q3.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +128,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

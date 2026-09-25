@@ -39,6 +39,9 @@
 <aside class="toc">
   <div class="toc-head">Domain 1</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../01-agents/01-workflow.html"><span class="itm-n">1-1</span><span class="itm-t">ワークフローか、エージェントか</span></a>
+<a class="toc-link toc-sub" href="#workflow-simple">まず、いちばん単純な形から</a>
+<a class="toc-link toc-sub" href="#workflow-types">ワークフローの5つの型</a>
+<a class="toc-link toc-sub" href="#workflow-agent">エージェントにするときの備え</a>
 <a class="itm toc-link" href="../01-agents/02-supervisor.html"><span class="itm-n">1-2</span><span class="itm-t">監督役と子 ─ 仕事を分ける形</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/03-q1.html"><span class="itm-n">1-3</span><span class="itm-t">理解度チェック ─ 組み方</span></a>
 <a class="itm toc-link" href="../01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a>
@@ -60,7 +63,66 @@
   <h2>1-1　ワークフローか、エージェントか</h2>
 </header>
 <p class="goal"><b>ゴール</b>手順が決まっている仕事と決まっていない仕事で、組み方を選び分けられる。</p>
+<p class="lead">Claude に仕事をさせる組み方は、大きく2つに分かれます。手順をコードで決めておく<b>ワークフロー</b>と、手順を Claude がその場で決める<b>エージェント</b>です。どちらも Claude と道具を組み合わせて使い、違うのは<b>次に何をするかを誰が決めるか</b>です。</p>
 <p class="task" data-s="agent-architecture"><span class="tn">DOMAIN 1</span><b>Agent Architecture</b></p>
+
+<table class="tbl">
+  <thead><tr><th>比べる点</th><th>ワークフロー</th><th>エージェント</th></tr></thead>
+  <tbody>
+    <tr><td data-l="比べる点">次の手</td><td data-l="ワークフロー">コードが決める。決めておいた道筋のとおりに、Claude と道具を呼ぶ</td><td data-l="エージェント">Claude が決める。結果を見ながら、使う道具と進め方を選ぶ</td></tr>
+    <tr><td data-l="比べる点">向く仕事</td><td data-l="ワークフロー">手順が決まっている仕事（毎月の請求書の処理など）</td><td data-l="エージェント">何手かかるか読めず、道筋を決めておけない仕事（原因の分からない不具合の調査など）</td></tr>
+    <tr><td data-l="比べる点">得</td><td data-l="ワークフロー">動きを予測でき、結果がそろう</td><td data-l="エージェント">途中で分かったことに合わせて、進め方を変えられる</td></tr>
+    <tr><td data-l="比べる点">代償</td><td data-l="ワークフロー">決めておいた道筋にない仕事には対応できない</td><td data-l="エージェント">費用と待ち時間が増える。結果がぶれ、誤りが積み重なることもある</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>分かれ目は「手順を先に決めておけるか」。決めておけるならワークフロー、決めておけないときだけエージェントにする。</p>
+
+<h3 class="sub" id="workflow-simple">まず、いちばん単純な形から</h3>
+<p class="goal"><b>ゴール</b>1回の呼び出しで足りるかを、先に確かめる理由を言える。</p>
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">複雑さの段 ─ 手前の段で足りないと分かってから、次へ進む</p>
+  <div class="fig-row flow" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">1回の呼び出し</b><span class="fig-note">資料と例を添えて、1回で答えさせる</span></div>
+    <div class="fig-card s2"><b class="fig-h">ワークフロー</b><span class="fig-note">決めた手順で、何回かに分けて呼ぶ</span></div>
+    <div class="fig-card key s3"><b class="fig-h">エージェント</b><span class="fig-note">進め方ごと、Claude に任せる</span></div>
+  </div>
+  <p class="fig-f">段を上げるほど出来は上がりうるが、<b>待ち時間と費用も増える</b>。その交換が見合うときだけ上げる。</p>
+</figure></div>
+<div class="detail">
+  <p>公式の勧めは、<b>いちばん単純な形から始め、足りないと分かったときだけ複雑にする</b>ことです。多くの用途は、検索で集めた資料と例を添えた1回の呼び出しで足ります。複雑にするかどうかは、評価して出来が上がると確かめてから決めます。</p>
+</div>
+
+<h3 class="sub" id="workflow-types">ワークフローの5つの型</h3>
+<p class="goal"><b>ゴール</b>仕事の形から、ワークフローの型を選べる。</p>
+<table class="tbl">
+  <thead><tr><th>型</th><th>すること</th><th>向く仕事</th></tr></thead>
+  <tbody>
+    <tr><td data-l="型">順につなぐ<br><span class="n">prompt chaining</span></td><td data-l="すること">前の呼び出しの出力を、次の呼び出しに渡す。途中にコードの関門を置ける</td><td data-l="向く仕事">決まった小さな仕事に、きれいに分けられる</td></tr>
+    <tr><td data-l="型">振り分ける<br><span class="n">routing</span></td><td data-l="すること">入力を分類し、種類ごとの処理へ送る</td><td data-l="向く仕事">種類ごとに扱いを変えたほうがよく、分類を正確にできる</td></tr>
+    <tr><td data-l="型">並べる<br><span class="n">parallelization</span></td><td data-l="すること">仕事を分担して同時に進めるか、同じ仕事を何回かさせて比べる</td><td data-l="向く仕事">速さが要る。または確かさのために、複数の見方が要る</td></tr>
+    <tr><td data-l="型">割り振る<br><span class="n">orchestrator-workers</span></td><td data-l="すること">監督役が入力を見て、その場で仕事を割り、結果をまとめる</td><td data-l="向く仕事">要る小さな仕事を、先に読めない（〈<a href="02-supervisor.html">監督役と子</a>〉）</td></tr>
+    <tr><td data-l="型">評価で直す<br><span class="n">evaluator-optimizer</span></td><td data-l="すること">1つが書き、もう1つが評価して、直させる</td><td data-l="向く仕事">評価の基準がはっきりしていて、直すほど良くなる</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="workflow-agent">エージェントにするときの備え</h3>
+<p class="goal"><b>ゴール</b>エージェントを選んだときに要る備えを挙げられる。</p>
+<div class="detail">
+  <p>エージェントにするのは、Claude の判断をある程度信頼して任せるということです。自分で進むぶん<b>費用が増え、誤りが積み重なるおそれ</b>もあるので、次の備えと組み合わせます。</p>
+  <table class="tbl">
+    <thead><tr><th>備え</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="備え">確かめる</td><td data-l="中身">各段階で、道具の結果やコードの実行結果のような<b>実際の結果</b>を返し、進み具合を確かめさせる</td></tr>
+      <tr><td data-l="備え">止める</td><td data-l="中身">反復の上限のような、止める条件をコードに置く</td></tr>
+      <tr><td data-l="備え">人に戻す</td><td data-l="中身">区切りや、行き詰まったところで、人の判断を仰ぐ</td></tr>
+      <tr><td data-l="備え">試す</td><td data-l="中身">本番の前に、隔離した環境（サンドボックス）で十分に試す</td></tr>
+    </tbody>
+  </table>
+  <div class="myth">
+    <span class="t">誤解</span><span>「エージェントのほうが賢いので、どんな仕事もエージェントにしたほうがよい」</span>
+    <span class="t o">実際は</span><span>手順が決まっている仕事に柔軟さは要らない。エージェントにすると、<b>費用と待ち時間と、結果のばらつき</b>を払うだけになる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/09-q2.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/02-supervisor.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +135,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

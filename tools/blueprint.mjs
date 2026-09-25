@@ -295,9 +295,21 @@ export const COVER = {
     "response validation":                "中身は確かめる",
     "defensive parsing":                  "壊れた出力に備える",
     "skepticism toward confident output": "自信のある出力ほど疑う" } },
-  "agent-architecture": { sections: ["workflow", "supervisor"], topics: {} },
-  "agent-patterns": { sections: ["loop", "memory", "framework"], topics: {} },
-  "agent-construction": { sections: ["agentsdk", "harness", "deploy", "hooks"], topics: {} },
+  "agent-architecture": { sections: ["workflow", "supervisor"], topics: {
+    "the decision criteria for using a workflow versus an agent": "手順を先に決めておけるか",
+    "the structure of manager/supervisor hierarchies":           "監督役を置く形",
+    "the role of subagents in improving task execution":         "子に任せると良くなること" } },
+  "agent-patterns": { sections: ["loop", "memory", "framework"], topics: {
+    "tool-use loops":            "ループの骨組み",
+    "sub-agents":                "子の窓で済ませ",
+    "memory":                    "記憶のツール",
+    "context-window management": "窓の中身を入れ替え",
+    "agentic abstraction frameworks (e.g., Strands, LangGraph, PydanticAI)": ["Strands", "LangGraph", "PydanticAI"] } },
+  "agent-construction": { sections: ["agentsdk", "harness", "deploy", "hooks"], topics: {
+    "the Claude Agent SDK":             "Agent SDK は、Claude Code",
+    "custom agent loops and harnesses": ["ハーネス", "3つの作り方"],
+    "managed agent deployment models (self-hosted vs. Anthropic-hosted)": ["Managed Agents", "実行は手元", "全部自前"],
+    "hooks for deterministic actions":  ["フック", "決定的"] } },
   "se-foundations": { sections: ["rest", "async", "change", "refactor"], topics: {} },
   "requirements": { sections: ["require"], topics: {} },
   "life-cycle": { sections: ["lifecycle"], topics: {} },
@@ -411,6 +423,16 @@ export const GLOSSARY = [
   { d: "prompt", en: "response validation",                                ja: "応答の検証" },
   { d: "prompt", en: "defensive parsing",                                  ja: "壊れた出力に備えた読み取り" },
   { d: "prompt", en: "skepticism toward confident output",                 ja: "自信のある出力への疑い" },
+
+  { d: "agents", en: "a workflow versus an agent",         ja: "ワークフローかエージェントかの判断" },
+  { d: "agents", en: "manager/supervisor hierarchies",     ja: "監督役を置く階層" },
+  { d: "agents", en: "subagents",                          ja: "子（別の窓で動くエージェント）" },
+  { d: "agents", en: "tool-use loops",                     ja: "ツールを使うループ" },
+  { d: "agents", en: "memory",                             ja: "記憶（窓の外に残すメモ）" },
+  { d: "agents", en: "agentic abstraction frameworks",     ja: "エージェントの枠組み" },
+  { d: "agents", en: "custom agent loops and harnesses",   ja: "自前のループとハーネス" },
+  { d: "agents", en: "self-hosted vs. Anthropic-hosted",   ja: "自前で動かすか、Anthropic が動かすか" },
+  { d: "agents", en: "hooks for deterministic actions",    ja: "決まった処理を必ず行うフック" },
 ];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
@@ -425,6 +447,10 @@ export const TERMS = {
   "刈り込み":          "tool output pruning",
   "圧縮":             "compaction",
   "子":               "subagent",
+  "監督役":            "supervisor",
+  "ツールを使うループ":  "tool-use loops",
+  "枠組み":            "agentic abstraction frameworks",
+  "決定的":            "deterministic",
 };
 
 /** 節の「登場人物」。本文に `<p class="cast" data-cast="app,claude"></p>` と置くと

@@ -43,6 +43,8 @@
 <a class="itm toc-link itm-quiz" href="../01-agents/03-q1.html"><span class="itm-n">1-3</span><span class="itm-t">理解度チェック ─ 組み方</span></a>
 <a class="itm toc-link" href="../01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a>
 <a class="itm toc-link on" href="../01-agents/05-memory.html"><span class="itm-n">1-5</span><span class="itm-t">長く動かす ─ 記憶・窓・子</span></a>
+<a class="toc-link toc-sub" href="#memory-tool">記憶のツール ─ 窓の外にメモを残す</a>
+<a class="toc-link toc-sub" href="#memory-jit">必要になってから読む</a>
 <a class="itm toc-link" href="../01-agents/06-framework.html"><span class="itm-n">1-6</span><span class="itm-t">枠組みを使うか ─ Strands・LangGraph・PydanticAI</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a>
 <a class="itm toc-link" href="../01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a>
@@ -60,7 +62,45 @@
   <h2>1-5　長く動かす ─ 記憶・窓・子</h2>
 </header>
 <p class="goal"><b>ゴール</b>長い仕事で文脈を保つ3つの手を選び分けられる。</p>
+<p class="lead">何時間も続く仕事は、1つの窓には収まりません。長く動くエージェントは、<b>窓の中身を入れ替えながら</b>進みます。そのための手は3つで、どれを主に使うかは仕事の形で決めます。</p>
 <p class="task" data-s="agent-patterns"><span class="tn">DOMAIN 1</span><b>Agent Patterns and Frameworks</b></p>
+
+<table class="tbl">
+  <thead><tr><th>手</th><th>すること</th><th>向く仕事</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手">圧縮</td><td data-l="すること">古い会話を要約に置き換えて、窓を空ける</td><td data-l="向く仕事">やり取りを重ねながら、会話の流れを保ちたい仕事</td></tr>
+    <tr><td data-l="手">メモ</td><td data-l="すること">進み具合や決めたことを窓の外のファイルに書き、要るときに読み戻す</td><td data-l="向く仕事">区切りのはっきりした段階を、繰り返し積み上げる仕事</td></tr>
+    <tr><td data-l="手">子</td><td data-l="すること">調べ物を子の窓で済ませ、要点だけを受け取る</td><td data-l="向く仕事">並べて調べると得になる、複雑な調査や分析</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>窓は、大きくても使えば尽きる。長い仕事では、窓に何を残すかを、3つの手を組み合わせて決め続ける。</p>
+<p class="note">※ 圧縮と刈り込みの仕組みは〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉、子への渡し方は〈<a href="../06-prompt/06-isolate.html">文脈を分ける</a>〉で扱いました。</p>
+
+<h3 class="sub" id="memory-tool">記憶のツール ─ 窓の外にメモを残す</h3>
+<p class="goal"><b>ゴール</b>memory ツールの動き方と、アプリが負う責任を言える。</p>
+<div class="detail">
+  <p>API には、窓の外にメモを残すための道具（memory ツール）があります。Claude は仕事を始める前にメモを確かめ、分かったことを <code>/memories</code> の下のファイルに書き、後の会話で読み戻して続きをします。</p>
+  <p>この道具は<b>クライアント側</b>で動きます。Claude が頼むのはファイルの操作（見る・作る・書き換える・消す など）だけで、実際に保存するのはアプリです。保存先も、アプリが決めます。</p>
+  <table class="tbl">
+    <thead><tr><th>アプリの責任</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="アプリの責任">場所を守る</td><td data-l="中身"><code>/memories</code> の外を指すパス（<code>../</code> を含むものなど）を、必ず拒む</td></tr>
+      <tr><td data-l="アプリの責任">中身を守る</td><td data-l="中身">秘密の情報が書かれないよう、書く前に確かめる</td></tr>
+      <tr><td data-l="アプリの責任">大きさ</td><td data-l="中身">ファイルの大きさに上限を設け、長く使われないメモは消す</td></tr>
+    </tbody>
+  </table>
+  <p>記憶は、圧縮と組み合わせて使います。圧縮で窓を小さく保ちながら、<b>要約で消えては困ることを記憶に残す</b>形です。</p>
+</div>
+
+<h3 class="sub" id="memory-jit">必要になってから読む</h3>
+<p class="goal"><b>ゴール</b>資料を先に全部入れず、要るときに読ませる理由を言える。</p>
+<div class="detail">
+  <p>関係しそうな資料を最初に全部窓に入れるより、<b>ファイルの場所や検索の条件のような手がかりだけを持たせ、要るときに道具で読ませる</b>ほうが窓を守れます。Claude Code は、決まりごとを書いた CLAUDE.md は最初に読み込み、コードは検索の道具で、要る分だけを探して読みます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「記憶やメモに書いたことは、Claude が必ず守る」</span>
+    <span class="t o">実際は</span><span>記憶は、文脈として読まれるだけで強制力はない。<b>毎回必ず守らせたいことは、コードの仕組みに置く</b>（〈<a href="11-hooks.html">決まった処理はフックで</a>〉）。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/04-loop.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/06-framework.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +113,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

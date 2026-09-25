@@ -48,6 +48,9 @@
 <a class="itm toc-link" href="../01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a>
 <a class="itm toc-link" href="../01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a>
 <a class="itm toc-link on" href="../01-agents/10-deploy.html"><span class="itm-n">1-10</span><span class="itm-t">どこで動かすか ─ 自前か、Anthropic が動かすか</span></a>
+<a class="toc-link toc-sub" href="#deploy-managed">Managed Agents の部品</a>
+<a class="toc-link toc-sub" href="#deploy-choose">選び方</a>
+<a class="toc-link toc-sub" href="#deploy-self">自前で動かすときに要るもの</a>
 <a class="itm toc-link" href="../01-agents/11-hooks.html"><span class="itm-n">1-11</span><span class="itm-t">決まった処理はフックで</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/12-q3.html"><span class="itm-n">1-12</span><span class="itm-t">理解度チェック ─ エージェントの作り方</span></a></nav>
 </aside>
@@ -60,7 +63,56 @@
   <h2>1-10　どこで動かすか ─ 自前か、Anthropic が動かすか</h2>
 </header>
 <p class="goal"><b>ゴール</b>自前で動かす形と Anthropic が動かす形を、管理の手間と制約で選び分けられる。</p>
+<p class="lead">エージェントを動かすときに決めることは2つあります。<b>ループ（ハーネス）を誰が回すか</b>と、<b>道具を実行する場所を誰が持つか</b>です。この2つは、別々に選べます。</p>
 <p class="task" data-s="agent-construction"><span class="tn">DOMAIN 1</span><b>Agent Construction with Claude</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">3つの形 ─ ループを回す側と、道具を実行する場所</p>
+  <div class="fig-row" style="--cols:3">
+    <div class="fig-card blue s1"><b class="fig-h">全部自前</b><span class="fig-note">Agent SDK や自前のループを、自分のコンテナで動かす</span></div>
+    <div class="fig-card key s2"><b class="fig-h">実行は手元</b><span class="fig-note">ループは Anthropic。道具の実行とファイルは、自分の基盤に置く</span></div>
+    <div class="fig-card amber s3"><b class="fig-h">全部任せる</b><span class="fig-note">ループも道具の実行も、Anthropic の環境で動く</span></div>
+  </div>
+  <p class="fig-f">Anthropic がループを回す形が <b>Managed Agents</b>（ベータ）。実行場所を、Anthropic のサンドボックスか自前のサンドボックスから選ぶ。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>ループをどこで回すかと、道具をどこで実行するかは、別の軸。</p>
+
+<h3 class="sub" id="deploy-managed">Managed Agents の部品</h3>
+<p class="goal"><b>ゴール</b>Managed Agents を使うときに作るものを言える。</p>
+<table class="tbl">
+  <thead><tr><th>部品</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="部品">Agent</td><td data-l="中身">モデル・system・道具・MCP・Skills の組。一度作り、ID で使い回す</td></tr>
+    <tr><td data-l="部品">Environment</td><td data-l="中身">どこで動かすか。Anthropic のクラウドのサンドボックスか、自前のサンドボックスか</td></tr>
+    <tr><td data-l="部品">Session</td><td data-l="中身">1つの仕事を進める、動いているエージェント。会話とファイルはサーバ側に残る</td></tr>
+    <tr><td data-l="部品">Events</td><td data-l="中身">アプリとエージェントのやり取り。指示を送り、進み具合を SSE で受け取る</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="deploy-choose">選び方</h3>
+<p class="goal"><b>ゴール</b>仕事の性質と制約から、動かす形を選べる。</p>
+<table class="tbl">
+  <thead><tr><th>形</th><th>向くとき</th></tr></thead>
+  <tbody>
+    <tr><td data-l="形">全部任せる</td><td data-l="向くとき">数分から数時間かかる仕事や、非同期の仕事。ループ・サンドボックス・道具の実行の層を、自分で作りたくない</td></tr>
+    <tr><td data-l="形">実行は手元</td><td data-l="向くとき">外に出せないデータや、社内のネットワークにしか無いサービスを使う。自社の監査の下で動かしたい</td></tr>
+    <tr><td data-l="形">全部自前</td><td data-l="向くとき">ループそのものを自分の基盤で動かす必要がある。1周ごとの動きを細かく決めたい</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>Managed Agents は、会話やファイルをサーバ側に保存する作りです。データを残さない扱い（ZDR）などの対象になるかは機能ごとに違うので、データの扱いに決まりがある仕事では、選ぶ前に確かめます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「自前のサンドボックスを選べば、データは Anthropic に一切渡らない」</span>
+    <span class="t o">実際は</span><span>道具の実行とファイルは手元に残るが、<b>道具の入力と結果は、Claude が読むために Anthropic 側へ送られる</b>。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="deploy-self">自前で動かすときに要るもの</h3>
+<p class="goal"><b>ゴール</b>Agent SDK を自前で動かすときの前提を言える。</p>
+<div class="detail">
+  <p>Agent SDK は、裏で Claude Code の本体を別のプロセスとして起動し、そのプロセスがシェル・作業ディレクトリ・セッションのファイルを持ちます。<b>状態を持たない API の中継とは違い</b>、動いているエージェントの数だけ、ファイルとプロセスを抱えた環境が要ります。</p>
+  <p>ふつうはコンテナで隔離し、仕事1つごとにコンテナを作って捨てる形か、コンテナを置いたまま仕事を受け続ける形を選びます。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/09-harness.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/11-hooks.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +125,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -44,6 +44,8 @@
 <a class="itm toc-link" href="../01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a>
 <a class="itm toc-link" href="../01-agents/05-memory.html"><span class="itm-n">1-5</span><span class="itm-t">長く動かす ─ 記憶・窓・子</span></a>
 <a class="itm toc-link on" href="../01-agents/06-framework.html"><span class="itm-n">1-6</span><span class="itm-t">枠組みを使うか ─ Strands・LangGraph・PydanticAI</span></a>
+<a class="toc-link toc-sub" href="#framework-trade">得と損</a>
+<a class="toc-link toc-sub" href="#framework-choose">選び方</a>
 <a class="itm toc-link itm-quiz" href="../01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a>
 <a class="itm toc-link" href="../01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a>
 <a class="itm toc-link" href="../01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a>
@@ -60,7 +62,37 @@
   <h2>1-6　枠組みを使うか ─ Strands・LangGraph・PydanticAI</h2>
 </header>
 <p class="goal"><b>ゴール</b>エージェントの枠組みを使う得と損を説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">エージェントを作るための<span data-en="枠組み">枠組み（agentic abstraction frameworks）</span>は、ループ・道具の定義・呼び出しのつなぎを肩代わりしてくれます。その代わり、<b>中で何を送り、何が返っているかが見えにくく</b>なります。</p>
 <p class="task" data-s="agent-patterns"><span class="tn">DOMAIN 1</span><b>Agent Patterns and Frameworks</b></p>
+
+<table class="tbl">
+  <thead><tr><th>枠組み</th><th>作り手</th><th>特徴</th></tr></thead>
+  <tbody>
+    <tr><td data-l="枠組み">Strands</td><td data-l="作り手">AWS（オープンソース）</td><td data-l="特徴">進め方をモデルに任せる作りで、数行でエージェントが動く。既定のモデルの提供元は Amazon Bedrock で、Anthropic の API にもつなげる</td></tr>
+    <tr><td data-l="枠組み">LangGraph</td><td data-l="作り手">LangChain</td><td data-l="特徴">処理を、節点と辺のグラフとして組む。決まった手順と、モデルに任せる手順を1つのグラフに混ぜられる。状態を保存し、長い処理を途中から再開できる</td></tr>
+    <tr><td data-l="枠組み">PydanticAI</td><td data-l="作り手">Pydantic のチーム</td><td data-l="特徴">Python の枠組み。道具の引数や出力を型で決め、受け取った値を型で確かめる</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>どの枠組みも、中でしていることは同じループ。肩代わりするのは組み立ての手間で、何を送るか・どう書くかは変わらない。</p>
+
+<h3 class="sub" id="framework-trade">得と損</h3>
+<p class="goal"><b>ゴール</b>枠組みを使うと楽になることと、困ることを挙げられる。</p>
+<div class="detail">
+  <p>枠組みを使うと、始めるのが速くなります。モデルの呼び出し、道具の定義と解析、呼び出しのつなぎといった下回りを任せられ、状態の保存や再開、人の確認を挟む仕組みのような部品もそろっています。多くの枠組みは、使うモデルを差し替えられます。</p>
+  <p>その代わり、<b>抽象の層が増えて、実際に送っているプロンプトと、返ってきた応答が見えにくく</b>なります。うまく動かないときに原因を追いにくく、単純な作りで足りる仕事まで複雑に組みたくなります。公式は、中の動きを思い込みで使うことが、よくある失敗のもとだとしています。</p>
+</div>
+
+<h3 class="sub" id="framework-choose">選び方</h3>
+<p class="goal"><b>ゴール</b>API を直接使うか、枠組みを使うかを決められる。</p>
+<div class="detail">
+  <p>公式の勧めは、<b>まず API を直接使う</b>ことです。よくある型の多くは、数行のコードで書けます。枠組みを使うなら、中のコードを理解してから使います。本番に向けては、層を減らして基本の部品で組み直すこともためらいません。</p>
+  <p>Claude Code と同じ道具とループをそのまま使いたいなら〈<a href="08-sdk.html">Agent SDK で作る</a>〉、ループの実行まで任せたいなら〈<a href="10-deploy.html">どこで動かすか</a>〉へ進みます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「枠組みを使えば、プロンプトや道具の説明を考えなくてよい」</span>
+    <span class="t o">実際は</span><span>枠組みが減らすのは組み立ての手間だけ。<b>何を送り、道具をどう説明するかは、自分で決める</b>。中が見えにくいぶん、確かめる手間はむしろ増える。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/05-memory.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/07-q2.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +105,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -40,6 +40,8 @@
   <div class="toc-head">Domain 1</div>
   <nav class="toc-list"><a class="itm toc-link" href="../01-agents/01-workflow.html"><span class="itm-n">1-1</span><span class="itm-t">ワークフローか、エージェントか</span></a>
 <a class="itm toc-link on" href="../01-agents/02-supervisor.html"><span class="itm-n">1-2</span><span class="itm-t">監督役と子 ─ 仕事を分ける形</span></a>
+<a class="toc-link toc-sub" href="#supervisor-handoff">割る・渡す・まとめる</a>
+<a class="toc-link toc-sub" href="#supervisor-role">子に任せると良くなること</a>
 <a class="itm toc-link itm-quiz" href="../01-agents/03-q1.html"><span class="itm-n">1-3</span><span class="itm-t">理解度チェック ─ 組み方</span></a>
 <a class="itm toc-link" href="../01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a>
 <a class="itm toc-link" href="../01-agents/05-memory.html"><span class="itm-n">1-5</span><span class="itm-t">長く動かす ─ 記憶・窓・子</span></a>
@@ -60,7 +62,54 @@
   <h2>1-2　監督役と子 ─ 仕事を分ける形</h2>
 </header>
 <p class="goal"><b>ゴール</b>監督役を置く階層の形と、子に任せると何が良くなるかを説明できる。</p>
+<p class="cast" data-cast="parent,child,parent"><span class="c-amber">親</span><span class="c-ar">→</span><span class="c-amber">子</span><span class="c-ar">→</span><span class="c-amber">親</span></p>
+<p class="lead">大きな仕事では、全体を見渡す<span data-en="監督役">監督役（supervisor）</span>が仕事を割り、それぞれを子に任せて、返ってきた結果をまとめる形がよく使われます。監督役は、親として子を起こす立場です。</p>
 <p class="task" data-s="agent-architecture"><span class="tn">DOMAIN 1</span><b>Agent Architecture</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">監督役を置く形 ─ 全体を知っているのは監督役だけ</p>
+  <div class="fig-row s1" style="--cols:1">
+    <div class="fig-card key"><b class="fig-h">監督役（親）</b><span class="fig-note">仕事を割って子に任せ、返った結果をまとめる。抜けがあれば頼み直す</span></div>
+  </div>
+  <p class="fig-lbl s2">行きと帰りで、渡るものが違う</p>
+  <div class="fig-row s2" style="--cols:2">
+    <div class="fig-card"><b class="fig-h">行き　親 → 子</b><span class="fig-note">目的・返す形・使う道具・範囲を、はっきり渡す</span></div>
+    <div class="fig-card"><b class="fig-h">帰り　子 → 親</b><span class="fig-note">要点をまとめた結果だけ。読んだ資料は子の窓に残る</span></div>
+  </div>
+  <div class="fig-row s3" style="--cols:3">
+    <div class="fig-card"><b class="fig-h">子A</b><span class="fig-note">自分の窓で調べる</span></div>
+    <div class="fig-card"><b class="fig-h">子B</b><span class="fig-note">自分の窓で調べる</span></div>
+    <div class="fig-card"><b class="fig-h">子C</b><span class="fig-note">自分の窓で調べる</span></div>
+  </div>
+  <p class="fig-f">この形では、子どうしは直接やり取りしない。<b>情報はすべて監督役を通る</b>ので、何が渡り、何が抜けたかは、監督役の段取りを見れば追える。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>監督役は、割る・渡す・まとめるを受け持つ。子は、渡された範囲を自分の窓で調べ、要点だけを返す。</p>
+
+<h3 class="sub" id="supervisor-handoff">割る・渡す・まとめる</h3>
+<p class="goal"><b>ゴール</b>監督役が子に渡すものと、結果を受けてからすることを言える。</p>
+<div class="detail">
+  <p>監督役が子に渡すのは、<b>目的・返してほしい形・使う道具や情報源・仕事の範囲</b>です。範囲が曖昧だと、子どうしで同じ調べ物が重なったり、誰も見ない隙間が残ったりします（渡し方の基本は〈<a href="../06-prompt/06-isolate.html">文脈を分ける</a>〉）。</p>
+  <p>返ってきた結果は、監督役がまとめます。抜けや食い違いに気づけるのは、全部の結果を集めた監督役だけです。見つけたら、その部分だけを子に頼み直します。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「どの子も正しく調べて返したのだから、答えに抜けはない」</span>
+    <span class="t o">実際は</span><span>子は、割り当てられた範囲しか見ない。<b>最初の割り方が狭ければ、どの子が成功しても答えは欠ける</b>。抜けを見つけたら、まず監督役の割り方を疑う。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="supervisor-role">子に任せると良くなること</h3>
+<p class="goal"><b>ゴール</b>子に任せる利点と、向かない仕事を挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>良くなること</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="良くなること">窓を守る</td><td data-l="中身">大量に読む調べ物を子の窓で済ませ、監督役の窓には要点だけを入れる</td></tr>
+    <tr><td data-l="良くなること">速くなる</td><td data-l="中身">互いに待たない仕事を、同時に進められる</td></tr>
+    <tr><td data-l="良くなること">道具を絞る</td><td data-l="中身">子ごとに、使える道具と権限を絞れる</td></tr>
+    <tr><td data-l="良くなること">役を絞る</td><td data-l="中身">子ごとに専用の指示を書き、仕事に合うモデルを選べる</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>その代わり、子はそれぞれ自分の窓でトークンを使うので、<b>全体の量は1体で進めるより大きく増えます</b>。皆が同じ文脈を共有しなければならない仕事や、子どうしの依存が多い仕事（多くのコーディングがそう）には向きません。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/01-workflow.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/03-q1.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

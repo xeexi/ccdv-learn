@@ -46,6 +46,8 @@
 <a class="itm toc-link" href="../01-agents/06-framework.html"><span class="itm-n">1-6</span><span class="itm-t">枠組みを使うか ─ Strands・LangGraph・PydanticAI</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a>
 <a class="itm toc-link on" href="../01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a>
+<a class="toc-link toc-sub" href="#agentsdk-mine">自分で決めること</a>
+<a class="toc-link toc-sub" href="#agentsdk-vs">API を呼ぶ SDK との違い</a>
 <a class="itm toc-link" href="../01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a>
 <a class="itm toc-link" href="../01-agents/10-deploy.html"><span class="itm-n">1-10</span><span class="itm-t">どこで動かすか ─ 自前か、Anthropic が動かすか</span></a>
 <a class="itm toc-link" href="../01-agents/11-hooks.html"><span class="itm-n">1-11</span><span class="itm-t">決まった処理はフックで</span></a>
@@ -60,7 +62,66 @@
   <h2>1-8　Agent SDK で作る</h2>
 </header>
 <p class="goal"><b>ゴール</b>Agent SDK が用意しているものと、自分で書く部分を区別できる。</p>
+<p class="cast" data-cast="app,cc,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">Agent SDK は、Claude Code を動かしている道具・ループ・文脈の管理を、Python と TypeScript のライブラリとして使えるようにしたものです。ループを自分で書かずに、<b>ファイルを読み書きし、コマンドを実行するエージェント</b>を、自分のアプリに組み込めます。</p>
 <p class="task" data-s="agent-construction"><span class="tn">DOMAIN 1</span><b>Agent Construction with Claude</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">Agent SDK で動かす（Python、抜粋）</p>
+  <pre class="code"><span class="k">async for</span> msg <span class="k">in</span> query(
+    prompt=<span class="s">"認証のテストが落ちる原因を直して"</span>,
+    options=ClaudeAgentOptions(
+        allowed_tools=[<span class="s">"Read"</span>, <span class="s">"Edit"</span>, <span class="s">"Bash"</span>],<span class="n">1</span>
+        max_turns=<span class="v">30</span>,<span class="n">2</span>
+    ),
+):
+    <span class="k">if</span> isinstance(msg, ResultMessage):
+        print(msg.result)<span class="n">3</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>ここに並べた道具は、確認なしで動く。</span></li>
+    <li><span class="n">2</span><span>ループの上限。数えるのは道具を使う往復で、達すると止まり、結果にその旨が付く。費用の上限も決められる。</span></li>
+    <li><span class="n">3</span><span>最後に、答え・使用量・費用・セッションの ID が入った結果が届く。</span></li>
+  </ol>
+</div>
+<table class="tbl">
+  <thead><tr><th>用意されたもの</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="用意されたもの">道具</td><td data-l="中身">ファイルの読み書き・編集、コマンドの実行、検索、Web の取得</td></tr>
+    <tr><td data-l="用意されたもの">ループ</td><td data-l="中身">道具の実行と結果の返送を、答えが出るまで繰り返す。窓が尽きそうなら、自動で圧縮する</td></tr>
+    <tr><td data-l="用意されたもの">権限</td><td data-l="中身">どの道具を確認なしで動かし、どれに承認を求め、どれを禁じるか</td></tr>
+    <tr><td data-l="用意されたもの">フック</td><td data-l="中身">決まった時点で、自分のコードを動かす（〈<a href="11-hooks.html">決まった処理はフックで</a>〉）</td></tr>
+    <tr><td data-l="用意されたもの">子</td><td data-l="中身">専用の指示と道具を持つ子に、仕事を任せる</td></tr>
+    <tr><td data-l="用意されたもの">セッション</td><td data-l="中身">会話を保存し、後から続きを再開する。途中から枝分かれもできる</td></tr>
+    <tr><td data-l="用意されたもの">MCP</td><td data-l="中身">外の道具やデータにつなぐ</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>ループと道具は SDK が持つ。自分で決めるのは、何をどこまで許すか。</p>
+
+<h3 class="sub" id="agentsdk-mine">自分で決めること</h3>
+<p class="goal"><b>ゴール</b>SDK を使っても自分で決めることを挙げられる。</p>
+<div class="detail">
+  <p>SDK が用意するのは仕組みで、<b>何をどこまで許すかは自分で決めます</b>。確認なしで動かす道具・承認を求める道具・禁じる道具、ループと費用の上限、CLAUDE.md や Skills のような設定を読み込ませるかどうか、です。</p>
+  <p>権限の決め方には、あらかじめ書いておく規則、動き方のモード、呼び出しごとに判定する関数があります。<b>禁じる規則は、どのモードでも効きます</b>。</p>
+</div>
+
+<h3 class="sub" id="agentsdk-vs">API を呼ぶ SDK との違い</h3>
+<p class="goal"><b>ゴール</b>Agent SDK と、API を呼ぶ SDK（Client SDK）の違いを言える。</p>
+<table class="tbl">
+  <thead><tr><th>比べる点</th><th>Client SDK</th><th>Agent SDK</th></tr></thead>
+  <tbody>
+    <tr><td data-l="比べる点">ループ</td><td data-l="Client SDK">自分で書く（tool runner に任せることもできる）</td><td data-l="Agent SDK">用意されている</td></tr>
+    <tr><td data-l="比べる点">道具</td><td data-l="Client SDK">自分で定義して、自分で実行する</td><td data-l="Agent SDK">ファイル・コマンド・検索がそろっている</td></tr>
+    <tr><td data-l="比べる点">管理</td><td data-l="Client SDK">権限・セッション・フックは、自分で作る</td><td data-l="Agent SDK">用意されている</td></tr>
+    <tr><td data-l="比べる点">動く場所</td><td data-l="Client SDK">どこでも（HTTP で API を呼ぶだけ）</td><td data-l="Agent SDK">Claude Code の本体が動ける環境（ファイルとシェル）</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>Client SDK は、〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉で扱った、API を呼ぶための SDK です。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「Agent SDK は、API を呼ぶ SDK の新しい名前」</span>
+    <span class="t o">実際は</span><span>別物。<b>Claude Code と同じ道具とループが入っていて</b>、ファイルを読み書きし、コマンドを実行する。そのぶん、動かす場所の用意が要る（〈<a href="10-deploy.html">どこで動かすか</a>〉）。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/07-q2.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/09-harness.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +134,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

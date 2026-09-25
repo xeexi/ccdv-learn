@@ -42,6 +42,8 @@
 <a class="itm toc-link" href="../01-agents/02-supervisor.html"><span class="itm-n">1-2</span><span class="itm-t">監督役と子 ─ 仕事を分ける形</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/03-q1.html"><span class="itm-n">1-3</span><span class="itm-t">理解度チェック ─ 組み方</span></a>
 <a class="itm toc-link on" href="../01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a>
+<a class="toc-link toc-sub" href="#loop-stop">止まる条件</a>
+<a class="toc-link toc-sub" href="#loop-ground">確かめられる仕事ほど、回して良くなる</a>
 <a class="itm toc-link" href="../01-agents/05-memory.html"><span class="itm-n">1-5</span><span class="itm-t">長く動かす ─ 記憶・窓・子</span></a>
 <a class="itm toc-link" href="../01-agents/06-framework.html"><span class="itm-n">1-6</span><span class="itm-t">枠組みを使うか ─ Strands・LangGraph・PydanticAI</span></a>
 <a class="itm toc-link itm-quiz" href="../01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a>
@@ -60,7 +62,58 @@
   <h2>1-4　ループの1周 ─ ツールを使い続ける</h2>
 </header>
 <p class="goal"><b>ゴール</b>ツールを使うループの1周と、止まる条件を説明できる。</p>
+<p class="cast" data-cast="app,claude,app"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">エージェントの中身は、多くの場合とても単純です。Claude が道具を頼んだら、実行して結果を返す。これを、Claude が道具を頼まなくなるまで繰り返します。この繰り返しが<span data-en="ツールを使うループ">ツールを使うループ（tool-use loops）</span>です。</p>
 <p class="task" data-s="agent-patterns"><span class="tn">DOMAIN 1</span><b>Agent Patterns and Frameworks</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">ループの骨組み（Python）</p>
+  <pre class="code"><span class="k">while</span> <span class="k">True</span>:
+    res = client.messages.create(
+        model=MODEL, max_tokens=<span class="v">1024</span>,
+        tools=tools, messages=msgs)<span class="n">1</span>
+    msgs.append({<span class="s">"role"</span>: <span class="s">"assistant"</span>,
+        <span class="s">"content"</span>: res.content})<span class="n">2</span>
+    <span class="k">if</span> res.stop_reason != <span class="s">"tool_use"</span>:
+        <span class="k">break</span><span class="n">3</span>
+    results = run_tools(res.content)
+    msgs.append({<span class="s">"role"</span>: <span class="s">"user"</span>,
+        <span class="s">"content"</span>: results})<span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>毎回、ここまでの履歴（<code>msgs</code>）を全部送る。道具の定義も毎回渡す。</span></li>
+    <li><span class="n">2</span><span>応答は、道具の依頼（<code>tool_use</code>）ごと丸ごと履歴に足す。</span></li>
+    <li><span class="n">3</span><span>道具を頼まなかったら、ループを抜ける。止まった理由は <code>stop_reason</code> で見る。</span></li>
+    <li><span class="n">4</span><span>頼まれた道具をすべて実行し、結果（<code>tool_result</code>）を1つのメッセージにまとめて返す。<code>run_tools</code> は自分で書く関数（〈<a href="../08-tools/02-dispatch.html">実行するのはアプリ</a>〉）。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>ループを回しているのは、アプリの while 文。続けるか止めるかは <code>stop_reason</code> で決め、Claude の返事の文面では決めない。</p>
+
+<h3 class="sub" id="loop-stop">止まる条件</h3>
+<p class="goal"><b>ゴール</b><code>stop_reason</code> の値ごとに、アプリがすることを言える。</p>
+<table class="tbl">
+  <thead><tr><th>値</th><th>意味</th><th>アプリがすること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="値"><code>tool_use</code></td><td data-l="意味">道具を頼んだ</td><td data-l="アプリがすること">実行して結果を返し、ループを続ける</td></tr>
+    <tr><td data-l="値"><code>end_turn</code></td><td data-l="意味">言い終えた</td><td data-l="アプリがすること">完了として、答えを使う</td></tr>
+    <tr><td data-l="値"><code>max_tokens</code></td><td data-l="意味">出力の上限で切れた</td><td data-l="アプリがすること">そのまま使わない。上限を見直すか、続きを頼む</td></tr>
+    <tr><td data-l="値"><code>refusal</code></td><td data-l="意味">安全のために断った</td><td data-l="アプリがすること">完了として扱わず、別の経路へ回す</td></tr>
+    <tr><td data-l="値"><code>pause_turn</code></td><td data-l="意味">サーバ側の道具の途中で区切った</td><td data-l="アプリがすること">応答をそのまま足して、送り直す</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>止める条件は、もう1つコードに置きます。<b>反復の上限</b>です。正常な終わりは <code>end_turn</code> で、上限は、壊れたときに回り続けないための保険です。上限に達したら、そこまでの結果を人に戻します。</p>
+</div>
+
+<h3 class="sub" id="loop-ground">確かめられる仕事ほど、回して良くなる</h3>
+<p class="goal"><b>ゴール</b>ループで出来が上がる仕事の条件と、そのために渡すものを言える。</p>
+<div class="detail">
+  <p>ループの中で Claude が進み具合を知る手がかりは、返ってくる道具の結果だけです。公式も、各段階で道具の結果やコードの実行結果のような<b>実際の結果</b>を得て、進み具合を確かめさせることを勧めています。</p>
+  <p>だから、テストが通るかどうかのように<b>自動で確かめられる仕事</b>ほど、周を重ねて良くなります。落ちたテストを直させるなら、テストを走らせる道具を渡します。「よく確かめて」と書き足すより効きます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「ループを回せば、Claude が自分で動き続けてくれる」</span>
+    <span class="t o">実際は</span><span>回しているのはアプリのコード。<b>次のリクエストを送らなければ、Claude は何もしない</b>。止める条件も、アプリの側に書く。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/03-q1.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../01-agents/05-memory.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +126,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=95b40fc6"></script>
-<script src="../assets/search-index.js?v=5dc0b7f5"></script>
+<script src="../assets/quiz-data.js?v=d73d485f"></script>
+<script src="../assets/search-index.js?v=db0944de"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
