@@ -42,6 +42,8 @@
 <a class="itm toc-link" href="../05-models/02-window.html"><span class="itm-n">5-2</span><span class="itm-t">コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</span></a>
 <a class="itm toc-link" href="../05-models/03-think.html"><span class="itm-n">5-3</span><span class="itm-t">考えさせる量を選ぶ ─ thinking・effort・fast mode</span></a>
 <a class="itm toc-link on" href="../05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a>
+<a class="toc-link toc-sub" href="#shot-why">例が効くわけ</a>
+<a class="toc-link toc-sub" href="#shot-cost">例は安くない</a>
 <a class="itm toc-link itm-quiz" href="../05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a>
 <a class="itm toc-link" href="../05-models/06-sdk.html"><span class="itm-n">5-6</span><span class="itm-t">SDK は REST を包んでいる</span></a>
 <a class="itm toc-link" href="../05-models/07-wire.html"><span class="itm-n">5-7</span><span class="itm-t">つなぎ方の違い ─ REST・SSE・websockets</span></a>
@@ -60,7 +62,32 @@
   <h2>5-4　例を何個見せるか ─ zero・single・multi-shot</h2>
 </header>
 <p class="goal"><b>ゴール</b>例の数を増やす得と損を言い、課題に合う数を選べる。</p>
+<p class="lead">指示だけで頼むか、手本を見せて頼むか。プロンプトに入れる<b>手本（例）の数</b>で、呼び名が変わります。</p>
 <p class="task" data-s="llm-fundamentals"><span class="tn">DOMAIN 5</span><b>LLM Fundamentals</b></p>
+
+<table class="tbl">
+  <thead><tr><th>呼び名</th><th>例の数</th><th>向いている場面</th><th>気をつけること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="呼び名"><b>zero-shot</b></td><td data-l="例の数">0</td><td data-l="向いている場面">指示だけで伝わる、よくある作業（要約・翻訳）</td><td data-l="気をつけること">出力の形や、判断の基準が揺れやすい</td></tr>
+    <tr><td data-l="呼び名"><b>single-shot</b></td><td data-l="例の数">1</td><td data-l="向いている場面">出力の形を1つ見せれば足りる</td><td data-l="気をつけること">例の話題や長さまで真似しやすい</td></tr>
+    <tr><td data-l="呼び名"><b>multi-shot</b></td><td data-l="例の数">複数</td><td data-l="向いている場面">形をそろえたい、判断の境目を教えたい</td><td data-l="気をつけること">例の分だけ、毎回の入力トークンが増える</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>例は「形」と「判断の境目」をいちばん短く伝える手段。ただし毎回の入力に乗るので、足りない分だけ足す。</p>
+
+<h3 class="sub" id="shot-why">例が効くわけ</h3>
+<p class="goal"><b>ゴール</b>例が出力を寄せる仕組みを、次のトークンの選び方で説明できる。</p>
+<div class="detail">
+  <p>モデルは、ここまでの文章から次に来そうなトークンを選びます（〈<a href="01-token.html">次の1トークンを選び続ける</a>〉）。手本が入っていると、<b>手本と同じ形の続きが「もっともらしく」なる</b>ので、出力がそちらに寄ります。</p>
+  <p>裏返すと、<b>手本の意図しない特徴まで真似されます</b>。例がどれも短ければ出力も短くなり、同じ話題ばかりなら話題も寄ります。複数見せるなら、<b>互いに違う例</b>を選びます。例の書き方は〈<a href="../06-prompt/02-clear.html">はっきり頼む</a>〉で扱います。</p>
+</div>
+
+<h3 class="sub" id="shot-cost">例は安くない</h3>
+<p class="goal"><b>ゴール</b>例を足す費用と、その抑え方を言える。</p>
+<div class="detail">
+  <p>API は会話を覚えていないので、例も<b>毎回の入力として送り直されます</b>。件数の多い処理では、例の分のトークンがそのまま件数倍になります。</p>
+  <p>例のように毎回同じ部分は、プロンプトの前のほうに置けばキャッシュでき、2回目からは安く読めます（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/03-think.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/05-q1.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +100,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

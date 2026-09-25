@@ -41,6 +41,8 @@
   <nav class="toc-list"><a class="itm toc-link" href="../05-models/01-token.html"><span class="itm-n">5-1</span><span class="itm-t">次の1トークンを選び続ける</span></a>
 <a class="itm toc-link" href="../05-models/02-window.html"><span class="itm-n">5-2</span><span class="itm-t">コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</span></a>
 <a class="itm toc-link on" href="../05-models/03-think.html"><span class="itm-n">5-3</span><span class="itm-t">考えさせる量を選ぶ ─ thinking・effort・fast mode</span></a>
+<a class="toc-link toc-sub" href="#think-effort">まず動かすのは effort</a>
+<a class="toc-link toc-sub" href="#think-bill">考えた分は、見えなくても払う</a>
 <a class="itm toc-link" href="../05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a>
 <a class="itm toc-link" href="../05-models/06-sdk.html"><span class="itm-n">5-6</span><span class="itm-t">SDK は REST を包んでいる</span></a>
@@ -60,7 +62,52 @@
   <h2>5-3　考えさせる量を選ぶ ─ thinking・effort・fast mode</h2>
 </header>
 <p class="goal"><b>ゴール</b>4つの選択肢を、品質・待ち時間・費用のどれを動かすかで選び分けられる。</p>
+<p class="lead">答える前に考えさせると、難しい問題の出来はよくなります。その代わり、考えた分のトークンと時間がかかります。<b>どれだけ考えさせ、どれだけ急がせるか</b>を決める手は4つです。</p>
 <p class="task" data-s="llm-fundamentals"><span class="tn">DOMAIN 5</span><b>LLM Fundamentals</b></p>
+
+<table class="tbl">
+  <thead><tr><th>手</th><th>決めること</th><th>書き方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手"><b>extended thinking</b><br><span class="n">予算を決めて考えさせる</span></td>
+        <td data-l="決めること">考えに使うトークンの上限を、呼ぶ側が先に決める</td>
+        <td data-l="書き方"><code>"thinking": {"type": "enabled", "budget_tokens": 8000}</code><br><span class="n">古い世代の書き方。新しいモデルでは受け付けない</span></td></tr>
+    <tr><td data-l="手"><b>adaptive thinking</b><br><span class="n">考える量をモデルが決める</span></td>
+        <td data-l="決めること">考えるかどうかと、どれだけ考えるかを、問題に応じてモデルが決める</td>
+        <td data-l="書き方"><code>"thinking": {"type": "adaptive"}</code><br><span class="n">いまの標準。常に有効なモデルもある</span></td></tr>
+    <tr><td data-l="手"><b>effort</b><br><span class="n">力の入れ具合</span></td>
+        <td data-l="決めること">考える深さと、全体で使うトークンの目安（<code>low</code> 〜 <code>max</code> の段階）</td>
+        <td data-l="書き方"><code>"output_config": {"effort": "low"}</code></td></tr>
+    <tr><td data-l="手"><b>fast mode</b><br><span class="n">同じモデルを速く</span></td>
+        <td data-l="決めること">出力の速さ。<b>速くなる代わりに、単価が上がる</b></td>
+        <td data-l="書き方"><code>"speed": "fast"</code><br><span class="n">研究プレビュー。使えるモデルと提供先が限られる</span></td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>いまの形は「考えることはモデルに任せ（adaptive）、力の入れ具合を effort で決める」。fast mode は賢さではなく速さを買う手で、費用は上がる。</p>
+
+<h3 class="sub" id="think-effort">まず動かすのは effort</h3>
+<p class="goal"><b>ゴール</b>effort を上げる場面と下げる場面を言える。</p>
+<div class="detail">
+  <p>effort を下げると、考える量が減り、ツールの呼び出しもまとまり、前置きや確認の文も短くなります。<b>同じモデルのまま、品質と、費用・待ち時間のかね合いを動かせる</b>のが effort です。公式も、モデルを替えるより effort を調整するほうが効くことが多いとしています。</p>
+  <table class="tbl">
+    <thead><tr><th>向き</th><th>向いている仕事</th></tr></thead>
+    <tbody>
+      <tr><td data-l="向き">上げる（<code>high</code> 以上）</td><td data-l="向いている仕事">難しい推論、コーディング、長く自律的に動くエージェント</td></tr>
+      <tr><td data-l="向き">下げる（<code>low</code>・<code>medium</code>）</td><td data-l="向いている仕事">分類や短い応答、待ち時間に厳しい処理、子エージェントの単純な仕事</td></tr>
+    </tbody>
+  </table>
+  <p>既定の段階はモデルによって違います。<b>挙動をそろえたいなら、既定に頼らず明示します。</b></p>
+</div>
+
+<h3 class="sub" id="think-bill">考えた分は、見えなくても払う</h3>
+<p class="goal"><b>ゴール</b>考えた分のトークンが、出力として数えられることを言える。</p>
+<div class="detail">
+  <p>考えた内容は、応答の中に <code>thinking</code> という種類のブロックとして返ります。新しいモデルでは既定で<b>中身が空のまま</b>返り、要約を見たいときだけ表示を指定します。<b>表示するかどうかに関係なく、考えた分は出力トークンとして数えられ、課金されます。</b>出力の上限（<code>max_tokens</code>）も、考えた分と回答の合計に掛かります。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「fast mode は、小さなモデルに切り替えて速くする機能」</span>
+    <span class="t o">実際は</span><span><b>同じモデルのまま</b>出力を速くする。そのぶん単価が高い。</span>
+  </div>
+</div>
+<p class="note">※ 予算を決める方式（<code>budget_tokens</code>）は古い世代の書き方で、新しいモデルに送るとエラーになります。乗り換えで起きることは〈<a href="09-choose.html">モデルを選ぶ・乗り換える</a>〉で扱います。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/02-window.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/04-shot.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +120,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

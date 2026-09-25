@@ -44,6 +44,8 @@
 <a class="itm toc-link" href="../05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a>
 <a class="itm toc-link on" href="../05-models/06-sdk.html"><span class="itm-n">5-6</span><span class="itm-t">SDK は REST を包んでいる</span></a>
+<a class="toc-link toc-sub" href="#sdk-does">SDK が肩代わりしていること</a>
+<a class="toc-link toc-sub" href="#sdk-retry">再試行を二重にしない</a>
 <a class="itm toc-link" href="../05-models/07-wire.html"><span class="itm-n">5-7</span><span class="itm-t">つなぎ方の違い ─ REST・SSE・websockets</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/08-q2.html"><span class="itm-n">5-8</span><span class="itm-t">理解度チェック ─ API につなぐ</span></a>
 <a class="itm toc-link" href="../05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a>
@@ -60,7 +62,61 @@
   <h2>5-6　SDK は REST を包んでいる</h2>
 </header>
 <p class="goal"><b>ゴール</b>SDK の1回の呼び出しが、どんな HTTP リクエストと応答になるかを言える。</p>
+<p class="cast" data-cast="app,claude,app"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">SDK は、HTTP で API を呼ぶ手間を肩代わりしてくれる部品です。中で起きていることは単純で、<b>決まった URL に JSON を送り、JSON を受け取る</b>だけです。</p>
 <p class="task" data-s="technical-fundamentals"><span class="tn">DOMAIN 5</span><b>Technical Fundamentals</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">SDK で書く（Python）</p>
+  <pre class="code">client = anthropic.Anthropic()   <span class="c"># 鍵は環境変数から読む</span>
+msg = client.messages.create(<span class="n">1</span>
+    model=<span class="s">"claude-sonnet-5"</span>,
+    max_tokens=<span class="v">1024</span>,
+    messages=[{<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"こんにちは"</span>}],
+)</pre>
+  <p class="codelabel">実際に送られる HTTP</p>
+  <pre class="code">POST https://api.anthropic.com/v1/messages
+x-api-key: …<span class="n">2</span>
+anthropic-version: 2023-06-01
+content-type: application/json
+
+{ <span class="k">"model"</span>: <span class="s">"claude-sonnet-5"</span>,<span class="n">3</span>
+  <span class="k">"max_tokens"</span>: <span class="v">1024</span>,
+  <span class="k">"messages"</span>: [{ <span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"こんにちは"</span> }] }</pre>
+  <p class="codelabel">返る JSON（要所だけ）</p>
+  <pre class="code">{ <span class="k">"type"</span>: <span class="s">"message"</span>, <span class="k">"role"</span>: <span class="s">"assistant"</span>,
+  <span class="k">"content"</span>: [{ <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"こんにちは。…"</span> }],<span class="n">4</span>
+  <span class="k">"stop_reason"</span>: <span class="s">"end_turn"</span>,
+  <span class="k">"usage"</span>: { <span class="k">"input_tokens"</span>: <span class="v">12</span>, <span class="k">"output_tokens"</span>: <span class="v">20</span> } }</pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>メソッド1つが、エンドポイント1つに対応する。<code>messages.create</code> は <code>POST /v1/messages</code>。</span></li>
+    <li><span class="n">2</span><span>認証は API キーのヘッダで行う。<code>anthropic-version</code> は、やり取りの形式の版。</span></li>
+    <li><span class="n">3</span><span>本文で必須なのは <code>model</code>・<code>max_tokens</code>・<code>messages</code> の3つ。モデルもヘッダではなく本文で指定する。</span></li>
+    <li><span class="n">4</span><span>答えは <code>content</code> の中にブロックの配列で入る。止まった理由と使用量は、その外側に付く。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>SDK の呼び出し1回は、API への JSON の往復1回（<code>POST /v1/messages</code>）。SDK を外しても、同じ JSON を送れば同じように動く。</p>
+
+<h3 class="sub" id="sdk-does">SDK が肩代わりしていること</h3>
+<p class="goal"><b>ゴール</b>SDK を使うと自分で書かずに済むものを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>項目</th><th>SDK を使うと</th><th>HTTP を自分で書くと</th></tr></thead>
+  <tbody>
+    <tr><td data-l="項目">鍵とヘッダ</td><td data-l="SDK を使うと">環境変数から鍵を読み、ヘッダを付ける</td><td data-l="HTTP を自分で書くと">毎回自分で付ける</td></tr>
+    <tr><td data-l="項目">失敗したときの再試行</td><td data-l="SDK を使うと">一時的な失敗（混雑・サーバ側の不調・接続の切断）を、間を空けて既定で2回までやり直す</td><td data-l="HTTP を自分で書くと">自分で書く</td></tr>
+    <tr><td data-l="項目">待ち時間の上限</td><td data-l="SDK を使うと">既定の上限を持つ。長い出力には、逐次で受け取る書き方を勧める</td><td data-l="HTTP を自分で書くと">自分で決める</td></tr>
+    <tr><td data-l="項目">名前と型の誤り</td><td data-l="SDK を使うと">型の補完で、書いた時点で気づける</td><td data-l="HTTP を自分で書くと">JSON を手で組む</td></tr>
+    <tr><td data-l="項目">エラーの見分け</td><td data-l="SDK を使うと">種類ごとの例外で受け取れる</td><td data-l="HTTP を自分で書くと">ステータスコードを読んで分ける</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="sdk-retry">再試行を二重にしない</h3>
+<p class="goal"><b>ゴール</b>SDK の再試行の上に自前の再試行を重ねると何が起きるかを言える。</p>
+<div class="detail">
+  <p>SDK の中ですでに再試行しているのに、呼ぶ側でも「失敗したら3回やり直す」を書くと、<b>試行の回数が掛け算で増えます</b>。混雑しているときほど送信が増え、待ち時間も上限の数倍まで伸びます。</p>
+  <p>やり直しは<b>どちらか1か所</b>に置きます。SDK に任せるなら、回数と待ち時間の上限を SDK の設定で決め、呼ぶ側では、やり直しても直らない失敗だけを扱います。失敗の種類の見分け方は〈<a href="../04-debug/01-errors.html">エラーの種類と、立て直し方</a>〉で扱います。</p>
+</div>
+<p class="note">※ SDK は Python・TypeScript など主な言語ごとにあり、どれも同じ API を呼びます。モデル ID は例で、世代で変わります。他社のクラウド経由で呼ぶときは、そのクラウド向けのクライアントを使います（〈<a href="../02-apps/02-data.html">データの渡し方と、呼び出し口</a>〉）。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/05-q1.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/07-wire.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +129,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

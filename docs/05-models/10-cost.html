@@ -48,6 +48,8 @@
 <a class="itm toc-link itm-quiz" href="../05-models/08-q2.html"><span class="itm-n">5-8</span><span class="itm-t">理解度チェック ─ API につなぐ</span></a>
 <a class="itm toc-link" href="../05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a>
 <a class="itm toc-link on" href="../05-models/10-cost.html"><span class="itm-n">5-10</span><span class="itm-t">トークンを数え、費用を見積もる</span></a>
+<a class="toc-link toc-sub" href="#cost-model">見積もりの式</a>
+<a class="toc-link toc-sub" href="#cost-count">送る前に数える</a>
 <a class="itm toc-link" href="../05-models/11-cache.html"><span class="itm-n">5-11</span><span class="itm-t">プロンプトキャッシュ ─ 同じ前半を安く使い回す</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/12-q3.html"><span class="itm-n">5-12</span><span class="itm-t">理解度チェック ─ モデル選択とコスト</span></a></nav>
 </aside>
@@ -60,7 +62,54 @@
   <h2>5-10　トークンを数え、費用を見積もる</h2>
 </header>
 <p class="goal"><b>ゴール</b>使用量の記録から、1件あたり・1か月あたりの費用を見積もれる。</p>
+<p class="lead">費用はトークンの数で決まります。見積もりに要るのは、<b>1件あたり何トークン使ったかの実測</b>と、単価だけです。</p>
 <p class="task" data-s="cost-tokens"><span class="tn">DOMAIN 5</span><b>Cost and Token Management</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">応答に付く使用量</p>
+  <pre class="code"><span class="k">"usage"</span>: {
+  <span class="k">"input_tokens"</span>: <span class="v">1200</span>,<span class="n">1</span>
+  <span class="k">"cache_creation_input_tokens"</span>: <span class="v">0</span>,<span class="n">2</span>
+  <span class="k">"cache_read_input_tokens"</span>: <span class="v">3000</span>,
+  <span class="k">"output_tokens"</span>: <span class="v">800</span><span class="n">3</span>
+}</pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>キャッシュを使わなかった入力だけの数。<b>入力の合計は、入力の3つの欄を足したもの</b>。</span></li>
+    <li><span class="n">2</span><span>キャッシュに書いた分と、キャッシュから読んだ分。どちらも、通常の入力とは単価が違う。</span></li>
+    <li><span class="n">3</span><span>出力。<b>考えた分（思考）も、ここに含まれる</b>。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>使用量は応答ごとに返ってくる。これを記録しておけば、見積もりは推測ではなく実測から出せる。</p>
+
+<h3 class="sub" id="cost-model">見積もりの式</h3>
+<p class="goal"><b>ゴール</b>1件あたりと1か月あたりの費用を、使用量と単価から出せる。</p>
+<table class="tbl">
+  <thead><tr><th>求めるもの</th><th>出し方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="求めるもの">1件の費用</td><td data-l="出し方">入力トークン × 入力の単価 ＋ 出力トークン × 出力の単価（キャッシュの書き込みと読み出しは、それぞれの単価で）</td></tr>
+    <tr><td data-l="求めるもの">1か月の費用</td><td data-l="出し方">1件の費用 × 月の件数</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>数える「1件」は、<b>仕事が1つ完了するまで</b>です。再試行、ツールとの往復、会話の往復も含めます。1回のリクエストが安くても、完了までに往復が増えれば高くつきます。</p>
+  <p>出力の単価は入力より高いので、長い出力や深い思考ほど効きます。記録は、機能や利用者ごとに分けて残します。<b>どこで費用がかかっているかが分かれば、手を打つ場所が決まります。</b></p>
+  <table class="tbl">
+    <thead><tr><th>費用を下げる手</th><th>効くところ</th></tr></thead>
+    <tbody>
+      <tr><td data-l="費用を下げる手">同じ前半をキャッシュする</td><td data-l="効くところ">繰り返し送る長い指示や資料（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
+      <tr><td data-l="費用を下げる手">待てる処理はバッチで送る</td><td data-l="効くところ">急がない大量の処理。通常の半額（〈<a href="../02-apps/04-batch.html">まとめて安く</a>〉）</td></tr>
+      <tr><td data-l="費用を下げる手">effort を下げる</td><td data-l="効くところ">考える量と前置きが多すぎる処理</td></tr>
+      <tr><td data-l="費用を下げる手">区分を下げる</td><td data-l="効くところ">評価で品質が保てると分かった処理（〈<a href="09-choose.html">モデルを選ぶ</a>〉）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="sub" id="cost-count">送る前に数える</h3>
+<p class="goal"><b>ゴール</b>送る前にトークン数を知る方法と、その注意を言える。</p>
+<div class="detail">
+  <p>送る前に数えたいときは、トークン数を数える API（<code>POST /v1/messages/count_tokens</code>）に、送る予定の中身をそのまま渡します。<b>数はモデルごとに違う</b>ので、実際に使うモデルを指定して数えます。他社のトークナイザで数えると、Claude の数とはずれます。</p>
+</div>
+<p class="note">※ 単価はモデルごとに違い、改定もあるので、この教材には書きません。公式の料金表で確かめます。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/09-choose.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/11-cache.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -49,6 +49,9 @@
 <a class="itm toc-link" href="../05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a>
 <a class="itm toc-link" href="../05-models/10-cost.html"><span class="itm-n">5-10</span><span class="itm-t">トークンを数え、費用を見積もる</span></a>
 <a class="itm toc-link on" href="../05-models/11-cache.html"><span class="itm-n">5-11</span><span class="itm-t">プロンプトキャッシュ ─ 同じ前半を安く使い回す</span></a>
+<a class="toc-link toc-sub" href="#cache-order">効くのは「前半の一致」だけ</a>
+<a class="toc-link toc-sub" href="#cache-point">区切りをどこに置くか</a>
+<a class="toc-link toc-sub" href="#cache-life">寿命と、割増・割引</a>
 <a class="itm toc-link itm-quiz" href="../05-models/12-q3.html"><span class="itm-n">5-12</span><span class="itm-t">理解度チェック ─ モデル選択とコスト</span></a></nav>
 </aside>
 <main class="doc">
@@ -60,7 +63,63 @@
   <h2>5-11　プロンプトキャッシュ ─ 同じ前半を安く使い回す</h2>
 </header>
 <p class="goal"><b>ゴール</b>キャッシュが効く並べ方と、区切りの置き場所を選べる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">長い指示や資料を毎回送っているなら、その<b>前半をキャッシュに置けます</b>。2回目からは、置いた部分を読み出すだけになり、安く、速く処理されます。</p>
 <p class="task" data-s="cost-tokens api-mechanics"><span class="tn">DOMAIN 5</span><b>Cost and Token Management</b>　／　<span class="tn">DOMAIN 2</span><b>Claude API Mechanics</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">プロンプトが並ぶ順と、それぞれの変わりやすさ</p>
+  <div class="fig-row flow" style="--cols:4">
+    <div class="fig-card s1"><b class="fig-h">ツールの定義</b><span class="fig-note">ほとんど変わらない</span></div>
+    <div class="fig-card s2"><b class="fig-h">system</b><span class="fig-note">ほとんど変わらない</span></div>
+    <div class="fig-card s3"><b class="fig-h">これまでの会話</b><span class="fig-note">後ろに伸びるだけ</span></div>
+    <div class="fig-card s4"><b class="fig-h">今回の入力</b><span class="fig-note">毎回変わる</span></div>
+  </div>
+  <p class="fig-f">キャッシュは<b>前半の一致</b>で効く。1文字でも前が変わると、その後ろはすべて外れる。</p>
+</figure></div>
+
+<h3 class="sub" id="cache-order">効くのは「前半の一致」だけ</h3>
+<p class="goal"><b>ゴール</b>キャッシュが外れる原因を、並び順から説明できる。</p>
+<div class="detail">
+  <p>API は、ツールの定義、<code>system</code>、会話の順にプロンプトを並べて処理します。キャッシュは<b>先頭から一致している部分</b>にしか効きません。だから<b>変わらないものを前に、変わるものを後ろに</b>置きます。</p>
+  <table class="tbl">
+    <thead><tr><th>黙って外す原因</th><th>何が起きるか</th></tr></thead>
+    <tbody>
+      <tr><td data-l="黙って外す原因">先頭に日時</td><td data-l="何が起きるか"><code>system</code> の先頭に日時を埋め込むと、毎回先頭が変わり、何も読み出されない</td></tr>
+      <tr><td data-l="黙って外す原因">並びが揺れる</td><td data-l="何が起きるか">ツールの並びや JSON のキーの順が毎回変わると、見た目は同じでも別物として扱われる</td></tr>
+      <tr><td data-l="黙って外す原因">モデルを替える</td><td data-l="何が起きるか">キャッシュはモデルごとに別なので、替えた先では使えない</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="sub" id="cache-point">区切りをどこに置くか</h3>
+<p class="goal"><b>ゴール</b>共通部分の終わりに区切りを置く理由を言える。</p>
+<div class="detail">
+  <p>キャッシュしたい範囲の、終わりのブロックに <code>cache_control</code> を付けます。これが<span data-en="キャッシュの区切り">キャッシュの区切り（cache check-pointing）</span>で、1回のリクエストに4つまで置けます。</p>
+  <pre class="code"><span class="k">"system"</span>: [{ <span class="k">"type"</span>: <span class="s">"text"</span>, <span class="k">"text"</span>: <span class="s">"（長い指示）"</span>,
+             <span class="k">"cache_control"</span>: { <span class="k">"type"</span>: <span class="s">"ephemeral"</span> } }]</pre>
+  <table class="tbl">
+    <thead><tr><th>使い方</th><th>区切りの置き場所</th></tr></thead>
+    <tbody>
+      <tr><td data-l="使い方">共通の長い指示</td><td data-l="区切りの置き場所"><code>system</code> の最後。多くのリクエストが同じ指示を読み出す</td></tr>
+      <tr><td data-l="使い方">共通の資料 ＋ 毎回違う質問</td><td data-l="区切りの置き場所"><b>共通部分の終わり</b>（質問の手前）</td></tr>
+      <tr><td data-l="使い方">会話を続ける</td><td data-l="区切りの置き場所">最新の発言の最後。前回までの区切りも、読み出し口として残る</td></tr>
+    </tbody>
+  </table>
+  <p>会話を続ける使い方なら、リクエストの外側に <code>cache_control</code> を1つ付けるだけで、最後のブロックに自動で置かれます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「区切りは末尾に置けば、全部キャッシュされて得」</span>
+    <span class="t o">実際は</span><span>毎回違う質問まで含めると、<b>毎回別のものとして書き込まれ、読み出しが起きない</b>。書き込みの割増だけを払うことになる。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="cache-life">寿命と、割増・割引</h3>
+<p class="goal"><b>ゴール</b>キャッシュが得になる条件と、効いているかの確かめ方を言える。</p>
+<div class="detail">
+  <p>置いたキャッシュは<b>既定で5分</b>残り、読み出されるたびに延びます。間が空くなら、1時間の指定もできます。書き込みは通常の入力より割高、読み出しは大幅に割安なので、<b>同じ前半を繰り返し使うほど得</b>になります。一度しか使わない部分に区切りを置くと、割増だけを払います。</p>
+  <p>短すぎる前半は、区切りを付けても<b>黙ってキャッシュされません</b>（最小の長さはモデルで決まります）。効いているかは、応答の使用量の <code>cache_read_input_tokens</code> で確かめます。繰り返し送っているのに 0 のままなら、どこかで前半が変わっています。</p>
+</div>
+<p class="point"><b>ポイント</b>変わらないものを前に、変わるものを後ろに並べ、共通部分の終わりに区切りを置く。効いているかは推測せず、使用量で確かめる。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/10-cost.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/12-q3.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +132,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

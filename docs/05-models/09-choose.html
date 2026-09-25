@@ -47,6 +47,8 @@
 <a class="itm toc-link" href="../05-models/07-wire.html"><span class="itm-n">5-7</span><span class="itm-t">つなぎ方の違い ─ REST・SSE・websockets</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/08-q2.html"><span class="itm-n">5-8</span><span class="itm-t">理解度チェック ─ API につなぐ</span></a>
 <a class="itm toc-link on" href="../05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a>
+<a class="toc-link toc-sub" href="#choose-start">2つの始め方</a>
+<a class="toc-link toc-sub" href="#choose-migrate">乗り換えで壊れるもの</a>
 <a class="itm toc-link" href="../05-models/10-cost.html"><span class="itm-n">5-10</span><span class="itm-t">トークンを数え、費用を見積もる</span></a>
 <a class="itm toc-link" href="../05-models/11-cache.html"><span class="itm-n">5-11</span><span class="itm-t">プロンプトキャッシュ ─ 同じ前半を安く使い回す</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/12-q3.html"><span class="itm-n">5-12</span><span class="itm-t">理解度チェック ─ モデル選択とコスト</span></a></nav>
@@ -60,7 +62,53 @@
   <h2>5-9　モデルを選ぶ・乗り換える</h2>
 </header>
 <p class="goal"><b>ゴール</b>Opus・Sonnet・Haiku を品質・待ち時間・費用で選び、乗り換えで挙動が変わる危険に備えられる。</p>
+<p class="lead">モデルは「いちばん賢いもの」を選ぶのではなく、<b>課題に要る能力・速さ・費用のかね合い</b>で選びます。</p>
 <p class="task" data-s="model-selection"><span class="tn">DOMAIN 5</span><b>Model Selection and Tradeoffs</b></p>
+
+<table class="tbl">
+  <thead><tr><th>区分</th><th>公式の位置づけ</th><th>向く仕事の例</th></tr></thead>
+  <tbody>
+    <tr><td data-l="区分"><b>Opus</b><br><span class="n">能力を優先</span></td><td data-l="公式の位置づけ">長く自律的に進めるコーディングや、知的作業のためのモデル</td><td data-l="向く仕事の例">大規模なリファクタリング、複雑なシステム設計、何時間も動くエージェント</td></tr>
+    <tr><td data-l="区分"><b>Sonnet</b><br><span class="n">均衡</span></td><td data-l="公式の位置づけ">速さと賢さの組み合わせが、最もよいモデル</td><td data-l="向く仕事の例">日々のコード生成、データ分析、ツールを使うエージェント</td></tr>
+    <tr><td data-l="区分"><b>Haiku</b><br><span class="n">速さと費用を優先</span></td><td data-l="公式の位置づけ">最も速く、最先端に近い賢さを持つモデル</td><td data-l="向く仕事の例">リアルタイムの応答、大量の処理、子エージェントの仕事</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>区分が上がるほど賢くなり、遅く、高くなる。どの区分が合うかは、課題と予算で決まる。</p>
+<p class="note">※ 区分の顔ぶれと名前は世代で変わります（いまは Opus のさらに上に、最も難しい推論に向けた区分もあります）。最新の一覧は、公式のモデル一覧で確かめます。</p>
+
+<h3 class="sub" id="choose-start">2つの始め方</h3>
+<p class="goal"><b>ゴール</b>小さいモデルから始める場合と、大きいモデルから始める場合を選び分けられる。</p>
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">公式が示す2つの始め方 ─ どちらも最後は評価で決める</p>
+  <div class="fig-row" style="--cols:2">
+    <div class="fig-card s1"><b class="fig-h">効率から始める</b>
+      <span class="fig-note">Haiku で作って評価し、足りない能力があるときだけ上げる</span>
+      <ul><li>試作と、早い反復</li><li>待ち時間が厳しい</li><li>費用を抑えたい</li><li>大量で単純な処理</li></ul></div>
+    <div class="fig-card s2"><b class="fig-h">能力から始める</b>
+      <span class="fig-note">Opus で作って評価し、effort や区分を下げていく</span>
+      <ul><li>複雑な推論</li><li>費用より正確さが大事</li><li>高度なコーディング</li></ul></div>
+  </div>
+  <p class="fig-f">モデルを替える前に、<b>effort を動かす</b>。同じモデルのまま、かね合いを変えられることが多い。</p>
+</figure></div>
+<div class="detail">
+  <p>考え方の対応（adaptive thinking など）も、モデルごとに違います。たとえば小さい区分には、予算を決める古い方式でしか考えられないものがあります。<b>使いたい機能に対応しているか</b>は、Models API の <code>capabilities</code> か、公式の一覧で確かめます。</p>
+</div>
+
+<h3 class="sub" id="choose-migrate">乗り換えで壊れるもの</h3>
+<p class="goal"><b>ゴール</b>新しい版に替えたときに起きうる変化と、その備えを言える。</p>
+<div class="detail">
+  <p>同じ区分の新しい版でも、<b>同じリクエストが同じようには動かない</b>ことがあります。起きる変化は3種類です。</p>
+  <table class="tbl">
+    <thead><tr><th>変化</th><th>例</th><th>備え</th></tr></thead>
+    <tbody>
+      <tr><td data-l="変化"><b>エラーになる</b></td><td data-l="例">古い書き方の指定を受け付けない（予算を決める思考、<code>temperature</code> の指定、応答の書き出しを先に埋める指定）</td><td data-l="備え">まず1件だけ送って確かめる</td></tr>
+      <tr><td data-l="変化"><b>黙って変わる</b></td><td data-l="例">既定値が変わる（思考の表示、既定の effort）。同じプロンプトの効き方も変わり、強い口調の指示が効きすぎることもある</td><td data-l="備え">自分の用途の評価セットで、旧版と比べる</td></tr>
+      <tr><td data-l="変化"><b>数え方が変わる</b></td><td data-l="例">トークンの区切り方が変わり、同じ文でもトークン数が増減する</td><td data-l="備え">トークン数を数え直し、出力の上限と費用の見積もりを直す</td></tr>
+    </tbody>
+  </table>
+  <p>備えの土台は、版を固定しておくことです。モデル ID は版ごとに固定された名前なので、<b>いつ替えるかをこちらで決められます</b>（〈<a href="../02-apps/20-version.html">版を固定する</a>〉）。</p>
+</div>
+<p class="point"><b>ポイント</b>乗り換えは、同じ区分の新しい版でも挙動が変わる。まず1件、次に評価セット、トークン数も数え直してから切り替える。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/08-q2.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/10-cost.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

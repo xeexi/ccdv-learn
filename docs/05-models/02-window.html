@@ -40,6 +40,7 @@
   <div class="toc-head">Domain 5</div>
   <nav class="toc-list"><a class="itm toc-link" href="../05-models/01-token.html"><span class="itm-n">5-1</span><span class="itm-t">次の1トークンを選び続ける</span></a>
 <a class="itm toc-link on" href="../05-models/02-window.html"><span class="itm-n">5-2</span><span class="itm-t">コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</span></a>
+<a class="toc-link toc-sub" href="#window-share">入力と出力が、同じ枠を食い合う</a>
 <a class="itm toc-link" href="../05-models/03-think.html"><span class="itm-n">5-3</span><span class="itm-t">考えさせる量を選ぶ ─ thinking・effort・fast mode</span></a>
 <a class="itm toc-link" href="../05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a>
 <a class="itm toc-link itm-quiz" href="../05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a>
@@ -60,7 +61,49 @@
   <h2>5-2　コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</h2>
 </header>
 <p class="goal"><b>ゴール</b>会話が長くなると何が起きるかを、窓の大きさと送り直しから説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">モデルが一度に扱えるトークンの量には上限があります。これが<span data-en="窓">窓（context window）</span>で、<b>入力と出力の両方</b>がこの1つの枠に入ります。</p>
 <p class="task" data-s="llm-fundamentals"><span class="tn">DOMAIN 5</span><b>LLM Fundamentals</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">3回のやり取りで、毎回 API に送っているもの</p>
+  <div class="fig-turn s1">
+    <span class="t-lbl">1回目</span>
+    <span class="fig-msgs"><span class="m m-u now">user 質問1</span></span>
+    <span class="t-n">1件</span>
+  </div>
+  <div class="fig-turn s2">
+    <span class="t-lbl">2回目</span>
+    <span class="fig-msgs"><span class="m m-u">user 質問1</span><span class="m m-a">assistant 答え1</span><span class="m m-u now">user 質問2</span></span>
+    <span class="t-n">3件</span>
+  </div>
+  <div class="fig-turn s3">
+    <span class="t-lbl">3回目</span>
+    <span class="fig-msgs"><span class="m m-u">user 質問1</span><span class="m m-a">assistant 答え1</span><span class="m m-u">user 質問2</span><span class="m m-a">assistant 答え2</span><span class="m m-u now">user 質問3</span></span>
+    <span class="t-n">5件</span>
+  </div>
+  <p class="fig-f">枠の太い箱が、その回の新しい発言。それ以外は<b>前回までの分を、もう一度そのまま送っている</b>。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>API は会話を覚えていない。続きを話すには、アプリが毎回<b>それまでの履歴を全部</b>送る。だから往復するほど、1回の入力が膨らむ。</p>
+
+<h3 class="sub" id="window-share">入力と出力が、同じ枠を食い合う</h3>
+<p class="goal"><b>ゴール</b>窓に入るものを挙げ、長い会話で起きることと打つ手を言える。</p>
+<div class="detail">
+  <p>窓に入るのは、指示（<code>system</code>）・ツールの定義・これまでの会話・今回の入力と、これから書く出力（考えた分を含む）です。<b>入力が大きいほど、出力に使える残りは減ります。</b></p>
+  <table class="tbl">
+    <thead><tr><th>起きること</th><th>どこで分かるか</th><th>打つ手</th></tr></thead>
+    <tbody>
+      <tr><td data-l="起きること">入力だけで窓を超える</td><td data-l="どこで分かるか">リクエストがエラーで返る</td><td data-l="打つ手">古い部分を刈り込む・要約する（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
+      <tr><td data-l="起きること">出力が途中で打ち切られる</td><td data-l="どこで分かるか">応答の <code>stop_reason</code> が、上限に達したことを示す</td><td data-l="打つ手">出力の上限を見直す・入力を減らす</td></tr>
+      <tr><td data-l="起きること">往復のたびに遅く、高くなる</td><td data-l="どこで分かるか">使用量のトークン数が、回ごとに増える</td><td data-l="打つ手">同じ前半を使い回す（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
+    </tbody>
+  </table>
+  <div class="myth">
+    <span class="t">誤解</span><span>「窓の大きいモデルなら、何でも全部入れておけばよい」</span>
+    <span class="t o">実際は</span><span>入れた分だけ<b>毎回の費用と待ち時間</b>がかかる。関係のないものまで入れると、必要な情報も埋もれやすい。</span>
+  </div>
+</div>
+<p class="note">※ 窓の大きさはモデルで決まり、世代で変わるので、この教材には数値を書きません。実際の値は、公式のモデル一覧か Models API の <code>max_input_tokens</code> で確かめます。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/01-token.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/03-think.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +116,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

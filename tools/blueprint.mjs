@@ -227,11 +227,34 @@ export const GLUE = ["including", "and", "based", "on", "used", "to", "for"];
  *  形: { "<スキルのキー>": { sections: ["節のid", …], topics: { "<topics の原文>": "正規表現" | ["正規表現", …] } } }
  *  正規表現は、そのスキルの sections の本文の中だけで照合する（関係のない節で偶然当たる穴を塞ぐ）。 */
 export const COVER = {
-  "llm-fundamentals": { sections: ["token", "window", "think", "shot"], topics: {} },
-  "technical-fundamentals": { sections: ["sdk", "wire"], topics: {} },
-  "model-selection": { sections: ["choose"], topics: {} },
-  "cost-tokens": { sections: ["cost", "cache"], topics: {} },
-  "api-mechanics": { sections: ["cache", "blocks", "data", "stream", "batch"], topics: {} },
+  "llm-fundamentals": { sections: ["token", "window", "think", "shot"], topics: {
+    "tokens":                "トークンは、単語や文字の断片",
+    "next-token generation": "次の1トークンを確率で選ぶ",
+    "sampling":              "確率に従って1つ選ぶことを[^。]{0,10}サンプリング",
+    "non-determinism":       "非決定性",
+    "context windows":       "入力と出力の両方",
+    "fast mode":             "fast mode[^。]{0,40}(速さ|速く)",
+    "extended thinking":     "extended thinking[^。]{0,40}予算を決め",
+    "adaptive thinking":     "adaptive thinking[^。]{0,40}考える量をモデルが決める",
+    "effort levels":         "effort[^。]{0,60}low[^。]{0,10}max",
+    "zero-shot":             "zero-shot",
+    "single-shot":           "single-shot",
+    "multi-shot":            "multi-shot" } },
+  "technical-fundamentals": { sections: ["sdk", "wire"], topics: {
+    "integrating with SDKs that wrap REST APIs": ["SDK は、HTTP で API を呼ぶ手間を肩代わり", "POST /v1/messages"],
+    "websockets":                                "WebSocket[^。]{0,40}双方向" } },
+  "model-selection": { sections: ["choose"], topics: {
+    "Opus vs. Sonnet vs. Haiku use cases":             ["Opus", "Sonnet", "Haiku", "向く仕事"],
+    "adaptive thinking support":                       "adaptive thinking[^。]{0,40}モデルごと",
+    "tradeoffs across quality/latency/cost parameters": "能力・速さ・費用のかね合い",
+    "breaking behavior changes across model releases": "乗り換えで壊れる" } },
+  "cost-tokens": { sections: ["cost", "cache"], topics: {
+    "token usage tracking": "使用量の記録",
+    "cost modeling":        "見積もりの式",
+    "prompt caching":       "前半をキャッシュに置け",
+    "cache check-pointing": "キャッシュの区切り（cache check-pointing）" } },
+  "api-mechanics": { sections: ["cache", "blocks", "data", "stream", "batch"], topics: {
+    "caching": "cache_control" } },
   "tool-implementation": { sections: ["define", "dispatch", "fail"], topics: {} },
   "mcp-server": { sections: ["mcp", "transport"], topics: {} },
   "agentic-customization": { sections: ["builtin", "extend"], topics: {} },
@@ -309,7 +332,25 @@ export const QUALIFIERS = [
 
 /** この教材の日本語 ⇄ 公式の英語。**英語は原文（DOMAINS・SKILLS・PREPARE・QUOTES）からしか取らない。**
  *  d は所属ドメイン（DOMAINS のキー）。ドメインを書くときに足す。 */
-export const GLOSSARY = [];
+export const GLOSSARY = [
+  { d: "models", en: "next-token generation",                           ja: "次の1トークンの生成" },
+  { d: "models", en: "sampling",                                        ja: "サンプリング（確率に従った選び方）" },
+  { d: "models", en: "non-determinism",                                 ja: "非決定性（同じ入力でも出力が揺れる性質）" },
+  { d: "models", en: "context windows",                                 ja: "窓（一度に扱えるトークンの上限）" },
+  { d: "models", en: "extended thinking",                               ja: "予算を決めて考えさせる方式" },
+  { d: "models", en: "adaptive thinking",                               ja: "考える量をモデルが決める方式" },
+  { d: "models", en: "effort levels",                                   ja: "力の入れ具合の段階" },
+  { d: "models", en: "fast mode",                                       ja: "同じモデルを速く動かす指定" },
+  { d: "models", en: "multi-shot",                                      ja: "例を複数見せる頼み方" },
+  { d: "models", en: "integrating with SDKs that wrap REST APIs",       ja: "REST API を包む SDK での接続" },
+  { d: "models", en: "websockets",                                      ja: "双方向の常時接続（WebSocket）" },
+  { d: "models", en: "tradeoffs across quality/latency/cost parameters", ja: "品質・待ち時間・費用のかね合い" },
+  { d: "models", en: "breaking behavior changes across model releases", ja: "版の更新による挙動の破壊的な変化" },
+  { d: "models", en: "token usage tracking",                            ja: "トークン使用量の記録" },
+  { d: "models", en: "cost modeling",                                   ja: "費用の見積もり" },
+  { d: "models", en: "prompt caching",                                  ja: "プロンプトキャッシュ" },
+  { d: "models", en: "cache check-pointing",                            ja: "キャッシュの区切りの置き方" },
+];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
 export const QUOTES = [];
@@ -317,7 +358,10 @@ export const QUOTES = [];
 /** 教材が日本語で作った「名前」と、公式の英語。
  *  本文には `<span data-en="窓"></span>` の目印だけを置き、reindex が「窓（context window）」に展開する。
  *  **HTML に手で書かない。** 英語は原文からしか取らない。ドメインを書くときに足す。 */
-export const TERMS = {};
+export const TERMS = {
+  "窓":               "context window",
+  "キャッシュの区切り": "cache check-pointing",
+};
 
 /** 節の「登場人物」。本文に `<p class="cast" data-cast="app,claude"></p>` と置くと
  *  reindex が「アプリ → Claude」に展開する。**HTML に名前を手で書かない。**

@@ -45,6 +45,8 @@
 <a class="itm toc-link itm-quiz" href="../05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a>
 <a class="itm toc-link" href="../05-models/06-sdk.html"><span class="itm-n">5-6</span><span class="itm-t">SDK は REST を包んでいる</span></a>
 <a class="itm toc-link on" href="../05-models/07-wire.html"><span class="itm-n">5-7</span><span class="itm-t">つなぎ方の違い ─ REST・SSE・websockets</span></a>
+<a class="toc-link toc-sub" href="#wire-sse">SSE で届くもの</a>
+<a class="toc-link toc-sub" href="#wire-ws">WebSocket が要るのは、双方向が要るとき</a>
 <a class="itm toc-link itm-quiz" href="../05-models/08-q2.html"><span class="itm-n">5-8</span><span class="itm-t">理解度チェック ─ API につなぐ</span></a>
 <a class="itm toc-link" href="../05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a>
 <a class="itm toc-link" href="../05-models/10-cost.html"><span class="itm-n">5-10</span><span class="itm-t">トークンを数え、費用を見積もる</span></a>
@@ -60,7 +62,51 @@
   <h2>5-7　つなぎ方の違い ─ REST・SSE・websockets</h2>
 </header>
 <p class="goal"><b>ゴール</b>一往復・逐次の受け取り・双方向の常時接続を、用途で選び分けられる。</p>
+<p class="cast" data-cast="mixed"></p>
+<p class="lead">アプリが外とやり取りする形は、大きく3つあります。Claude の API が使うのは、このうち最初の2つです。</p>
 <p class="task" data-s="technical-fundamentals"><span class="tn">DOMAIN 5</span><b>Technical Fundamentals</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">やり取りの3つの形 ─ 誰が、いつ送れるか</p>
+  <div class="fig-row" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">REST（1往復）</b>
+      <span class="fig-note">頼んで、できあがった全体を1回で受け取る</span>
+      <span class="fig-note">例：通常の Messages API の呼び出し</span></div>
+    <div class="fig-card s2"><b class="fig-h">SSE（逐次）</b>
+      <span class="fig-note">1回頼むと、サーバから少しずつ届き続ける。向きは一方向</span>
+      <span class="fig-note">例：<code>"stream": true</code> を付けた呼び出し</span></div>
+    <div class="fig-card s3"><b class="fig-h">WebSocket（双方向）</b>
+      <span class="fig-note">つなぎっぱなしで、どちらからでも好きなときに送れる</span>
+      <span class="fig-note">例：ブラウザと自分のサーバの間の音声・共同編集</span></div>
+  </div>
+  <p class="fig-f">Claude の API は HTTP の上で動き、逐次の受け取りは SSE。<b>WebSocket は使わない</b>。</p>
+</figure></div>
+
+<h3 class="sub" id="wire-sse">SSE で届くもの</h3>
+<p class="goal"><b>ゴール</b>逐次で受け取ると、どんな順で何が届くかを言える。</p>
+<div class="detail">
+  <p><code>"stream": true</code> を付けて呼ぶと、1つの HTTP 応答の中に<b>イベントが順に流れてきます</b>。始まり、ブロックの始まり、本文の差分の繰り返し、ブロックの終わり、止まった理由と使用量、終わり、という順です。</p>
+  <pre class="code">event: message_start
+event: content_block_start
+event: content_block_delta   <span class="c"># 本文の差分。これが何度も来る</span>
+event: content_block_stop
+event: message_delta         <span class="c"># stop_reason と使用量</span>
+event: message_stop</pre>
+  <p>差分をつなぎ合わせて元の応答を組み立てる方法と、途中で切れたときの立て直しは〈<a href="../02-apps/03-stream.html">逐次で受け取る</a>〉で扱います。</p>
+</div>
+
+<h3 class="sub" id="wire-ws">WebSocket が要るのは、双方向が要るとき</h3>
+<p class="goal"><b>ゴール</b>WebSocket を選ぶ理由と、Claude の API との位置関係を言える。</p>
+<div class="detail">
+  <p>SSE は<b>サーバから届くだけ</b>の一方向です。途中で利用者からサーバへ何かを届けたくても、同じ接続では送れません。音声を送り続けながら返事も受け取る、といった<b>双方向の常時接続</b>が要る画面では、ブラウザと自分のサーバの間を WebSocket でつなぎます。</p>
+  <p>そのときも、自分のサーバから Claude の API へは HTTP（逐次なら SSE）で呼び、受け取ったものを WebSocket で画面へ流します。<b>WebSocket は、アプリの内側の配線</b>です。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「逐次で受け取るには、Claude の API に WebSocket でつなぐ必要がある」</span>
+    <span class="t o">実際は</span><span>Claude の API の逐次の受け取りは SSE。WebSocket を使うのは、<b>自分のアプリの中で双方向が要るとき</b>。</span>
+  </div>
+</div>
+<p class="point"><b>ポイント</b>1往復で足りるなら REST、できた端から見せたいなら SSE、双方向に常時やり取りするなら WebSocket。Claude の API 自体は HTTP と SSE で完結する。</p>
+<p class="note">※ 長い出力を1往復で待つと、途中の経路や SDK の待ち時間の上限にかかりやすくなります。長くなりそうな呼び出しは、逐次で受け取るのが安全です。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../05-models/06-sdk.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../05-models/08-q2.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +119,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

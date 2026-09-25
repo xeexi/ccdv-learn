@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 5</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../05-models/01-token.html"><span class="itm-n">5-1</span><span class="itm-t">次の1トークンを選び続ける</span></a>
+<a class="toc-link toc-sub" href="#token-unit">トークン ─ 数えるのも、払うのも、この単位</a>
+<a class="toc-link toc-sub" href="#token-sway">揺れは消せない ─ サンプリングと非決定性</a>
 <a class="itm toc-link" href="../05-models/02-window.html"><span class="itm-n">5-2</span><span class="itm-t">コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</span></a>
 <a class="itm toc-link" href="../05-models/03-think.html"><span class="itm-n">5-3</span><span class="itm-t">考えさせる量を選ぶ ─ thinking・effort・fast mode</span></a>
 <a class="itm toc-link" href="../05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a>
@@ -60,7 +62,47 @@
   <h2>5-1　次の1トークンを選び続ける</h2>
 </header>
 <p class="goal"><b>ゴール</b>同じ入力でも答えが変わる理由を、トークンと確率で説明できる。</p>
+<p class="lead">Claude は、答えの文章を先にまとめて決めてから書いているのではありません。<b>文章を細かく刻んだ単位（トークン）を1つずつ</b>、「次に来そうなもの」から選んでは後ろに繋げています。</p>
 <p class="task" data-s="llm-fundamentals"><span class="tn">DOMAIN 5</span><b>LLM Fundamentals</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">「今日の天気は」の次に来る1トークン ─ 候補ごとの確率（数値は説明用）</p>
+  <div class="fig-bars s1">
+    <div class="fig-bar"><span class="b-name">晴れ</span><span class="b-track"><span class="b-fill" style="width:46%"></span></span><span class="b-val">46%</span></div>
+    <div class="fig-bar"><span class="b-name">雨</span><span class="b-track"><span class="b-fill" style="width:24%"></span></span><span class="b-val">24%</span></div>
+    <div class="fig-bar"><span class="b-name">曇り</span><span class="b-track"><span class="b-fill" style="width:19%"></span></span><span class="b-val">19%</span></div>
+    <div class="fig-bar"><span class="b-name">どう</span><span class="b-track"><span class="b-fill" style="width:11%"></span></span><span class="b-val">11%</span></div>
+  </div>
+  <p class="fig-f">この中から<b>確率に従って1つ選び</b>、末尾に足して、また次の候補を計算する。終わりの合図を選ぶか、出力の上限（<code>max_tokens</code>）に達すると止まる。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>生成は「次の1トークンを確率で選ぶ」ことの繰り返し。文全体は、この選択を重ねた結果としてできあがる。</p>
+
+<h3 class="sub" id="token-unit">トークン ─ 数えるのも、払うのも、この単位</h3>
+<p class="goal"><b>ゴール</b>文字数ではなくトークン数で考える理由を言える。</p>
+<div class="detail">
+  <p>トークンは、単語や文字の断片です。どこで区切るかはモデル側の決まり（トークナイザ）で決まり、<b>同じ文でも、モデルが変われば数が変わる</b>ことがあります。</p>
+  <p>モデルが一度に扱える量も、出力の上限も、料金も、<b>すべてトークンで数えます</b>。文字数から見積もるとずれるので、実際の数は API に数えさせます（〈<a href="10-cost.html">トークンを数え、費用を見積もる</a>〉）。</p>
+</div>
+
+<h3 class="sub" id="token-sway">揺れは消せない ─ サンプリングと非決定性</h3>
+<p class="goal"><b>ゴール</b>揺れを前提にした確かめ方を選べる。</p>
+<div class="detail">
+  <p>確率に従って1つ選ぶことを<b>サンプリング</b>と言います。確率の高い候補ほど選ばれやすいものの、いつも最も高いものが選ばれるわけではありません。そのため<b>同じ入力でも、出力が同じになる保証はありません</b>。この性質を<b>非決定性</b>と呼びます。</p>
+  <p>選び方の散らばりを調整する値（<code>temperature</code> など）を受け付けるモデルもあります。ただし最も低くしても、<b>毎回同じ答えになる保証はなく</b>、答えが正しくなるわけでもありません。新しい世代には、この値の指定そのものを受け付けないモデルもあります。</p>
+  <table class="tbl">
+    <thead><tr><th>起きること</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td data-l="起きること">答えが回ごとに違う</td><td data-l="理由">選ぶ道筋が、確率で回ごとに変わる。言い回しだけでなく、結論が変わることもある</td></tr>
+      <tr><td data-l="起きること">ない関数名を書く</td><td data-l="理由">「それらしい並び」を選んだ結果。事実と照らし合わせて書いているわけではない</td></tr>
+      <tr><td data-l="起きること">自信満々で間違える</td><td data-l="理由">口調もまた、もっともらしさで選ばれる。口調と正しさは関係しない</td></tr>
+    </tbody>
+  </table>
+  <div class="myth">
+    <span class="t">誤解</span><span>「<code>temperature</code> を最も低くすれば、テストで完全一致を期待できる」</span>
+    <span class="t o">実際は</span><span>揺れはなくならない。<b>決まった文字列と比べるのではなく、形や含むべき内容を確かめ</b>、必要なら何回か流して判定する。</span>
+  </div>
+</div>
+<p class="point"><b>ポイント</b>揺れと、もっともらしい誤りは消せない。確かさが要るところは、モデルの外側（検証・仕組み）で受ける。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../index.html" title="トップへ（← キー）"><span class="vh">トップへ</span></a><a class="pgv next" href="../05-models/02-window.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -73,7 +115,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
-<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/quiz-data.js?v=212c3a25"></script>
+<script src="../assets/search-index.js?v=3b6a3f8c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
