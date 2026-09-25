@@ -141,6 +141,8 @@ const mRight = () => {
   main.querySelectorAll(':scope > *, :scope > * > .figbox, :scope > .cmp').forEach(el => {
     const r = el.getBoundingClientRect();
     if (r.width < 40 || r.height < 4) return;
+    // 行内の札（トップの資格名など）は中身の幅で終わるので、列の右端とは比べない
+    if (getComputedStyle(el).display.startsWith('inline')) return;
     out.push({ sel: el.tagName.toLowerCase() + (el.className ? '.' + String(el.className).split(' ')[0] : ''), right: Math.round(r.right) });
   });
   return out;

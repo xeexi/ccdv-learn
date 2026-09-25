@@ -275,9 +275,26 @@ export const COVER = {
   "agentic-customization": { sections: ["builtin", "extend"], topics: {
     "Tradeoffs among built-in Tools, custom Tools, Skills, and MCPs":      ["組み込みのツール", "自作のツール", "Skills", "MCP"],
     "selecting and applying the appropriate approach for a given use case": "4つの手の選び方" } },
-  "prompt-engineering": { sections: ["place", "clear", "refine"], topics: {} },
-  "context-engineering": { sections: ["prune", "isolate"], topics: {} },
-  "output-handling": { sections: ["struct", "doubt"], topics: {} },
+  "prompt-engineering": { sections: ["place", "clear", "refine"], topics: {
+    "instruction clarity":                                "はっきり頼む",
+    "few-shot examples":                                  "例を見せる",
+    "system versus user placement":                       "指示は system に、材料は user に",
+    "output constraints":                                 "出力の制約",
+    "prompt and instruction placement across components": "部品ごとの置き場所",
+    "iterative refinement":                               "プロンプトを直していく手順",
+    "prompt adjustment":                                  "直す場所を選ぶ",
+    "input sanitization":                                 "入力を整えてから渡す" } },
+  "context-engineering": { sections: ["prune", "isolate"], topics: {
+    "context window management":              "窓は、大きさの決まった予算",
+    "prevention of context drift and bloat":  ["膨らむ", "ずれる"],
+    "tool output pruning":                    "ツールの結果を刈り込む",
+    "compaction":                             "会話を圧縮する",
+    "context isolation through subagents or multi-step agentic workflows": ["子に切り出す", "段階に分ける"] } },
+  "output-handling": { sections: ["struct", "doubt"], topics: {
+    "structured output patterns":         "output_config\\.format",
+    "response validation":                "中身は確かめる",
+    "defensive parsing":                  "壊れた出力に備える",
+    "skepticism toward confident output": "自信のある出力ほど疑う" } },
   "agent-architecture": { sections: ["workflow", "supervisor"], topics: {} },
   "agent-patterns": { sections: ["loop", "memory", "framework"], topics: {} },
   "agent-construction": { sections: ["agentsdk", "harness", "deploy", "hooks"], topics: {} },
@@ -378,6 +395,22 @@ export const GLOSSARY = [
   { d: "tools", en: "MCP resources, tools, and prompts",                 ja: "MCP のリソース・ツール・プロンプト" },
   { d: "tools", en: "stdio",                                             ja: "標準入出力でのつなぎ方（stdio）" },
   { d: "tools", en: "Tradeoffs among built-in Tools, custom Tools, Skills, and MCPs", ja: "組み込み・自作・Skills・MCP の使い分け" },
+
+  { d: "prompt", en: "instruction clarity",                                ja: "指示のはっきりさ" },
+  { d: "prompt", en: "few-shot examples",                                  ja: "少数の例（few-shot）" },
+  { d: "prompt", en: "system versus user placement",                       ja: "system と user の置き分け" },
+  { d: "prompt", en: "output constraints",                                 ja: "出力の制約" },
+  { d: "prompt", en: "prompt and instruction placement across components", ja: "部品ごとの指示の置き場所" },
+  { d: "prompt", en: "iterative refinement",                               ja: "結果を見ながらの手直し" },
+  { d: "prompt", en: "input sanitization",                                 ja: "渡す前の入力の整え方" },
+  { d: "prompt", en: "prevention of context drift and bloat",              ja: "文脈のずれと膨らみの防止" },
+  { d: "prompt", en: "tool output pruning",                                ja: "ツールの結果の刈り込み" },
+  { d: "prompt", en: "compaction",                                         ja: "圧縮（会話を要約に置き換えること）" },
+  { d: "prompt", en: "context isolation",                                  ja: "文脈の切り分け" },
+  { d: "prompt", en: "structured output patterns",                         ja: "構造化出力の型" },
+  { d: "prompt", en: "response validation",                                ja: "応答の検証" },
+  { d: "prompt", en: "defensive parsing",                                  ja: "壊れた出力に備えた読み取り" },
+  { d: "prompt", en: "skepticism toward confident output",                 ja: "自信のある出力への疑い" },
 ];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
@@ -389,6 +422,9 @@ export const QUOTES = [];
 export const TERMS = {
   "窓":               "context window",
   "キャッシュの区切り": "cache check-pointing",
+  "刈り込み":          "tool output pruning",
+  "圧縮":             "compaction",
+  "子":               "subagent",
 };
 
 /** 節の「登場人物」。本文に `<p class="cast" data-cast="app,claude"></p>` と置くと

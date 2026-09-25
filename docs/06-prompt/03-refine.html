@@ -41,6 +41,8 @@
   <nav class="toc-list"><a class="itm toc-link" href="../06-prompt/01-place.html"><span class="itm-n">6-1</span><span class="itm-t">指示は system に、材料は user に</span></a>
 <a class="itm toc-link" href="../06-prompt/02-clear.html"><span class="itm-n">6-2</span><span class="itm-t">はっきり頼む ─ 基準・制約・例</span></a>
 <a class="itm toc-link on" href="../06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a>
+<a class="toc-link toc-sub" href="#refine-adjust">失敗の見え方から、直す場所を選ぶ</a>
+<a class="toc-link toc-sub" href="#refine-input">入力を整えてから渡す</a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
 <a class="itm toc-link" href="../06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a>
 <a class="itm toc-link" href="../06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a>
@@ -57,7 +59,52 @@
   <h2>6-3　直しながら寄せる・入力を整える</h2>
 </header>
 <p class="goal"><b>ゴール</b>結果を見てプロンプトを直す手順と、入力を整えてから渡す理由を説明できる。</p>
+<p class="lead">最初のプロンプトで完成することは、まずありません。<b>何をもって成功とするかを先に決め</b>、確かめながら直していきます。</p>
 <p class="task" data-s="prompt-engineering"><span class="tn">DOMAIN 6</span><b>Prompt Engineering</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">プロンプトを直していく手順 ─ 直すたびに、同じテストで比べる</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">基準</span><span class="fig-do">成功の基準を決める。具体的で、測れるものにする</span></li>
+    <li class="s2"><span class="fig-who">テスト</span><span class="fig-do">確かめる例を集める。端の場合も入れ、なるべく自動で採点する</span></li>
+    <li class="s3"><span class="fig-who">初稿</span><span class="fig-do">プロンプトを書いて、テストを流す</span></li>
+    <li class="s4"><span class="fig-who">直す</span><span class="fig-do">失敗を見て、指示や例を足す・直す。1回に1か所ずつ</span></li>
+    <li class="s5"><span class="fig-who">出す</span><span class="fig-do">基準を満たしたら、最後の確かめをして出す</span></li>
+  </ol>
+  <p class="fig-f">感覚で直すと、ある例が良くなった代わりに別の例が悪くなっても気づけない。<b>比べる相手は、いつも同じテスト</b>。</p>
+</figure></div>
+
+<h3 class="sub" id="refine-adjust">失敗の見え方から、直す場所を選ぶ</h3>
+<p class="goal"><b>ゴール</b>見えた失敗から、プロンプトのどこを直すかを選べる。</p>
+<table class="tbl">
+  <thead><tr><th>見えた失敗</th><th>直す場所</th></tr></thead>
+  <tbody>
+    <tr><td data-l="見えた失敗">形の崩れ</td><td data-l="直す場所">出力の形をはっきり書く。例を見せる。プログラムで読むなら構造化出力</td></tr>
+    <tr><td data-l="見えた失敗">判断の揺れ</td><td data-l="直す場所">判断の基準と理由を書く。迷いやすい例を、例として見せる</td></tr>
+    <tr><td data-l="見えた失敗">やりすぎ</td><td data-l="直す場所">頼んでいないことまでする。してほしい範囲を、はっきり書く</td></tr>
+    <tr><td data-l="見えた失敗">効きすぎ</td><td data-l="直す場所">不要な場面でも従おうとする。強い口調を和らげ、細かすぎる手順を減らす</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>難しい出力は、下書き → 基準に照らした見直し → 手直し、と<b>別々の呼び出しに分ける</b>と、それぞれを確かめながら直せます。</p>
+</div>
+
+<h3 class="sub" id="refine-input">入力を整えてから渡す</h3>
+<p class="goal"><b>ゴール</b>利用者の入力や外から取った中身を、プロンプトに入れる前に整える理由と方法を言える。</p>
+<div class="detail">
+  <p>利用者の入力や、Web・メール・ファイルから取ってきた中身には、指示に見える文が混じることがあります。そのまま指示の続きにつなげると、Claude は<b>どこまでが指示で、どこからが材料か</b>を見分けられません。</p>
+  <table class="tbl">
+    <thead><tr><th>整え方</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="整え方">区切る</td><td data-l="中身">材料はタグで囲むか、ツールの結果として渡す。<code>system</code> には入れない</td></tr>
+      <tr><td data-l="整え方">包む</td><td data-l="中身">信頼できない中身は JSON の文字列にして渡す。中にタグや引用符があっても、材料の外に抜け出せない</td></tr>
+      <tr><td data-l="整え方">添える</td><td data-l="中身">「知らない送り主からのメールの本文」のように、何がどこから来たかを書き添える</td></tr>
+      <tr><td data-l="整え方">決める</td><td data-l="中身">材料の中の指示には従わないことを、<code>system</code> で決めておく</td></tr>
+    </tbody>
+  </table>
+  <p>入力を整えるのは、答えの質のためだけでなく、仕込まれた指示から守るためでもあります（〈<a href="../07-security/01-inject.html">仕込まれた指示を効かせない</a>〉）。</p>
+</div>
+<p class="point"><b>ポイント</b>直すときは基準とテストを先に決め、1か所ずつ比べる。外から来た中身は、区切って、データとして渡す。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/02-clear.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/04-q1.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +117,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

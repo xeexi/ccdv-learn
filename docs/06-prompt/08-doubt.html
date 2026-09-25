@@ -46,6 +46,7 @@
 <a class="itm toc-link" href="../06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a>
 <a class="itm toc-link" href="../06-prompt/07-struct.html"><span class="itm-n">6-7</span><span class="itm-t">出力を形で受け取り、確かめる</span></a>
 <a class="itm toc-link on" href="../06-prompt/08-doubt.html"><span class="itm-n">6-8</span><span class="itm-t">自信のある出力ほど疑う</span></a>
+<a class="toc-link toc-sub" href="#doubt-sure">自信と正しさは別</a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/09-q2.html"><span class="itm-n">6-9</span><span class="itm-t">理解度チェック ─ 文脈と出力</span></a></nav>
 </aside>
 <main class="doc">
@@ -57,7 +58,32 @@
   <h2>6-8　自信のある出力ほど疑う</h2>
 </header>
 <p class="goal"><b>ゴール</b>もっともらしい誤りを、確かめ方と止め方で防げる。</p>
+<p class="lead">口調の確かさと、中身の正しさは関係しません（〈<a href="../05-models/01-token.html">次の1トークンを選び続ける</a>〉）。確かさが要るところでは、出力をそのまま信じず、<b>確かめる仕組みを先に組みます</b>。</p>
 <p class="task" data-s="output-handling"><span class="tn">DOMAIN 6</span><b>Output Handling</b></p>
+
+<table class="tbl">
+  <thead><tr><th>手</th><th>すること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手">不明を許す</td><td data-l="すること">分からないときは「分からない」と答えてよい、と明示する</td></tr>
+    <tr><td data-l="手">引用を先に</td><td data-l="すること">長い資料から、根拠になる箇所を一字一句抜き出させてから答えさせる</td></tr>
+    <tr><td data-l="手">出典を示す</td><td data-l="すること">主張ごとに出典を示させ、支える箇所が無い主張は取り下げさせる。Citations の機能を使うと、資料の該当箇所を指させられる</td></tr>
+    <tr><td data-l="手">資料に限る</td><td data-l="すること">渡した資料だけを根拠にするよう指示する</td></tr>
+    <tr><td data-l="手">何回か出す</td><td data-l="すること">同じ問いに何回か答えさせ、答えが割れたら疑う</td></tr>
+    <tr><td data-l="手">外で検証</td><td data-l="すること">コードはテストで、計算は計算で、事実はツールで確かめる</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>減らす手はあっても、もっともらしい誤りはなくならない。確かさが要る出力は、使う前に外で確かめる。</p>
+
+<h3 class="sub" id="doubt-sure">自信と正しさは別</h3>
+<p class="goal"><b>ゴール</b>自信のある口調の出力でも、確かめが要る理由を言える。</p>
+<div class="detail">
+  <p>Claude は、もっともらしい続きを選んで書きます。存在しない関数名や、ありそうな数字も、同じ滑らかさで書かれます。<b>口調が確かなことは、確かめなくてよい理由になりません。</b></p>
+  <p>コードの作業では、開いていないファイルの中身を推測させず、必ず読ませてから答えさせます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「自信ありげに、はっきり答えた出力は正しい」</span>
+    <span class="t o">実際は</span><span>口調も、もっともらしさで選ばれている。<b>確かさは、出典やテストで外から確かめる</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/07-struct.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/09-q2.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +96,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

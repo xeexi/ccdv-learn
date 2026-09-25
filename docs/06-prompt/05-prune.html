@@ -43,6 +43,9 @@
 <a class="itm toc-link" href="../06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
 <a class="itm toc-link on" href="../06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a>
+<a class="toc-link toc-sub" href="#prune-why">膨らむ、ずれる</a>
+<a class="toc-link toc-sub" href="#prune-tool">ツールの結果を刈り込む</a>
+<a class="toc-link toc-sub" href="#prune-compact">会話を圧縮する</a>
 <a class="itm toc-link" href="../06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a>
 <a class="itm toc-link" href="../06-prompt/07-struct.html"><span class="itm-n">6-7</span><span class="itm-t">出力を形で受け取り、確かめる</span></a>
 <a class="itm toc-link" href="../06-prompt/08-doubt.html"><span class="itm-n">6-8</span><span class="itm-t">自信のある出力ほど疑う</span></a>
@@ -57,7 +60,44 @@
   <h2>6-5　窓を守る ─ 刈り込みと圧縮</h2>
 </header>
 <p class="goal"><b>ゴール</b>文脈が膨らみ、ずれていく原因と、刈り込み・圧縮の使いどころを説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">長く続く会話やエージェントでは、窓の中身が増え続けます。読み終えたツールの結果が居座り、肝心の指示が埋もれていく。これを防ぐ手が<b><span data-en="刈り込み">刈り込み（tool output pruning）</span></b>と<b><span data-en="圧縮">圧縮（compaction）</span></b>で、窓の外に書き出す<b>記憶</b>と組み合わせて使います。</p>
 <p class="task" data-s="context-engineering"><span class="tn">DOMAIN 6</span><b>Context Engineering</b></p>
+
+<table class="tbl">
+  <thead><tr><th>手</th><th>すること</th><th>向くとき</th><th>残るもの</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手"><b>刈り込み</b></td><td data-l="すること">古いツールの結果（や、考えた内容）を消す</td><td data-l="向くとき">ツールを何度も呼ぶ長い作業で、結果はもう読み終えた</td><td data-l="残るもの">会話の流れは残り、古い結果の中身だけが消える</td></tr>
+    <tr><td data-l="手"><b>圧縮</b></td><td data-l="すること">それまでの会話を、要約に置き換える</td><td data-l="向くとき">窓の上限に近づいた</td><td data-l="残るもの">要約に書かれたことだけ。細部は落ちる</td></tr>
+    <tr><td data-l="手"><b>記憶</b></td><td data-l="すること">大事なことを窓の外のファイルに書き出し、要るときに読む</td><td data-l="向くとき">会話やセッションをまたいで続く仕事</td><td data-l="残るもの">書き出したものは、窓を空にしても残る</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>刈り込みと圧縮は1つの会話の中で窓を空け、記憶は会話をまたいで残す。長く動くエージェントは、3つを組み合わせる。</p>
+
+<h3 class="sub" id="prune-why">膨らむ、ずれる</h3>
+<p class="goal"><b>ゴール</b>文脈が膨らむこととずれることが、それぞれ何を引き起こすかを言える。</p>
+<div class="detail">
+  <p><b>膨らむ</b>のは、大きなツールの結果（ファイルの全文、長い検索結果）が積み重なるからです。入れた分だけ費用と待ち時間が増え、窓が大きくても、量が増えるほど必要なことを正しく拾いにくくなります。窓は、大きさの決まった予算として使います。</p>
+  <p><b>ずれる</b>のは、長い作業のあいだに最初の目的や制約が薄まり、目の前の細部に引きずられるからです。途中で目的を書き直す、進み具合をメモに残す、といった手で引き戻します。</p>
+</div>
+
+<h3 class="sub" id="prune-tool">ツールの結果を刈り込む</h3>
+<p class="goal"><b>ゴール</b>ツールの結果を、返す前と返した後の両方で減らせる。</p>
+<div class="detail">
+  <p>まず、<b>返す前に減らします</b>。ツールは、要る項目だけを、件数を絞って返すように作ります。全文が要らない調べ物なら、要点や該当箇所だけを返します。</p>
+  <p>次に、<b>読み終えた結果を消します</b>。API には、古いツールの結果を自動で消す機能（context editing、ベータ）があります。消えるのは結果の中身で、ツールを呼んだという流れは残ります。</p>
+</div>
+
+<h3 class="sub" id="prune-compact">会話を圧縮する</h3>
+<p class="goal"><b>ゴール</b>圧縮で失われるものと、その備えを言える。</p>
+<div class="detail">
+  <p>圧縮は、それまでの会話を要約に置き換えて、窓を空けます。API では、上限に近づいたところで自動で要約する機能（compaction、ベータ）があり、Claude Code では <code>/compact</code> で自分から、または上限の手前で自動で行われます。</p>
+  <p>要約は細部を落とします。<b>後で要る決定や数字は、圧縮の前に記憶（ファイル）へ書き出して</b>おきます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「窓の大きいモデルなら、刈り込みも圧縮も要らない」</span>
+    <span class="t o">実際は</span><span>入れた分だけ毎回の費用と待ち時間がかかり、量が増えるほど必要なことを拾いにくくなる。<b>大きさに頼らず、中身を選ぶ</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/04-q1.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/06-isolate.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

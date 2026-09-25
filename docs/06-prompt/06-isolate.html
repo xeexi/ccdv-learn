@@ -44,6 +44,8 @@
 <a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
 <a class="itm toc-link" href="../06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a>
 <a class="itm toc-link on" href="../06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a>
+<a class="toc-link toc-sub" href="#isolate-handoff">子に渡すもの、返させるもの</a>
+<a class="toc-link toc-sub" href="#isolate-steps">段階に分ける</a>
 <a class="itm toc-link" href="../06-prompt/07-struct.html"><span class="itm-n">6-7</span><span class="itm-t">出力を形で受け取り、確かめる</span></a>
 <a class="itm toc-link" href="../06-prompt/08-doubt.html"><span class="itm-n">6-8</span><span class="itm-t">自信のある出力ほど疑う</span></a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/09-q2.html"><span class="itm-n">6-9</span><span class="itm-t">理解度チェック ─ 文脈と出力</span></a></nav>
@@ -57,7 +59,38 @@
   <h2>6-6　文脈を分ける ─ 子と段階処理</h2>
 </header>
 <p class="goal"><b>ゴール</b>仕事を別の文脈に切り出すと何が守られるかを説明できる。</p>
+<p class="cast" data-cast="parent,child,parent"><span class="c-amber">親</span><span class="c-ar">→</span><span class="c-amber">子</span><span class="c-ar">→</span><span class="c-amber">親</span></p>
+<p class="lead">大量に読む調べ物を、本筋と同じ窓の中でやると、読んだものが全部居座ります。別の窓で動く<span data-en="子">子（subagent）</span>に任せ、<b>要点だけを持ち帰らせれば</b>、本筋の窓は汚れません。</p>
 <p class="task" data-s="context-engineering"><span class="tn">DOMAIN 6</span><b>Context Engineering</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">子に切り出す ─ 持ち帰るのは要点だけ</p>
+  <div class="fig-row flow" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">親</b><span class="fig-note">本筋の窓。子に、仕事と条件を渡す</span></div>
+    <div class="fig-card s2"><b class="fig-h">子</b><span class="fig-note">新しい窓で、大量に読んで試す</span></div>
+    <div class="fig-card key s3"><b class="fig-h">親に返るもの</b><span class="fig-note">要点をまとめた結果だけ</span></div>
+  </div>
+  <p class="fig-f">子が読んだ大量の中身は、<b>子の窓とともに捨てられる</b>。親の窓に入るのは、まとめた結果だけ。</p>
+</figure></div>
+
+<h3 class="sub" id="isolate-handoff">子に渡すもの、返させるもの</h3>
+<p class="goal"><b>ゴール</b>子に何を渡し、何を返させるかを決められる。</p>
+<div class="detail">
+  <p>子は、空の窓から始まります。<b>親の会話は見えない</b>ので、仕事の目的・条件・必要な資料を、はっきり渡します。「さっきの件を調べて」では伝わりません。</p>
+  <p>返させるものは、<b>親が次の判断に使う形</b>に決めます。読んだものの丸写しではなく、結論と根拠、見つからなかったこと、を短く返させます。</p>
+</div>
+
+<h3 class="sub" id="isolate-steps">段階に分ける</h3>
+<p class="goal"><b>ゴール</b>1つの長い処理を段階に分けると、文脈の面で何が良くなるかを言える。</p>
+<div class="detail">
+  <p>子を使わなくても、処理を段階に分ければ文脈は分けられます。抜き出す、確かめる、まとめる、と段階ごとに呼び出しを分け、<b>各段階には、その段階に要るものだけを渡します</b>。前の段階の出力も、次に要る部分だけを渡します。</p>
+  <p>段階の境目では、出力を確かめてから次へ進めます。どこで崩れたかも、段階ごとに見れば分かります。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「子をたくさん並べれば、速くて安い」</span>
+    <span class="t o">実際は</span><span>子はそれぞれ自分の窓でトークンを使うので、<b>並べるほど総量は増える</b>。分けるのは、本筋の窓を守りたいとき、並べると速くなる仕事のとき。</span>
+  </div>
+</div>
+<p class="point"><b>ポイント</b>文脈を分ける目的は、本筋の窓に要点だけを入れること。子には必要なものを明示して渡し、要点だけを返させる。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/05-prune.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/07-struct.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +103,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

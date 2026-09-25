@@ -39,6 +39,9 @@
 <aside class="toc">
   <div class="toc-head">Domain 6</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../06-prompt/01-place.html"><span class="itm-n">6-1</span><span class="itm-t">指示は system に、材料は user に</span></a>
+<a class="toc-link toc-sub" href="#place-system">system に置くもの</a>
+<a class="toc-link toc-sub" href="#place-long">長い資料は先頭に、質問は最後に</a>
+<a class="toc-link toc-sub" href="#place-parts">部品ごとの置き場所</a>
 <a class="itm toc-link" href="../06-prompt/02-clear.html"><span class="itm-n">6-2</span><span class="itm-t">はっきり頼む ─ 基準・制約・例</span></a>
 <a class="itm toc-link" href="../06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
@@ -57,7 +60,44 @@
   <h2>6-1　指示は system に、材料は user に</h2>
 </header>
 <p class="goal"><b>ゴール</b>指示と材料をどこに置くかで、効き方がどう変わるかを説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">同じ文でも、どこに置くかで扱いが変わります。<code>system</code> はアプリを運営する側の声、<code>user</code> は利用者の声、ツールの結果は外から届いたデータとして読まれます。</p>
 <p class="task" data-s="prompt-engineering"><span class="tn">DOMAIN 6</span><b>Prompt Engineering</b></p>
+
+<table class="tbl">
+  <thead><tr><th>置き場所</th><th>誰の声として読まれるか</th><th>置くもの</th></tr></thead>
+  <tbody>
+    <tr><td data-l="置き場所"><code>system</code></td><td data-l="誰の声として読まれるか">アプリを運営する側</td><td data-l="置くもの">役割、最初から効かせたい指示、方針（ツールの結果はデータとして扱う、など）</td></tr>
+    <tr><td data-l="置き場所"><code>user</code></td><td data-l="誰の声として読まれるか">利用者</td><td data-l="置くもの">今回の依頼、資料、質問</td></tr>
+    <tr><td data-l="置き場所">ツール結果</td><td data-l="誰の声として読まれるか">外から届いたデータ</td><td data-l="置くもの">ツールが返した内容。信頼できない中身は、ここに入れる</td></tr>
+    <tr><td data-l="置き場所">ツール説明</td><td data-l="誰の声として読まれるか">道具の説明書</td><td data-l="置くもの">いつ使うか、引数の意味</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>役割と方針は <code>system</code>、今回の依頼と資料は <code>user</code>。外から来た中身には、指示の権限を与えない。</p>
+
+<h3 class="sub" id="place-system">system に置くもの</h3>
+<p class="goal"><b>ゴール</b>役割と方針を system に置く理由を言える。</p>
+<div class="detail">
+  <p><code>system</code> に役割を1文書くだけでも、振る舞いと口調が定まります。会話の最初から最後まで効かせたい方針も、ここに置きます。運営する側の指示と利用者の依頼がぶつかったときは、運営する側の指示が優先されます。</p>
+  <p>途中から効かせたい指示を足すために <code>system</code> の本文を書き換えると、キャッシュがすべて外れます。対応するモデルでは、会話の途中に <code>system</code> のメッセージを足す形を使えば、それまでの部分を使い回せます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「外から取ってきた文章も <code>system</code> に入れれば、確実に読ませられる」</span>
+    <span class="t o">実際は</span><span><code>system</code> に入れると、その文章に<b>運営する側の権限</b>を与えてしまう。信頼できない中身は、ツールの結果に入れて、データとして扱わせる。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="place-long">長い資料は先頭に、質問は最後に</h3>
+<p class="goal"><b>ゴール</b>長い資料と質問の並べ方を決められる。</p>
+<div class="detail">
+  <p>長い資料を渡すときは、<b>資料をプロンプトの先頭に、質問や指示を最後に</b>置きます。質問を最後に置くと、応答の質が上がります。資料が複数なら、1つずつタグで区切って出どころを添え、答える前に関係する箇所を抜き出させます。</p>
+</div>
+
+<h3 class="sub" id="place-parts">部品ごとの置き場所</h3>
+<p class="goal"><b>ゴール</b>アプリを作る部品ごとに、どの指示をどこに置くかを選べる。</p>
+<div class="detail">
+  <p>Claude を使うアプリでは、指示は1か所ではなく部品に分かれて入ります。道具をいつ使うかはツールの説明に、方針は <code>system</code> に、今回の依頼は <code>user</code> に書きます。<b>自分の指示を、ツールの結果の中に混ぜない</b>のも決まりです。結果の中の指示は、Claude がデータとして疑ってかかるからです。</p>
+  <p>Claude Code なら、いつも効かせる約束は CLAUDE.md に、必要なときだけの手順は Skills に置きます（〈<a href="../03-claude-code/01-parts.html">Claude Code の部品</a>〉）。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../08-tools/09-q2.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/02-clear.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

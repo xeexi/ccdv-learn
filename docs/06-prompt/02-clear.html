@@ -40,6 +40,9 @@
   <div class="toc-head">Domain 6</div>
   <nav class="toc-list"><a class="itm toc-link" href="../06-prompt/01-place.html"><span class="itm-n">6-1</span><span class="itm-t">指示は system に、材料は user に</span></a>
 <a class="itm toc-link on" href="../06-prompt/02-clear.html"><span class="itm-n">6-2</span><span class="itm-t">はっきり頼む ─ 基準・制約・例</span></a>
+<a class="toc-link toc-sub" href="#clear-why">理由を添え、してほしいことを書く</a>
+<a class="toc-link toc-sub" href="#clear-example">例を見せる</a>
+<a class="toc-link toc-sub" href="#clear-output">出力の制約</a>
 <a class="itm toc-link" href="../06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a>
 <a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
 <a class="itm toc-link" href="../06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a>
@@ -57,7 +60,54 @@
   <h2>6-2　はっきり頼む ─ 基準・制約・例</h2>
 </header>
 <p class="goal"><b>ゴール</b>あいまいな指示を、基準・出力の制約・例で直せる。</p>
+<p class="lead">Claude は、優秀でも<b>事情を知らない新しい同僚</b>のように指示を読みます。前提を知らない人が読んで迷う指示なら、Claude も迷います。</p>
 <p class="task" data-s="prompt-engineering"><span class="tn">DOMAIN 6</span><b>Prompt Engineering</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">あいまい</p>
+  <pre class="code">この問い合わせを分類して。</pre>
+  <p class="codelabel">はっきり</p>
+  <pre class="code">&lt;instructions&gt;
+問い合わせを「請求」「配送」「その他」の1つに分類する。<span class="n">1</span>
+複数に当たるときは、利用者が最初に困っていることで決める。<span class="n">2</span>
+答えは、カテゴリ名だけを書く。<span class="n">3</span>
+&lt;/instructions&gt;
+&lt;inquiry&gt;（問い合わせの本文）&lt;/inquiry&gt;<span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>何をするかと、選べるものをはっきり書く。</span></li>
+    <li><span class="n">2</span><span>迷う場合の決め方（判断の基準）を書く。</span></li>
+    <li><span class="n">3</span><span>出力の形と長さを決める。</span></li>
+    <li><span class="n">4</span><span>指示と材料を、タグで分ける。材料の中の文を、指示と取り違えさせない。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>何を・どんな基準で・どんな形で、の3つを書き、指示と材料をタグで分ける。</p>
+
+<h3 class="sub" id="clear-why">理由を添え、してほしいことを書く</h3>
+<p class="goal"><b>ゴール</b>禁止の羅列より、理由と望む形を書くほうが効く理由を言える。</p>
+<div class="detail">
+  <p>指示には理由を添えます。「省略記号を使わない」だけより「音声で読み上げるので、省略記号を使わない」のほうが、Claude は似た場面にも正しく広げられます。「〜しないで」を並べるより、<b>代わりにどうしてほしいか</b>を書きます。</p>
+  <p>「絶対に」「必ず」のような強い口調は、新しいモデルでは効きすぎて、不要な場面でも従おうとすることがあります。古いモデル向けに書いた細かすぎる手順も、かえって出来を下げることがあります。</p>
+</div>
+
+<h3 class="sub" id="clear-example">例を見せる</h3>
+<p class="goal"><b>ゴール</b>よい例の条件を言える。</p>
+<table class="tbl">
+  <thead><tr><th>条件</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="条件">数</td><td data-l="中身">3〜5個が目安（公式の推奨）</td></tr>
+    <tr><td data-l="条件">関係がある</td><td data-l="中身">実際の入力に近い例にする</td></tr>
+    <tr><td data-l="条件">互いに違う</td><td data-l="中身">端の場合も含め、意図しない特徴まで真似されないよう、ばらつかせる</td></tr>
+    <tr><td data-l="条件">区切る</td><td data-l="中身">例は <code>&lt;example&gt;</code> のようなタグで囲み、指示と分ける</td></tr>
+  </tbody>
+</table>
+<p class="note">※ 例の数と費用の関係は〈<a href="../05-models/04-shot.html">例を何個見せるか</a>〉で扱いました。</p>
+
+<h3 class="sub" id="clear-output">出力の制約</h3>
+<p class="goal"><b>ゴール</b>出力の形と長さを決める方法を選べる。</p>
+<div class="detail">
+  <p>出力の形は、言葉で指定するか、タグで囲ませるか、プログラムで読むなら構造化出力で縛ります（〈<a href="07-struct.html">出力を形で受け取り、確かめる</a>〉）。長さや書き方も、望む形をそのまま書きます。</p>
+  <p>プロンプトの書き方は、出力に移ります。プロンプトを見出しや箇条書きだらけにすると、出力もそうなりやすくなります。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../06-prompt/01-place.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/03-refine.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +120,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=0c34ad23"></script>
-<script src="../assets/search-index.js?v=d6823bfa"></script>
+<script src="../assets/quiz-data.js?v=95b40fc6"></script>
+<script src="../assets/search-index.js?v=5dc0b7f5"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
