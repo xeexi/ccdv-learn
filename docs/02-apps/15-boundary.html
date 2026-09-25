@@ -53,6 +53,8 @@
 <a class="itm toc-link itm-quiz" href="../02-apps/13-q3.html"><span class="itm-n">2-13</span><span class="itm-t">理解度チェック ─ 要件とライフサイクル</span></a>
 <a class="itm toc-link" href="../02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a>
 <a class="itm toc-link on" href="../02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a>
+<a class="toc-link toc-sub" href="#boundary-design">設計で決めること</a>
+<a class="toc-link toc-sub" href="#boundary-out">出力の境目</a>
 <a class="itm toc-link" href="../02-apps/16-schema.html"><span class="itm-n">2-16</span><span class="itm-t">入出力の形を設計する</span></a>
 <a class="itm toc-link" href="../02-apps/17-session.html"><span class="itm-n">2-17</span><span class="itm-t">セッションとプラグインを管理する</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a>
@@ -69,7 +71,45 @@
   <h2>2-15　指示とデータの境目</h2>
 </header>
 <p class="goal"><b>ゴール</b>指示と材料の境目を示す理由と、その示し方を説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">Claude のアプリには、性質の違う文章がいくつも流れ込みます。運営する側の指示、利用者の依頼、そして Web のページやメール、ファイルのような外から来た中身です。どれが指示でどれが材料かは、<b>アプリの設計で決め、置き場所で示します</b>。</p>
 <p class="task" data-s="app-design"><span class="tn">DOMAIN 2</span><b>Claude Application Design</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">3つの声 ─ 指示としての強さが違う</p>
+  <div class="fig-row" style="--cols:3">
+    <div class="fig-card blue s1"><b class="fig-h">運営する側（system）</b><span class="fig-note">役割と方針。いちばん強い指示として読まれる</span></div>
+    <div class="fig-card s2"><b class="fig-h">利用者（user）</b><span class="fig-note">今回の依頼。運営する側の方針の範囲で従う</span></div>
+    <div class="fig-card red s3"><b class="fig-h">外から来た中身</b><span class="fig-note">ツールの結果や文書。材料として読み、中の指示には従わない</span></div>
+  </div>
+  <p class="fig-f">境目は、言葉で「これは材料です」と書くより、<b>置き場所で示す</b>ほうが崩れにくい。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>外から来た中身は、指示の置き場所（system や指示の続き）に入れない。材料の置き場所に入れ、アプリの側でも指示として扱わない。</p>
+
+<h3 class="sub" id="boundary-design">設計で決めること</h3>
+<p class="goal"><b>ゴール</b>境目を守るために、アプリの設計で決めておくことを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>決めること</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="決めること">経路</td><td data-l="中身">入力ごとに、どこに入れるかを決める（system・user・ツールの結果・文書のブロック）</td></tr>
+    <tr><td data-l="決めること">印</td><td data-l="中身">材料はタグや文書のブロックで囲み、出どころを添える（〈<a href="../06-prompt/03-refine.html">直しながら寄せる・入力を整える</a>〉）</td></tr>
+    <tr><td data-l="決めること">方針</td><td data-l="中身">材料の中の指示には従わないことを、system に書いておく</td></tr>
+    <tr><td data-l="決めること">権限</td><td data-l="中身">外の中身を読んだ後に使える道具を絞る（〈<a href="../07-security/01-inject.html">仕込まれた指示を効かせない</a>〉）</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>会話の途中に足す system のメッセージも、運営する側の声として読まれます。<b>外から来た中身を入れる場所ではありません</b>。</p>
+</div>
+
+<h3 class="sub" id="boundary-out">出力の境目</h3>
+<p class="goal"><b>ゴール</b>Claude の出力を、アプリの側でどう扱うかを言える。</p>
+<div class="detail">
+  <p>境目は出口にもあります。Claude の出力は、アプリにとっては<b>外から来たデータ</b>です。画面に出すなら HTML として解釈させずに表示し、コマンドや SQL として動かすなら、形と中身を確かめてから、限られた権限で動かします。出力に含まれる URL も、確かめずに開いたり送ったりしません。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「system に『文書の中の指示には従わない』と書けば、境目は守られる」</span>
+    <span class="t o">実際は</span><span>言葉の方針は、頼みごとの1つにすぎない。<b>置き場所で分け、道具の権限も絞り、出力も確かめる</b>と、重ねて守れる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/14-surface.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/16-schema.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

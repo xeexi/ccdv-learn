@@ -44,6 +44,8 @@
 <a class="itm toc-link" href="../02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a>
 <a class="itm toc-link on" href="../02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a>
+<a class="toc-link toc-sub" href="#rest-status">ステータスコードの読み方</a>
+<a class="toc-link toc-sub" href="#rest-json">JSON の形</a>
 <a class="itm toc-link" href="../02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a>
 <a class="itm toc-link" href="../02-apps/08-change.html"><span class="itm-n">2-8</span><span class="itm-t">変更を管理する ─ バージョン管理・開発工程・レビュー</span></a>
 <a class="itm toc-link" href="../02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a>
@@ -69,7 +71,56 @@
   <h2>2-6　REST と JSON</h2>
 </header>
 <p class="goal"><b>ゴール</b>REST の作法と JSON の形で、API のやり取りを読める。</p>
+<p class="lead">REST は、Web の API をつくる作法です。操作したい対象を URL で表し、何をするかを HTTP のメソッドで、結果をステータスコードで表します。本文には JSON がよく使われます。Claude の API も、アプリの道具が呼ぶ社内の API も、この作法の上にあります（Claude の API の実物は〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉）。</p>
 <p class="task" data-s="se-foundations"><span class="tn">DOMAIN 2</span><b>Software Engineering Foundations</b></p>
+
+<table class="tbl">
+  <thead><tr><th>メソッド</th><th>すること</th><th>同じ要求を繰り返すと</th></tr></thead>
+  <tbody>
+    <tr><td data-l="メソッド"><code>GET</code></td><td data-l="すること">取得する</td><td data-l="同じ要求を繰り返すと">状態は変わらない</td></tr>
+    <tr><td data-l="メソッド"><code>POST</code></td><td data-l="すること">作る・処理を頼む</td><td data-l="同じ要求を繰り返すと">そのたびに新しく作られうる</td></tr>
+    <tr><td data-l="メソッド"><code>PUT</code></td><td data-l="すること">丸ごと置き換える</td><td data-l="同じ要求を繰り返すと">何度送っても同じ状態になる</td></tr>
+    <tr><td data-l="メソッド"><code>PATCH</code></td><td data-l="すること">一部を変える</td><td data-l="同じ要求を繰り返すと">書き方しだい</td></tr>
+    <tr><td data-l="メソッド"><code>DELETE</code></td><td data-l="すること">消す</td><td data-l="同じ要求を繰り返すと">何度送っても消えたまま</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>再試行してよいかは、繰り返しても結果が変わらないか（冪等か）で決まる。<code>POST</code> を再試行するなら、二重に作らない工夫と組にする。</p>
+
+<h3 class="sub" id="rest-status">ステータスコードの読み方</h3>
+<p class="goal"><b>ゴール</b>ステータスコードの範囲から、誰の誤りで、再試行してよいかを言える。</p>
+<table class="tbl">
+  <thead><tr><th>範囲</th><th>意味</th><th>例と、次の手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="範囲"><code>2xx</code></td><td data-l="意味">成功</td><td data-l="例と、次の手"><code>200</code> など。本文を読む</td></tr>
+    <tr><td data-l="範囲"><code>4xx</code></td><td data-l="意味">送った側の誤り</td><td data-l="例と、次の手"><code>400</code> 形の誤り、<code>401</code> 認証、<code>403</code> 権限、<code>404</code> 見つからない。直してから送る。<code>429</code>（送りすぎ）だけは、間を空ければ通る</td></tr>
+    <tr><td data-l="範囲"><code>5xx</code></td><td data-l="意味">受けた側の不調</td><td data-l="例と、次の手">間を空けて再試行してよい</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p><code>429</code> の応答には、待つ秒数（<code>retry-after</code>）が付くことがあります。待たずに送り直すと、同じ理由で断られ続けます。Claude の API に特有のエラーと立て直し方は〈<a href="../04-debug/01-errors.html">エラーの種類と、立て直し方</a>〉で扱います。</p>
+</div>
+
+<h3 class="sub" id="rest-json">JSON の形</h3>
+<p class="goal"><b>ゴール</b>JSON の型と、壊れにくい作り方を言える。</p>
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">JSON の型</p>
+  <pre class="code">{ <span class="k">"order_id"</span>: <span class="s">"A-1024"</span>,<span class="n">1</span>
+  <span class="k">"items"</span>: [ { <span class="k">"sku"</span>: <span class="s">"X1"</span>, <span class="k">"qty"</span>: <span class="v">2</span> } ],<span class="n">2</span>
+  <span class="k">"paid"</span>: <span class="v">true</span>,
+  <span class="k">"note"</span>: <span class="v">null</span> }<span class="n">3</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>全体はオブジェクト。名前は必ず二重引用符で囲んだ文字列。</span></li>
+    <li><span class="n">2</span><span>配列の中にオブジェクト。数値は引用符で囲まない。</span></li>
+    <li><span class="n">3</span><span>真偽（<code>true</code>・<code>false</code>）と、値が無いこと（<code>null</code>）。注釈や末尾のカンマは書けない。</span></li>
+  </ol>
+</div>
+<div class="detail">
+  <p>JSON は、文字列をつなげて組み立てず、必ずパーサ（Python の <code>json</code> など）で作り、パーサで読みます。どの項目が必須で、どんな値を取るかは、JSON Schema で決めておきます（〈<a href="16-schema.html">入出力の形を設計する</a>〉）。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「JSON なら、文字列をつなげて作っても同じ」</span>
+    <span class="t o">実際は</span><span>値に引用符や改行が入ると、<b>その場で壊れる</b>。作るのも読むのも、パーサに任せる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/05-q1.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/07-async.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +133,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

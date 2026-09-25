@@ -50,6 +50,8 @@
 <a class="itm toc-link itm-quiz" href="../02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a>
 <a class="itm toc-link" href="../02-apps/11-require.html"><span class="itm-n">2-11</span><span class="itm-t">要件 ─ 業務から機能と基盤へ</span></a>
 <a class="itm toc-link on" href="../02-apps/12-lifecycle.html"><span class="itm-n">2-12</span><span class="itm-t">作って終わりではない ─ システムのライフサイクル</span></a>
+<a class="toc-link toc-sub" href="#lifecycle-claude">Claude のアプリで特に要ること</a>
+<a class="toc-link toc-sub" href="#lifecycle-ops">運用で見張るもの</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/13-q3.html"><span class="itm-n">2-13</span><span class="itm-t">理解度チェック ─ 要件とライフサイクル</span></a>
 <a class="itm toc-link" href="../02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a>
 <a class="itm toc-link" href="../02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a>
@@ -69,7 +71,61 @@
   <h2>2-12　作って終わりではない ─ システムのライフサイクル</h2>
 </header>
 <p class="goal"><b>ゴール</b>作る・入れる・動かす・保つの各段階で、何を決めておくかを説明できる。</p>
+<p class="lead">システムは、作って入れたら終わりではありません。動かしながら見張り、直し、やがて入れ替えるまでが一続きです。この一続きを段階に分けて管理する考え方を、<b><span data-en="ライフサイクル管理">ライフサイクル管理（life cycle management）</span></b>と呼びます。</p>
 <p class="task" data-s="life-cycle"><span class="tn">DOMAIN 2</span><b>Systems Life Cycle</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">システムの一生 ─ 保守から、また計画に戻る</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">計画</span><span class="fig-do">業務の要件と、成功の基準を決める</span></li>
+    <li class="s2"><span class="fig-who">開発</span><span class="fig-do">設計して作り、確かめるテストをそろえる</span></li>
+    <li class="s3"><span class="fig-who">導入</span><span class="fig-do">本番に入れる。少しずつ広げ、戻せるようにしておく</span></li>
+    <li class="s4"><span class="fig-who">運用</span><span class="fig-do">使用量・費用・失敗を見張り、問題に手を打つ</span></li>
+    <li class="s5"><span class="fig-who">保守</span><span class="fig-do">直し、更新する。古くなれば入れ替え、最後は廃止する</span></li>
+  </ol>
+  <p class="fig-f">どの段階も、前の段階で決めたことに縛られる。<b>後の段階で困ることは、前の段階で決めておく</b>。</p>
+</figure></div>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">進め方の3つの型 ─ 要件の固まり方で選ぶ</p>
+  <div class="fig-row" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">ウォーターフォール</b><span class="fig-note">段階を順に一度ずつ進める。要件が最初に固まり、変わりにくいときに</span></div>
+    <div class="fig-card s2"><b class="fig-h">アジャイル</b><span class="fig-note">小さく作って確かめることを、短い周期で繰り返す。要件が使いながら固まるときに</span></div>
+    <div class="fig-card s3"><b class="fig-h">DevOps</b><span class="fig-note">開発と運用をつなぎ、試験と導入を自動にする。頻繁に更新するときに</span></div>
+  </div>
+  <p class="fig-f">型によって、途中で要件が変わったときの<b>手戻りの大きさ</b>が違う。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>ライフサイクルは、計画から保守までの一続き。進め方の型は要件の固まり方で選び、どの型でも運用と保守まで計画に入れる。</p>
+
+<h3 class="sub" id="lifecycle-claude">Claude のアプリで特に要ること</h3>
+<p class="goal"><b>ゴール</b>Claude を使うアプリの各段階で、特に決めておくことを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>段階</th><th>決めておくこと</th></tr></thead>
+  <tbody>
+    <tr><td data-l="段階">開発</td><td data-l="決めておくこと">出来を確かめる評価のテスト（〈<a href="../06-prompt/03-refine.html">直しながら寄せる</a>〉）</td></tr>
+    <tr><td data-l="段階">導入</td><td data-l="決めておくこと">モデルとプロンプトの版を固定する（〈<a href="20-version.html">版を固定する</a>〉）</td></tr>
+    <tr><td data-l="段階">運用</td><td data-l="決めておくこと">何を見張るかを決め、記録を残す</td></tr>
+    <tr><td data-l="段階">保守</td><td data-l="決めておくこと">モデルの廃止の予定を追い、乗り換えを評価で確かめる（〈<a href="../05-models/09-choose.html">モデルを選ぶ・乗り換える</a>〉）</td></tr>
+  </tbody>
+</table>
+<h3 class="sub" id="lifecycle-ops">運用で見張るもの</h3>
+<p class="goal"><b>ゴール</b>Claude のアプリを動かしているあいだに、何を記録して見張るかを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>見張るもの</th><th>分かること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="見張るもの">使用量</td><td data-l="分かること">入力・出力・キャッシュのトークン数と費用。見積もりから外れていないか（〈<a href="../05-models/10-cost.html">費用を見積もる</a>〉）</td></tr>
+    <tr><td data-l="見張るもの">待ち時間</td><td data-l="分かること">最初の文字と、全体が届くまでの時間。要件を満たしているか</td></tr>
+    <tr><td data-l="見張るもの">止まり方</td><td data-l="分かること"><code>stop_reason</code> の内訳。<code>max_tokens</code> や <code>refusal</code> が増えていないか</td></tr>
+    <tr><td data-l="見張るもの">失敗</td><td data-l="分かること">エラーの種類と件数。<code>429</code> や <code>5xx</code> が増えていないか</td></tr>
+    <tr><td data-l="見張るもの">出来</td><td data-l="分かること">評価の点数と、利用者からの指摘。モデルやプロンプトを変えた前後で比べる</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <div class="myth">
+    <span class="t">誤解</span><span>「一度評価して出したプロンプトは、そのまま使い続けられる」</span>
+    <span class="t o">実際は</span><span>モデルの廃止や入れ替えで、挙動は変わる。<b>運用のあいだも評価を回し続け</b>、乗り換えに備える。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/11-require.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/13-q3.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +138,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

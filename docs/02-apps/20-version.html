@@ -58,6 +58,8 @@
 <a class="itm toc-link itm-quiz" href="../02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a>
 <a class="itm toc-link" href="../02-apps/19-config.html"><span class="itm-n">2-19</span><span class="itm-t">構成を管理する ─ CLAUDE.md と settings.json</span></a>
 <a class="itm toc-link on" href="../02-apps/20-version.html"><span class="itm-n">2-20</span><span class="itm-t">版を固定する ─ モデル・プロンプト・プラグイン</span></a>
+<a class="toc-link toc-sub" href="#version-model">モデルの ID と、引退</a>
+<a class="toc-link toc-sub" href="#version-prompt">プロンプトとプラグインの版</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/21-q5.html"><span class="itm-n">2-21</span><span class="itm-t">理解度チェック ─ 構成管理</span></a></nav>
 </aside>
 <main class="doc">
@@ -69,7 +71,36 @@
   <h2>2-20　版を固定する ─ モデル・プロンプト・プラグイン</h2>
 </header>
 <p class="goal"><b>ゴール</b>変更で壊れないように、モデル・プロンプト・プラグインの版を扱える。</p>
+<p class="lead">Claude のアプリは、モデル・プロンプト・プラグインのどれが変わっても、挙動が変わります。変わる部品の版を固定し、変えるときは評価で確かめてから替えます。</p>
 <p class="task" data-s="config-management"><span class="tn">DOMAIN 2</span><b>Configuration Management</b></p>
+
+<table class="tbl">
+  <thead><tr><th>部品</th><th>固定のしかた</th><th>変えるとき</th></tr></thead>
+  <tbody>
+    <tr><td data-l="部品">モデル</td><td data-l="固定のしかた">モデル ID を指定する。ID ごとに、中のモデルは固定されている</td><td data-l="変えるとき">新しい ID を評価で確かめてから切り替える</td></tr>
+    <tr><td data-l="部品">プロンプト</td><td data-l="固定のしかた">コードと同じリポジトリで、版として管理する</td><td data-l="変えるとき">前の版と同じテストで比べてから替える</td></tr>
+    <tr><td data-l="部品">プラグイン</td><td data-l="固定のしかた"><code>plugin.json</code> の <code>version</code>。取り込む元は git の ref や sha で固定できる</td><td data-l="変えるとき"><code>version</code> を上げて配る</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>変わる部品は版を固定し、替えるときは前の版と同じテストで比べる。固定しないと、何が挙動を変えたのかをたどれない。</p>
+
+<h3 class="sub" id="version-model">モデルの ID と、引退</h3>
+<p class="goal"><b>ゴール</b>モデル ID と別名の違いと、引退への備えを言える。</p>
+<div class="detail">
+  <p>Claude のモデル ID は、それぞれ固定された版を指します。同じ ID なら、中のモデルは変わりません。古い世代には、最新の日付つきの版を指す短い別名もあります。Claude Code の <code>opus</code> や <code>sonnet</code> のような別名は、時とともに指す先が変わるので、固定したいなら ID を書くか、対応する環境変数で指定します。</p>
+  <p>モデルは、提供中 → 非推奨（引退の日と代わりのモデルが示される）→ 引退、と進みます。<b>引退したモデルへのリクエストは失敗します</b>。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「モデル ID を固定しておけば、いつまでも同じモデルを使い続けられる」</span>
+    <span class="t o">実際は</span><span>固定しても、引退すれば呼べなくなる。非推奨の知らせを追い、乗り換えを評価で確かめる（〈<a href="12-lifecycle.html">作って終わりではない</a>〉）。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="version-prompt">プロンプトとプラグインの版</h3>
+<p class="goal"><b>ゴール</b>プロンプトとプラグインを、壊さずに更新する方法を言える。</p>
+<div class="detail">
+  <p>プロンプトは、コードと同じリポジトリで管理し、変えるたびに<b>前の版と同じテストで比べ</b>ます（〈<a href="../06-prompt/03-refine.html">直しながら寄せる</a>〉）。どの版のプロンプトを、どのモデルに送ったかを記録しておくと、挙動が変わったときに原因をたどれます。Managed Agents では、モデル・system・道具の組（agent）そのものに版が付きます。</p>
+  <p>プラグインは、<code>plugin.json</code> の <code>version</code> を上げて配ります。<b>version を変えずに中身だけ更新しても、利用者は手元に残った古い写しを使い続けます</b>。ほかのプラグインに頼るなら、依存（<code>dependencies</code>）として、試した版の範囲（<code>^2.0</code> など）を書きます。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/19-config.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/21-q5.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +113,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

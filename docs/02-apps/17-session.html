@@ -55,6 +55,7 @@
 <a class="itm toc-link" href="../02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a>
 <a class="itm toc-link" href="../02-apps/16-schema.html"><span class="itm-n">2-16</span><span class="itm-t">入出力の形を設計する</span></a>
 <a class="itm toc-link on" href="../02-apps/17-session.html"><span class="itm-n">2-17</span><span class="itm-t">セッションとプラグインを管理する</span></a>
+<a class="toc-link toc-sub" href="#session-plugin">プラグインを管理する</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a>
 <a class="itm toc-link" href="../02-apps/19-config.html"><span class="itm-n">2-19</span><span class="itm-t">構成を管理する ─ CLAUDE.md と settings.json</span></a>
 <a class="itm toc-link" href="../02-apps/20-version.html"><span class="itm-n">2-20</span><span class="itm-t">版を固定する ─ モデル・プロンプト・プラグイン</span></a>
@@ -69,7 +70,43 @@
   <h2>2-17　セッションとプラグインを管理する</h2>
 </header>
 <p class="goal"><b>ゴール</b>会話を分ける・捨てる判断と、プラグインの入れ方・外し方を説明できる。</p>
+<p class="cast" data-cast="dev,cc"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span></p>
+<p class="lead">会話が長くなるほど、窓には関係のない試行や失敗が積もり、出来が落ちます。会話をいつ分け、いつ捨てるかを決めておくのが、<b><span data-en="セッションの衛生">セッションの衛生（session hygiene）</span></b>です。</p>
 <p class="task" data-s="app-design"><span class="tn">DOMAIN 2</span><b>Claude Application Design</b></p>
+
+<table class="tbl">
+  <thead><tr><th>場面</th><th>手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="場面">別の仕事</td><td data-l="手">別の仕事に移るときは、<code>/clear</code> で文脈を空にする</td></tr>
+    <tr><td data-l="場面">直らない</td><td data-l="手">同じことを2回より多く直させても駄目なら、<code>/clear</code> し、学んだことを入れた具体的なプロンプトで始め直す</td></tr>
+    <tr><td data-l="場面">戻りたい</td><td data-l="手"><code>/rewind</code> で、会話とコードを前の時点に戻す。git の代わりにはならない</td></tr>
+    <tr><td data-l="場面">続き</td><td data-l="手"><code>--continue</code>（直前の会話）か <code>--resume</code>（一覧から選ぶ）で再開する</td></tr>
+    <tr><td data-l="場面">長い</td><td data-l="手"><code>/compact</code> で要約して、窓を空ける（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>失敗が積もった長い会話より、学んだことを入れて始め直した短い会話のほうが、ほとんどの場合うまくいく。</p>
+<div class="detail">
+  <p>API のアプリでも同じです。新しい仕事は、前の仕事の履歴を引きずらずに、新しい会話で始めることを考えます。</p>
+</div>
+
+<h3 class="sub" id="session-plugin">プラグインを管理する</h3>
+<p class="goal"><b>ゴール</b>プラグインの入れ方・広げ方・外し方と、信頼の注意を言える。</p>
+<div class="detail">
+  <p>プラグインは、Skills・子の定義・フック・MCP サーバ・コマンドなどを1つにまとめて配る単位です。プラグインの一覧（マーケットプレイス）から、<code>/plugin</code> で入れ、有効にし、無効にし、更新し、外します。</p>
+  <table class="tbl">
+    <thead><tr><th>範囲</th><th>有効にした記録の場所</th><th>効くところ</th></tr></thead>
+    <tbody>
+      <tr><td data-l="範囲"><code>user</code></td><td data-l="有効にした記録の場所"><code>~/.claude/settings.json</code></td><td data-l="効くところ">自分の、すべてのプロジェクト</td></tr>
+      <tr><td data-l="範囲"><code>project</code></td><td data-l="有効にした記録の場所"><code>.claude/settings.json</code></td><td data-l="効くところ">リポジトリを使う全員（git で共有）</td></tr>
+      <tr><td data-l="範囲"><code>local</code></td><td data-l="有効にした記録の場所"><code>.claude/settings.local.json</code></td><td data-l="効くところ">自分だけ・そのリポジトリだけ</td></tr>
+    </tbody>
+  </table>
+  <p>チームで同じプラグインを使うなら、リポジトリの <code>.claude/settings.json</code> に、マーケットプレイス（<code>extraKnownMarketplaces</code>）と有効にするプラグイン（<code>enabledPlugins</code>）を書いて配ります。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「プラグインは Claude への指示を足すだけなので、入れても危険はない」</span>
+    <span class="t o">実際は</span><span>フックや MCP サーバを含められ、<b>自分の権限で任意のコードを動かせる</b>。信頼できる出どころのものだけを入れる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/16-schema.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/18-q4.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +119,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

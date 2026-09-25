@@ -66,9 +66,9 @@
   <thead><tr><th>観点</th><th>stdio</th><th>Streamable HTTP</th></tr></thead>
   <tbody>
     <tr><td data-l="観点">置き場所</td><td data-l="stdio">同じ機械の中</td><td data-l="Streamable HTTP">ネットワークの向こう</td></tr>
-    <tr><td data-l="観点">起動するのは</td><td data-l="stdio">クライアントが、子のプロセスとして起動する</td><td data-l="Streamable HTTP">サーバが、自分で動き続ける</td></tr>
+    <tr><td data-l="観点">起動</td><td data-l="stdio">クライアントが、子のプロセスとして起動する</td><td data-l="Streamable HTTP">サーバが、自分で動き続ける</td></tr>
     <tr><td data-l="観点">通り道</td><td data-l="stdio">標準入出力（1行に1つの JSON-RPC）</td><td data-l="Streamable HTTP">1つの URL への HTTP のリクエスト</td></tr>
-    <tr><td data-l="観点">つなぐクライアント</td><td data-l="stdio">ふつうは1つ</td><td data-l="Streamable HTTP">多くのクライアント</td></tr>
+    <tr><td data-l="観点">つなぐ数</td><td data-l="stdio">ふつうは1つ</td><td data-l="Streamable HTTP">多くのクライアント</td></tr>
     <tr><td data-l="観点">認証</td><td data-l="stdio">鍵は環境変数から読む</td><td data-l="Streamable HTTP">HTTP の認証。OAuth が勧められている</td></tr>
     <tr><td data-l="観点">向く使い方</td><td data-l="stdio">手元のファイルや道具を、自分だけで使う</td><td data-l="Streamable HTTP">社内の仕組みを、チームや複数のアプリで共有する</td></tr>
   </tbody>
@@ -88,7 +88,7 @@
 <table class="tbl">
   <thead><tr><th>範囲</th><th>置き場所</th><th>効くところ</th></tr></thead>
   <tbody>
-    <tr><td data-l="範囲"><b>local</b>（既定）</td><td data-l="置き場所">自分の設定（<code>~/.claude.json</code>）の、そのプロジェクトの欄</td><td data-l="効くところ">自分だけ・そのプロジェクトだけ</td></tr>
+    <tr><td data-l="範囲"><b>local</b></td><td data-l="置き場所">既定。自分の設定（<code>~/.claude.json</code>）の、そのプロジェクトの欄</td><td data-l="効くところ">自分だけ・そのプロジェクトだけ</td></tr>
     <tr><td data-l="範囲"><b>project</b></td><td data-l="置き場所">プロジェクト直下の <code>.mcp.json</code></td><td data-l="効くところ">バージョン管理で、チーム全員に配れる。使う前に承認を求められる</td></tr>
     <tr><td data-l="範囲"><b>user</b></td><td data-l="置き場所">自分の設定（<code>~/.claude.json</code>）</td><td data-l="効くところ">自分の、すべてのプロジェクト</td></tr>
   </tbody>
@@ -106,7 +106,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

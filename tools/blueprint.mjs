@@ -254,7 +254,16 @@ export const COVER = {
     "prompt caching":       "前半をキャッシュに置け",
     "cache check-pointing": "キャッシュの区切り（cache check-pointing）" } },
   "api-mechanics": { sections: ["cache", "blocks", "data", "stream", "batch"], topics: {
-    "caching": "cache_control" } },
+    "messages":                                            "メッセージの列",
+    "tools":                                               "道具の依頼",
+    "streaming":                                           ["差分の種類", "途中で切れたら"],
+    "vision":                                              "画像を読ませる",
+    "thinking":                                            "考えた内容のブロック",
+    "caching":                                             "cache_control",
+    "invoking Claude through third-party vendors":         "他社のクラウド経由で呼ぶ",
+    "Messages API data access patterns":                   "資料を読ませる道は2つ",
+    "batch API use":                                       "custom_id",
+    "tradeoffs between realtime and batch API selection":  "すぐ答えが要るか" } },
   "tool-implementation": { sections: ["define", "dispatch", "fail"], topics: {
     "tool use and function calling":                  "ツール使用（関数呼び出し）",
     "configuration for external system interaction":  "外のシステムにつなぐ設定",
@@ -310,11 +319,32 @@ export const COVER = {
     "custom agent loops and harnesses": ["ハーネス", "3つの作り方"],
     "managed agent deployment models (self-hosted vs. Anthropic-hosted)": ["Managed Agents", "実行は手元", "全部自前"],
     "hooks for deterministic actions":  ["フック", "決定的"] } },
-  "se-foundations": { sections: ["rest", "async", "change", "refactor"], topics: {} },
-  "requirements": { sections: ["require"], topics: {} },
-  "life-cycle": { sections: ["lifecycle"], topics: {} },
-  "app-design": { sections: ["surface", "boundary", "schema", "session"], topics: {} },
-  "config-management": { sections: ["config", "version"], topics: {} },
+  "se-foundations": { sections: ["rest", "async", "change", "refactor"], topics: {
+    "REST APIs":                "REST は、Web の API",
+    "JSON":                     "JSON の形",
+    "asynchronous programming":           "非同期処理",
+    "version control":                    "ブランチ",
+    "SDLC integration":                   "開発工程",
+    "code review":                        "レビューする",
+    "small- and large-scale refactoring": ["小さな書き換え", "大きな作り直し"] } },
+  "requirements": { sections: ["require"], topics: {
+    "Functional and infrastructure requirements":      ["機能の要件", "基盤の要件"],
+    "business requirements and solution architecture": ["業務の要件", "ソリューションアーキテクチャ"] } },
+  "life-cycle": { sections: ["lifecycle"], topics: {
+    "Systems life cycle management concepts and frameworks": ["ライフサイクル管理", "進め方の3つの型"],
+    "develop, implement, operate, and maintain IT systems":  ["開発", "導入", "運用", "保守"] } },
+  "app-design": { sections: ["surface", "boundary", "schema", "session"], topics: {
+    "how Claude interprets instructions across interfaces (Claude Code, Desktop, claude.ai, API, SDKs)": ["前から入っている指示", "Desktop", "Agent SDK"],
+    "content boundaries": ["置き場所で示", "出力の境目"],
+    "schema design":      ["逃げ道", "道具の結果の形"],
+    "session hygiene":    ["/clear", "始め直"],
+    "plugin management":  ["/plugin", "enabledPlugins"] } },
+  "config-management": { sections: ["config", "version"], topics: {
+    "CLAUDE.md files":       ["CLAUDE.md", "つなげて読む"],
+    "settings.json":         ["settings.json", "強いほうが勝つ"],
+    "model version pinning": "モデルの ID と、引退",
+    "prompt versioning":     "前の版と同じテスト",
+    "plugin dependencies":   "dependencies" } },
   "claude-code-operation": { sections: ["parts", "run"], topics: {} },
   "app-security": { sections: ["inject", "leak"], topics: {} },
   "guardrails": { sections: ["layer"], topics: {} },
@@ -433,6 +463,26 @@ export const GLOSSARY = [
   { d: "agents", en: "custom agent loops and harnesses",   ja: "自前のループとハーネス" },
   { d: "agents", en: "self-hosted vs. Anthropic-hosted",   ja: "自前で動かすか、Anthropic が動かすか" },
   { d: "agents", en: "hooks for deterministic actions",    ja: "決まった処理を必ず行うフック" },
+
+  { d: "apps", en: "invoking Claude through third-party vendors",         ja: "他社のクラウド経由での呼び出し" },
+  { d: "apps", en: "Messages API data access patterns",                   ja: "Messages API への資料の渡し方" },
+  { d: "apps", en: "tradeoffs between realtime and batch API selection",  ja: "通常の呼び出しと Batch の選び分け" },
+  { d: "apps", en: "asynchronous programming",                            ja: "非同期処理" },
+  { d: "apps", en: "version control",                                     ja: "バージョン管理" },
+  { d: "apps", en: "SDLC integration",                                    ja: "開発工程への組み込み" },
+  { d: "apps", en: "code review",                                         ja: "コードレビュー" },
+  { d: "apps", en: "small- and large-scale refactoring",                  ja: "小さな書き換えと大きな作り直し" },
+  { d: "apps", en: "Functional and infrastructure requirements",          ja: "機能の要件と基盤の要件" },
+  { d: "apps", en: "business requirements and solution architecture",    ja: "業務の要件と全体の構成" },
+  { d: "apps", en: "Systems life cycle management",                       ja: "システムのライフサイクル管理" },
+  { d: "apps", en: "how Claude interprets instructions across interfaces", ja: "入口ごとの指示の読まれ方" },
+  { d: "apps", en: "content boundaries",                                  ja: "指示とデータの境目" },
+  { d: "apps", en: "schema design",                                       ja: "入出力の形の設計" },
+  { d: "apps", en: "session hygiene",                                     ja: "セッションの衛生" },
+  { d: "apps", en: "plugin management",                                   ja: "プラグインの管理" },
+  { d: "apps", en: "model version pinning",                               ja: "モデルの版の固定" },
+  { d: "apps", en: "prompt versioning",                                   ja: "プロンプトの版管理" },
+  { d: "apps", en: "plugin dependencies",                                 ja: "プラグインの依存関係" },
 ];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
@@ -451,6 +501,9 @@ export const TERMS = {
   "ツールを使うループ":  "tool-use loops",
   "枠組み":            "agentic abstraction frameworks",
   "決定的":            "deterministic",
+  "非同期処理":         "asynchronous programming",
+  "ライフサイクル管理":  "life cycle management",
+  "セッションの衛生":    "session hygiene",
 };
 
 /** 節の「登場人物」。本文に `<p class="cast" data-cast="app,claude"></p>` と置くと

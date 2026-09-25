@@ -64,8 +64,8 @@
 <table class="tbl">
   <thead><tr><th>手</th><th>何か</th><th>向くとき</th><th>限り</th></tr></thead>
   <tbody>
-    <tr><td data-l="手"><b>組み込みのツール</b></td><td data-l="何か">Anthropic が用意した道具。web search や code execution のように Anthropic 側で動くものと、bash や text editor のように形だけ決まっていて実行はアプリのものがある</td><td data-l="向くとき">検索・コードの実行・ファイル操作など、よくある作業を手早く足す</td><td data-l="限り">社内のシステムには届かない</td></tr>
-    <tr><td data-l="手"><b>自作のツール</b></td><td data-l="何か">名前・説明・入力の形を自分で定義し、実行もアプリで行う</td><td data-l="向くとき">社内の API やデータベースを呼ぶ。承認や記録を挟みたい操作</td><td data-l="限り">そのアプリの中でしか使えない</td></tr>
+    <tr><td data-l="手"><b>組み込み</b></td><td data-l="何か">Anthropic が用意した道具。web search や code execution のように Anthropic 側で動くものと、bash や text editor のように形だけ決まっていて実行はアプリのものがある</td><td data-l="向くとき">検索・コードの実行・ファイル操作など、よくある作業を手早く足す</td><td data-l="限り">社内のシステムには届かない</td></tr>
+    <tr><td data-l="手"><b>自作</b></td><td data-l="何か">名前・説明・入力の形を自分で定義し、実行もアプリで行う</td><td data-l="向くとき">社内の API やデータベースを呼ぶ。承認や記録を挟みたい操作</td><td data-l="限り">そのアプリの中でしか使えない</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>よくある作業は組み込みで足り、社内のシステムに触れるなら自作する。組み込みのツールが、社内の API に勝手に届くわけではない。</p>
@@ -80,7 +80,7 @@
       <tr><td data-l="切り出す理由">止めたい</td><td data-l="できるようになること">送信や削除のような取り返しのつかない操作だけに、承認を挟める</td></tr>
       <tr><td data-l="切り出す理由">見せたい</td><td data-l="できるようになること">利用者への質問を、選択肢つきの画面として出せる</td></tr>
       <tr><td data-l="切り出す理由">記録したい</td><td data-l="できるようになること">誰が何をしたかを、操作ごとに残せる</td></tr>
-      <tr><td data-l="切り出す理由">並べて動かしたい</td><td data-l="できるようになること">読むだけの操作を、並列で走らせてよいと判断できる</td></tr>
+      <tr><td data-l="切り出す理由">並べたい</td><td data-l="できるようになること">読むだけの操作を、並列で走らせてよいと判断できる</td></tr>
     </tbody>
   </table>
   <p>目安は、<b>まず広い道具で始め、止める・見せる・記録する・並べる必要が出た操作から、専用のツールに切り出す</b>ことです。</p>
@@ -97,7 +97,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

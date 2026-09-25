@@ -46,6 +46,8 @@
 <a class="itm toc-link" href="../02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a>
 <a class="itm toc-link" href="../02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a>
 <a class="itm toc-link on" href="../02-apps/08-change.html"><span class="itm-n">2-8</span><span class="itm-t">変更を管理する ─ バージョン管理・開発工程・レビュー</span></a>
+<a class="toc-link toc-sub" href="#change-sdlc">Claude を工程に組み込む</a>
+<a class="toc-link toc-sub" href="#change-review">レビューする</a>
 <a class="itm toc-link" href="../02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a>
 <a class="itm toc-link" href="../02-apps/11-require.html"><span class="itm-n">2-11</span><span class="itm-t">要件 ─ 業務から機能と基盤へ</span></a>
@@ -69,7 +71,44 @@
   <h2>2-8　変更を管理する ─ バージョン管理・開発工程・レビュー</h2>
 </header>
 <p class="goal"><b>ゴール</b>Claude が書いた変更を、バージョン管理と開発工程とレビューにどう載せるかを説明できる。</p>
+<p class="cast" data-cast="dev,cc,dev"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span><span class="c-ar">→</span><span class="c-blue">開発者</span></p>
+<p class="lead">Claude が書いたコードも、人が書いたコードと同じ道を通します。ブランチで作り、テストで確かめ、プルリクエストでレビューを受けてから取り込む。この<b>開発工程</b>に Claude を組み込めば、速さを保ったまま、変更を追えて戻せる状態を保てます。</p>
 <p class="task" data-s="se-foundations"><span class="tn">DOMAIN 2</span><b>Software Engineering Foundations</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">Claude の変更が取り込まれるまで</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">分ける</span><span class="fig-do">仕事ごとにブランチを切る。並行するなら worktree で作業場所も分ける</span></li>
+    <li class="s2"><span class="fig-who">作る</span><span class="fig-do">Claude Code が編集し、テストを走らせ、コミットする</span></li>
+    <li class="s3"><span class="fig-who">確かめる</span><span class="fig-do">CI でテストを流す。Claude を CI の中で動かすこともできる</span></li>
+    <li class="s4"><span class="fig-who">レビュー</span><span class="fig-do">プルリクエストで、人と Claude がレビューする</span></li>
+    <li class="s5"><span class="fig-who">取り込む</span><span class="fig-do">人が承認して取り込む。問題があれば、コミット単位で戻せる</span></li>
+  </ol>
+  <p class="fig-f">工程は人の変更と同じで、<b>速さだけが違う</b>。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>Claude が書いた変更も、人の変更と同じ工程に載せる。取り込むかどうかは、テストとレビューで決める。</p>
+
+<h3 class="sub" id="change-sdlc">Claude を工程に組み込む</h3>
+<p class="goal"><b>ゴール</b>開発工程のどこで、どう Claude を動かせるかを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>場所</th><th>動かし方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="場所">GitHub</td><td data-l="動かし方">プルリクエストや issue に <code>@claude</code> と書くと、Claude Code が GitHub Actions の中で動き、調べる・直す・プルリクエストを作る</td></tr>
+    <tr><td data-l="場所">CI の中</td><td data-l="動かし方">CI の手順から、対話なしの実行（<code>claude -p</code>）で動かす。人が承認できないので、使える道具を先に決めておく（〈<a href="../03-claude-code/02-run.html">Claude Code の動かし方</a>〉）</td></tr>
+    <tr><td data-l="場所">手元</td><td data-l="動かし方">「プルリクエストを作って」と頼めば、コミットからプルリクエストまで進める</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="change-review">レビューする</h3>
+<p class="goal"><b>ゴール</b>Claude の変更をレビューするときの進め方を言える。</p>
+<div class="detail">
+  <p>レビューは、書いた本人とは別の目で行います。Claude の変更なら、人が読むのに加えて、<b>新しい文脈の Claude</b> にもレビューさせます。書いたセッションは、自分が書いたコードに引きずられるからです（書く役とレビューする役を分ける形）。</p>
+  <p>「直しました」という言葉ではなく、テストの出力や、実行したコマンドとその結果のような<b>証拠</b>を見せさせます。証拠を見るほうが、自分で確かめ直すより速く確かです。Claude Code には手元の変更を調べるコマンド（<code>/code-review</code>・<code>/security-review</code>）があり、プルリクエストに自動でレビューのコメントを付ける機能もあります。自動のレビューは指摘を付けるだけで、承認や差し戻しはしません。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「Claude が『テストは通りました』と言ったら、そのまま取り込んでよい」</span>
+    <span class="t o">実際は</span><span>言葉ではなく証拠を見せさせ、CI でも確かめる。<b>取り込む判断は人が行う</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/07-async.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/09-refactor.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

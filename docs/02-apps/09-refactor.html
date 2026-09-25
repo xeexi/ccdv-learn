@@ -47,6 +47,8 @@
 <a class="itm toc-link" href="../02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a>
 <a class="itm toc-link" href="../02-apps/08-change.html"><span class="itm-n">2-8</span><span class="itm-t">変更を管理する ─ バージョン管理・開発工程・レビュー</span></a>
 <a class="itm toc-link on" href="../02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a>
+<a class="toc-link toc-sub" href="#refactor-large">大きな作り直しの進め方</a>
+<a class="toc-link toc-sub" href="#refactor-test">テストを先に</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a>
 <a class="itm toc-link" href="../02-apps/11-require.html"><span class="itm-n">2-11</span><span class="itm-t">要件 ─ 業務から機能と基盤へ</span></a>
 <a class="itm toc-link" href="../02-apps/12-lifecycle.html"><span class="itm-n">2-12</span><span class="itm-t">作って終わりではない ─ システムのライフサイクル</span></a>
@@ -69,7 +71,46 @@
   <h2>2-9　リファクタリングを任せる ─ 小さく・大きく</h2>
 </header>
 <p class="goal"><b>ゴール</b>小さな書き換えと大きな作り直しで、任せ方と確かめ方を選び分けられる。</p>
+<p class="cast" data-cast="dev,cc,dev"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span><span class="c-ar">→</span><span class="c-blue">開発者</span></p>
+<p class="lead">リファクタリングは、振る舞いを変えずに中身を書き換えることです。振る舞いが変わっていないことはテストで確かめ、変更の大きさによって任せ方を変えます。</p>
 <p class="task" data-s="se-foundations"><span class="tn">DOMAIN 2</span><b>Software Engineering Foundations</b></p>
+
+<table class="tbl">
+  <thead><tr><th>比べる点</th><th>小さな書き換え</th><th>大きな作り直し</th></tr></thead>
+  <tbody>
+    <tr><td data-l="比べる点">例</td><td data-l="小さな書き換え">1つの関数を分ける、名前をそろえる</td><td data-l="大きな作り直し">数百のファイルで、古いライブラリの呼び出しを新しい書き方に移す</td></tr>
+    <tr><td data-l="比べる点">計画</td><td data-l="小さな書き換え">差分を1文で言えるなら、計画は省く</td><td data-l="大きな作り直し">先に調べて計画を立て、合意してから動かす</td></tr>
+    <tr><td data-l="比べる点">進め方</td><td data-l="小さな書き換え">テストで確かめられる小さな単位で、少しずつ進める</td><td data-l="大きな作り直し">仕事を分けて、並行に進める</td></tr>
+    <tr><td data-l="比べる点">確かめ方</td><td data-l="小さな書き換え">いまのテストを流す。無ければ先に書く</td><td data-l="大きな作り直し">単位ごとにテストを流し、失敗したものだけやり直す</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>振る舞いを変えないことは、テストで確かめる。小さな書き換えは計画を省いて小刻みに、大きな作り直しは計画してから分けて並べる。</p>
+
+<h3 class="sub" id="refactor-large">大きな作り直しの進め方</h3>
+<p class="goal"><b>ゴール</b>大規模な移行を、分けて並べて確かめる手順を言える。</p>
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">数百のファイルを移す ─ 1つの長い会話でやらせない</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">一覧</span><span class="fig-do">移す対象のファイルを、一覧にして書き出させる</span></li>
+    <li class="s2"><span class="fig-who">試す</span><span class="fig-do">数件で試し、結果を見てプロンプトを直す</span></li>
+    <li class="s3"><span class="fig-who">並べる</span><span class="fig-do">一覧を分けて並行に流す。子に任せるか、ファイルごとに対話なしで回す</span></li>
+    <li class="s4"><span class="fig-who">確かめる</span><span class="fig-do">単位ごとにテストを流し、失敗したものだけやり直す</span></li>
+  </ol>
+  <p class="fig-f">分けておけば、どこで崩れたかが単位ごとに分かる。</p>
+</figure></div>
+<div class="detail">
+  <p>Claude Code の <code>/batch</code> は、変更を分けて子に任せ、子はそれぞれ別の worktree で作業します。自分のスクリプトからファイルごとに対話なしで回すときは、使える道具を絞っておきます。後方互換を保つ必要があるなら、そう指示に書きます。</p>
+</div>
+
+<h3 class="sub" id="refactor-test">テストを先に</h3>
+<p class="goal"><b>ゴール</b>テストの無いコードを書き換えるときの順番を言える。</p>
+<div class="detail">
+  <p>テストの無いコードを書き換えるなら、<b>先にいまの振る舞いを固定するテストを書かせて</b>から、書き換えさせます。不具合を直すときも、まず再現する（失敗する）テストを書かせ、それが通るように直させます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「大きな移行は、1つの長いセッションで一気にやらせるのが速い」</span>
+    <span class="t o">実際は</span><span>窓が尽き、どこで崩れたかも追えなくなる。<b>一覧にして分け、単位ごとに確かめる</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/08-change.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/10-q2.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +123,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

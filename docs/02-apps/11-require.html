@@ -49,6 +49,9 @@
 <a class="itm toc-link" href="../02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a>
 <a class="itm toc-link on" href="../02-apps/11-require.html"><span class="itm-n">2-11</span><span class="itm-t">要件 ─ 業務から機能と基盤へ</span></a>
+<a class="toc-link toc-sub" href="#require-infra">Claude を使うときの基盤の要件</a>
+<a class="toc-link toc-sub" href="#require-check">確かめられる形に書く</a>
+<a class="toc-link toc-sub" href="#require-arch">要件から構成へ</a>
 <a class="itm toc-link" href="../02-apps/12-lifecycle.html"><span class="itm-n">2-12</span><span class="itm-t">作って終わりではない ─ システムのライフサイクル</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/13-q3.html"><span class="itm-n">2-13</span><span class="itm-t">理解度チェック ─ 要件とライフサイクル</span></a>
 <a class="itm toc-link" href="../02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a>
@@ -69,7 +72,58 @@
   <h2>2-11　要件 ─ 業務から機能と基盤へ</h2>
 </header>
 <p class="goal"><b>ゴール</b>業務の要件から、機能の要件と基盤の要件を書き分けられる。</p>
+<p class="lead">作るものを決める出発点は、業務で何を達成したいか（<b>業務の要件</b>）です。そこから、システムが何をするか（<b>機能の要件</b>）と、どんな条件で動くか（<b>基盤の要件</b>）を書き分け、全体の構成（ソリューションアーキテクチャ）を選びます。</p>
 <p class="task" data-s="requirements"><span class="tn">DOMAIN 2</span><b>Understanding Requirements</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">問い合わせの一次対応を、Claude で作る場合</p>
+  <div class="fig-row flow" style="--cols:3">
+    <div class="fig-card s1"><b class="fig-h">業務の要件（なぜ）</b><span class="fig-note">夜間の問い合わせにも、翌朝を待たずに一次回答を返したい</span></div>
+    <div class="fig-card s2"><b class="fig-h">機能の要件（何を）</b><span class="fig-note">分類し、よくある質問には回答案を返す。迷うものは人に回す</span></div>
+    <div class="fig-card key s3"><b class="fig-h">基盤の要件（どんな条件で）</b><span class="fig-note">夜間も動く。10分以内に返す。個人情報の置き場所と、月の費用に上限</span></div>
+  </div>
+  <p class="fig-f">構成は、3つを同時に満たすように選ぶ。機能だけを見て選ぶと、条件のほうで行き詰まる。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>業務の要件は「なぜ」、機能の要件は「何を」、基盤の要件は「どんな条件で」。要件は、確かめられる数値で書く。</p>
+
+<h3 class="sub" id="require-infra">Claude を使うときの基盤の要件</h3>
+<p class="goal"><b>ゴール</b>基盤の要件が、モデルや呼び出し方の選択をどう縛るかを言える。</p>
+<table class="tbl">
+  <thead><tr><th>観点</th><th>決めること</th><th>縛られる選択</th></tr></thead>
+  <tbody>
+    <tr><td data-l="観点">待ち時間</td><td data-l="決めること">利用者が待てる時間</td><td data-l="縛られる選択">モデルの区分・effort・逐次で受けるか・Batch に回せるか</td></tr>
+    <tr><td data-l="観点">量</td><td data-l="決めること">1日の件数と、集中する時間帯</td><td data-l="縛られる選択">利用上限・非同期・Batch</td></tr>
+    <tr><td data-l="観点">費用</td><td data-l="決めること">1件と1か月の上限</td><td data-l="縛られる選択">モデル・キャッシュ・Batch（〈<a href="../05-models/10-cost.html">費用を見積もる</a>〉）</td></tr>
+    <tr><td data-l="観点">データ</td><td data-l="決めること">置いてよい場所と、残してよい期間</td><td data-l="縛られる選択">どの経路で呼ぶか、どの機能を使えるか</td></tr>
+    <tr><td data-l="観点">可用性</td><td data-l="決めること">止まってよい時間</td><td data-l="縛られる選択">再試行・代わりの経路・人への切り替え</td></tr>
+    <tr><td data-l="観点">品質</td><td data-l="決めること">許せる誤りの割合</td><td data-l="縛られる選択">評価の基準・人の確認を挟む範囲</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="require-check">確かめられる形に書く</h3>
+<p class="goal"><b>ゴール</b>要件を、満たしたかを判定できる形に書き直せる。</p>
+<table class="tbl">
+  <thead><tr><th>観点</th><th>曖昧な書き方</th><th>確かめられる書き方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="観点">速さ</td><td data-l="曖昧な書き方">すぐに返す</td><td data-l="確かめられる書き方">9割の問い合わせに、10秒以内に最初の文字を返す</td></tr>
+    <tr><td data-l="観点">正しさ</td><td data-l="曖昧な書き方">正確に分類する</td><td data-l="確かめられる書き方">用意した評価のデータで、分類の正解率が決めた値以上</td></tr>
+    <tr><td data-l="観点">費用</td><td data-l="曖昧な書き方">安く動かす</td><td data-l="確かめられる書き方">1件あたりと1か月の費用が、それぞれ上限以下</td></tr>
+    <tr><td data-l="観点">データ</td><td data-l="曖昧な書き方">安全に扱う</td><td data-l="確かめられる書き方">個人情報は決めた地域に置き、決めた期間で消す</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>品質の要件は、そのまま評価のテストになります（〈<a href="../06-prompt/03-refine.html">直しながら寄せる</a>〉）。<b>要件を書いた時点で、確かめ方も決まる</b>形にしておくと、作ったものが要件を満たしたかを、機械で判定できます。</p>
+</div>
+
+<h3 class="sub" id="require-arch">要件から構成へ</h3>
+<p class="goal"><b>ゴール</b>要件を満たす構成を選ぶときの進め方を言える。</p>
+<div class="detail">
+  <p>構成は、要件を1つずつ満たす部品を選んで組みます。「10分以内」なら通常の呼び出しで、「翌朝まで」なら Batch も候補になります。「個人情報を外に出さない」なら、使える経路と機能が絞られます。<b>要件が曖昧なまま作り始めると、あとで構成ごと作り直す</b>ことになります。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「機能の要件だけ決めれば、基盤は後から合わせればよい」</span>
+    <span class="t o">実際は</span><span>待ち時間・費用・データの置き場所は、<b>モデルと呼び出し方の選択を縛る</b>。後から変えると、作り直しになる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/10-q2.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/12-lifecycle.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +136,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

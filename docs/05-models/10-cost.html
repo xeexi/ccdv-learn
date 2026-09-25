@@ -87,19 +87,19 @@
   <thead><tr><th>求めるもの</th><th>出し方</th></tr></thead>
   <tbody>
     <tr><td data-l="求めるもの">1件の費用</td><td data-l="出し方">入力トークン × 入力の単価 ＋ 出力トークン × 出力の単価（キャッシュの書き込みと読み出しは、それぞれの単価で）</td></tr>
-    <tr><td data-l="求めるもの">1か月の費用</td><td data-l="出し方">1件の費用 × 月の件数</td></tr>
+    <tr><td data-l="求めるもの">月の費用</td><td data-l="出し方">1件の費用 × 月の件数</td></tr>
   </tbody>
 </table>
 <div class="detail">
   <p>数える「1件」は、<b>仕事が1つ完了するまで</b>です。再試行、ツールとの往復、会話の往復も含めます。1回のリクエストが安くても、完了までに往復が増えれば高くつきます。</p>
   <p>出力の単価は入力より高いので、長い出力や深い思考ほど効きます。記録は、機能や利用者ごとに分けて残します。<b>どこで費用がかかっているかが分かれば、手を打つ場所が決まります。</b></p>
   <table class="tbl">
-    <thead><tr><th>費用を下げる手</th><th>効くところ</th></tr></thead>
+    <thead><tr><th>下げる手</th><th>効くところ</th></tr></thead>
     <tbody>
-      <tr><td data-l="費用を下げる手">同じ前半をキャッシュする</td><td data-l="効くところ">繰り返し送る長い指示や資料（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
-      <tr><td data-l="費用を下げる手">待てる処理はバッチで送る</td><td data-l="効くところ">急がない大量の処理。通常の半額（〈<a href="../02-apps/04-batch.html">まとめて安く</a>〉）</td></tr>
-      <tr><td data-l="費用を下げる手">effort を下げる</td><td data-l="効くところ">考える量と前置きが多すぎる処理</td></tr>
-      <tr><td data-l="費用を下げる手">区分を下げる</td><td data-l="効くところ">評価で品質が保てると分かった処理（〈<a href="09-choose.html">モデルを選ぶ</a>〉）</td></tr>
+      <tr><td data-l="下げる手">キャッシュ</td><td data-l="効くところ">繰り返し送る長い指示や資料の、同じ前半（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
+      <tr><td data-l="下げる手">Batch</td><td data-l="効くところ">急がない大量の処理。通常の半額（〈<a href="../02-apps/04-batch.html">まとめて安く</a>〉）</td></tr>
+      <tr><td data-l="下げる手">effort</td><td data-l="効くところ">考える量と前置きが多すぎる処理で、段階を下げる</td></tr>
+      <tr><td data-l="下げる手">区分</td><td data-l="効くところ">評価で品質が保てると分かった処理で、下の区分に替える（〈<a href="09-choose.html">モデルを選ぶ</a>〉）</td></tr>
     </tbody>
   </table>
 </div>
@@ -122,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

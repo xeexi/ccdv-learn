@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 2</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../02-apps/01-blocks.html"><span class="itm-n">2-1</span><span class="itm-t">メッセージと content ブロック</span></a>
+<a class="toc-link toc-sub" href="#blocks-vision">画像を読ませる</a>
+<a class="toc-link toc-sub" href="#blocks-thinking">考えた内容のブロックと、道具</a>
 <a class="itm toc-link" href="../02-apps/02-data.html"><span class="itm-n">2-2</span><span class="itm-t">データの渡し方と、呼び出し口</span></a>
 <a class="itm toc-link" href="../02-apps/03-stream.html"><span class="itm-n">2-3</span><span class="itm-t">逐次で受け取る ─ streaming</span></a>
 <a class="itm toc-link" href="../02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a>
@@ -69,7 +71,70 @@
   <h2>2-1　メッセージと content ブロック</h2>
 </header>
 <p class="goal"><b>ゴール</b>1回の往復で送るもの・返るものを、ブロックの種類で説明できる。</p>
+<p class="cast" data-cast="app,claude,app"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">API とのやり取りは、<code>role</code> と <code>content</code> を持つメッセージの列です。<code>content</code> の中身は種類（<code>type</code>）の付いたブロックの配列で、文章も画像も、道具の依頼も結果も、同じ配列に並びます。</p>
 <p class="task" data-s="api-mechanics"><span class="tn">DOMAIN 2</span><b>Claude API Mechanics</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">道具を1回使う往復の、messages の中身</p>
+  <pre class="code"><span class="k">"messages"</span>: [
+  { <span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"image"</span>, <span class="k">"source"</span>: {…} },<span class="n">1</span>
+    { <span class="k">"type"</span>: <span class="s">"text"</span>,
+      <span class="k">"text"</span>: <span class="s">"この請求書の合計は？"</span> } ] },
+  { <span class="k">"role"</span>: <span class="s">"assistant"</span>, <span class="k">"content"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"thinking"</span>, … },<span class="n">2</span>
+    { <span class="k">"type"</span>: <span class="s">"tool_use"</span>, <span class="k">"id"</span>: <span class="s">"toolu_01"</span>,
+      <span class="k">"name"</span>: <span class="s">"calc"</span>, <span class="k">"input"</span>: {…} } ] },<span class="n">3</span>
+  { <span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: [
+    { <span class="k">"type"</span>: <span class="s">"tool_result"</span>,
+      <span class="k">"tool_use_id"</span>: <span class="s">"toolu_01"</span>, … } ] }<span class="n">4</span>
+]</pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>画像もブロックの1つ。文より先に置くと、よく読まれる。</span></li>
+    <li><span class="n">2</span><span>考えた内容のブロック。返ってきたまま、手を加えずに履歴へ戻す。</span></li>
+    <li><span class="n">3</span><span>道具の依頼は、assistant の側に入る。</span></li>
+    <li><span class="n">4</span><span>道具の結果は、user の側に、同じ id を付けて入る。</span></li>
+  </ol>
+</div>
+<table class="tbl">
+  <thead><tr><th>ブロック</th><th>書く側</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="ブロック"><code>text</code></td><td data-l="書く側">アプリ・Claude</td><td data-l="中身">文章</td></tr>
+    <tr><td data-l="ブロック"><code>image</code></td><td data-l="書く側">アプリ</td><td data-l="中身">画像（渡し方は〈<a href="02-data.html">データの渡し方と、呼び出し口</a>〉）</td></tr>
+    <tr><td data-l="ブロック"><code>document</code></td><td data-l="書く側">アプリ</td><td data-l="中身">PDF や文書。出典を示させることもできる</td></tr>
+    <tr><td data-l="ブロック"><code>tool_use</code></td><td data-l="書く側">Claude</td><td data-l="中身">道具の名前・引数・呼び出しの id</td></tr>
+    <tr><td data-l="ブロック"><code>tool_result</code></td><td data-l="書く側">アプリ</td><td data-l="中身">道具の結果。対応する id を付ける</td></tr>
+    <tr><td data-l="ブロック"><code>thinking</code></td><td data-l="書く側">Claude</td><td data-l="中身">考えた内容（〈<a href="../05-models/03-think.html">考えさせる量を選ぶ</a>〉）</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>送るものも返るものも、<code>type</code> の付いたブロックの列。返ってきた <code>content</code> は、手を加えずにそのまま履歴に戻す。</p>
+
+<h3 class="sub" id="blocks-vision">画像を読ませる</h3>
+<p class="goal"><b>ゴール</b>画像を渡すときの形と、苦手なことを言える。</p>
+<div class="detail">
+  <p>画像は <code>image</code> ブロックで渡します。形式は JPEG・PNG・GIF・WebP で、動く GIF は最初の1枚だけが使われます。画像も大きさに応じてトークンを使い、上限より大きい画像は縮めてから読まれます。<b>細かい文字を読ませたいなら、送る前に切り抜くか、縮め方を自分で決めます</b>。</p>
+  <table class="tbl">
+    <thead><tr><th>苦手なこと</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="苦手なこと">画質</td><td data-l="中身">小さい・傾いた・ぼやけた画像は、読み違えやすい</td></tr>
+      <tr><td data-l="苦手なこと">数える</td><td data-l="中身">おおよその数になる。小さな物が多いと外れやすい</td></tr>
+      <tr><td data-l="苦手なこと">位置</td><td data-l="中身">座標や位置はおおよそ。使う前に確かめる</td></tr>
+      <tr><td data-l="苦手なこと">人物</td><td data-l="中身">画像の人物が誰かは答えない</td></tr>
+      <tr><td data-l="苦手なこと">生成画像</td><td data-l="中身">AI が作った画像かどうかは、見分けられない</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h3 class="sub" id="blocks-thinking">考えた内容のブロックと、道具</h3>
+<p class="goal"><b>ゴール</b>考えた内容のブロックを、道具の往復でどう扱うかを言える。</p>
+<div class="detail">
+  <p>考えさせる設定のとき、応答には <code>thinking</code> ブロックが入ります。道具を使う往復を続けるときは、<b>このブロックも含めて、返ってきた <code>content</code> をそのまま履歴に戻します</b>。中身を書き換えたり一部だけを消したりすると、リクエストが拒まれることがあります。画面に表示するのは構いません。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「履歴を軽くするため、考えた内容のブロックは消して送り直せばよい」</span>
+    <span class="t o">実際は</span><span>道具の往復の途中では、<b>手を加えずに戻す</b>のが決まり。古い部分を減らしたいなら、刈り込みの機能を使う（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../01-agents/12-q3.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/02-data.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +147,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

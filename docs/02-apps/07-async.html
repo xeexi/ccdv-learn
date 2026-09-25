@@ -45,6 +45,7 @@
 <a class="itm toc-link itm-quiz" href="../02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a>
 <a class="itm toc-link" href="../02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a>
 <a class="itm toc-link on" href="../02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a>
+<a class="toc-link toc-sub" href="#async-care">非同期で気をつけること</a>
 <a class="itm toc-link" href="../02-apps/08-change.html"><span class="itm-n">2-8</span><span class="itm-t">変更を管理する ─ バージョン管理・開発工程・レビュー</span></a>
 <a class="itm toc-link" href="../02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a>
@@ -69,7 +70,50 @@
   <h2>2-7　待たずに進める ─ 非同期処理</h2>
 </header>
 <p class="goal"><b>ゴール</b>待ち時間の長い呼び出しを、非同期でまとめて扱う理由と形を説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">Claude の呼び出しは、1回に数秒から数分かかります。その間、処理を止めて待つのではなく、ほかの仕事を進められるように書くのが<b><span data-en="非同期処理">非同期処理（asynchronous programming）</span></b>です。何十件もの呼び出しの待ち時間を重ねられるので、全体が早く終わります。</p>
 <p class="task" data-s="se-foundations"><span class="tn">DOMAIN 2</span><b>Software Engineering Foundations</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">同時に走らせる数を絞って、まとめて待つ（Python）</p>
+  <pre class="code">client = AsyncAnthropic()
+limit = asyncio.Semaphore(<span class="v">5</span>)<span class="n">1</span>
+
+<span class="k">async def</span> ask(q):
+    <span class="k">async with</span> limit:
+        msgs = [{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: q}]
+        <span class="k">return await</span> client.messages.create(
+            model=MODEL, max_tokens=<span class="v">1024</span>,
+            messages=msgs)<span class="n">2</span>
+
+answers = <span class="k">await</span> asyncio.gather(
+    *(ask(q) <span class="k">for</span> q <span class="k">in</span> questions))<span class="n">3</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>同時に走らせる数の上限。上げすぎると、利用上限に掛かる。</span></li>
+    <li><span class="n">2</span><span><code>await</code> で待つ間に、ほかの呼び出しが進む。</span></li>
+    <li><span class="n">3</span><span>全部を同時に始め、そろったら受け取る。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>非同期にすると、待ち時間を重ねられる。ただし同時に走らせる数は、利用上限に合わせて絞る。</p>
+
+<h3 class="sub" id="async-care">非同期で気をつけること</h3>
+<p class="goal"><b>ゴール</b>まとめて呼ぶときに起きやすい問題と、その手当てを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>気をつけること</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="気をつけること">利用上限</td><td data-l="中身">1分あたりのリクエスト数やトークン数に上限がある。超えると <code>429</code> で断られる</td></tr>
+    <tr><td data-l="気をつけること">再試行</td><td data-l="中身"><code>429</code> や <code>5xx</code> は、SDK が間を空けて再試行する。自前の再試行と重ねない（〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉）</td></tr>
+    <tr><td data-l="気をつけること">失敗</td><td data-l="中身">1件の失敗で全体を止めないよう、結果ごとに成否を見る</td></tr>
+    <tr><td data-l="気をつけること">待てるなら</td><td data-l="中身">すぐ要らない大量の処理は、Batch に回すほうが安い（〈<a href="04-batch.html">まとめて安く</a>〉）</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>Python の SDK には非同期用のクライアント（<code>AsyncAnthropic</code>）があり、TypeScript の SDK はもともと非同期（<code>Promise</code>）で書きます。逐次の受け取りも、非同期のまま書けます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「非同期にすれば、同時に何件でも速く流せる」</span>
+    <span class="t o">実際は</span><span>利用上限を超えると、<code>429</code> で待たされて<b>かえって遅くなる</b>。同時の数は、上限に合わせて決める。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/06-rest.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/08-change.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +126,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

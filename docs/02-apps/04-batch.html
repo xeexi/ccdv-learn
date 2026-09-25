@@ -42,6 +42,8 @@
 <a class="itm toc-link" href="../02-apps/02-data.html"><span class="itm-n">2-2</span><span class="itm-t">データの渡し方と、呼び出し口</span></a>
 <a class="itm toc-link" href="../02-apps/03-stream.html"><span class="itm-n">2-3</span><span class="itm-t">逐次で受け取る ─ streaming</span></a>
 <a class="itm toc-link on" href="../02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a>
+<a class="toc-link toc-sub" href="#batch-id">custom_id で突き合わせる</a>
+<a class="toc-link toc-sub" href="#batch-plan">締め切りと、試し流し</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a>
 <a class="itm toc-link" href="../02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a>
 <a class="itm toc-link" href="../02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a>
@@ -69,7 +71,54 @@
   <h2>2-4　まとめて安く ─ Batch API</h2>
 </header>
 <p class="goal"><b>ゴール</b>待てる大量処理は Batch、すぐ要る処理は通常の呼び出し、と選び分けられる。</p>
+<p class="cast" data-cast="app,claude,app"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">すぐに答えが要らない大量の処理は、Message Batches API にまとめて送れます。<b>料金は通常の半額</b>で、結果は後から取りに行きます。</p>
 <p class="task" data-s="api-mechanics"><span class="tn">DOMAIN 2</span><b>Claude API Mechanics</b></p>
+
+<table class="tbl">
+  <thead><tr><th>比べる点</th><th>通常の呼び出し</th><th>Batch</th></tr></thead>
+  <tbody>
+    <tr><td data-l="比べる点">届く時間</td><td data-l="通常の呼び出し">すぐ。逐次なら最初の文字から</td><td data-l="Batch">多くは1時間以内、長くて24時間</td></tr>
+    <tr><td data-l="比べる点">料金</td><td data-l="通常の呼び出し">通常</td><td data-l="Batch">半額</td></tr>
+    <tr><td data-l="比べる点">向く仕事</td><td data-l="通常の呼び出し">利用者が画面で待っている</td><td data-l="Batch">評価の一括実行、ためた文書の分類や抽出</td></tr>
+    <tr><td data-l="比べる点">制約</td><td data-l="通常の呼び出し">─</td><td data-l="Batch">逐次では受け取れない。1件の中で道具を実行して、続きを回すこともできない</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>選ぶ基準は「すぐ答えが要るか」。件数の多さではない。要らないなら、半額で回せる。</p>
+
+<h3 class="sub" id="batch-id">custom_id で突き合わせる</h3>
+<p class="goal"><b>ゴール</b>結果を取り違えずに受け取る方法を言える。</p>
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">Batch に入れる1件</p>
+  <pre class="code">{ <span class="k">"custom_id"</span>: <span class="s">"inv-001"</span>,<span class="n">1</span>
+  <span class="k">"params"</span>: { <span class="k">"model"</span>: <span class="s">"…"</span>,
+    <span class="k">"max_tokens"</span>: <span class="v">1024</span>,
+    <span class="k">"messages"</span>: [ … ] } }<span class="n">2</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>1件ごとに付ける自分の ID。結果は送った順に返るとは限らないので、この ID で突き合わせる。</span></li>
+    <li><span class="n">2</span><span>中身は、通常の Messages API のリクエストと同じ。道具・画像・キャッシュも使える。</span></li>
+  </ol>
+</div>
+<table class="tbl">
+  <thead><tr><th>1件の結果</th><th>意味</th><th>次の手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="1件の結果"><code>succeeded</code></td><td data-l="意味">成功した</td><td data-l="次の手">結果を使う</td></tr>
+    <tr><td data-l="1件の結果"><code>errored</code></td><td data-l="意味">失敗した</td><td data-l="次の手">入力の誤りなら直して、サーバ側の失敗ならそのまま送り直す</td></tr>
+    <tr><td data-l="1件の結果"><code>canceled</code></td><td data-l="意味">取り消した</td><td data-l="次の手">要るなら送り直す</td></tr>
+    <tr><td data-l="1件の結果"><code>expired</code></td><td data-l="意味">期限内に終わらなかった</td><td data-l="次の手">送り直す</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="batch-plan">締め切りと、試し流し</h3>
+<p class="goal"><b>ゴール</b>締め切りのある仕事で、Batch に回す間隔と進め方を決められる。</p>
+<div class="detail">
+  <p>Batch は、長ければ24時間かかります。「受け取ってから30時間以内に返す」約束なら、ためてから送るまでに使えるのは6時間までで、実際には余裕を見てもっと短い間隔で送ります。「1日に1回まとめて」は、締め切りのある仕事では成り立たないことがあります。</p>
+  <p>全件を流す前に、少ない件数で試し、プロンプトを直してから本番を流します。<b>やり直しは、結果が返るまで待つ分だけ高くつきます</b>。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「件数が多い処理は、Batch にすべき」</span>
+    <span class="t o">実際は</span><span>基準は件数ではなく、<b>すぐ答えが要るか</b>。利用者が待っているなら、件数にかかわらず通常の呼び出しを使う。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/03-stream.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/05-q1.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +131,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

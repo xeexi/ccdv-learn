@@ -40,6 +40,8 @@
   <div class="toc-head">Domain 2</div>
   <nav class="toc-list"><a class="itm toc-link" href="../02-apps/01-blocks.html"><span class="itm-n">2-1</span><span class="itm-t">メッセージと content ブロック</span></a>
 <a class="itm toc-link on" href="../02-apps/02-data.html"><span class="itm-n">2-2</span><span class="itm-t">データの渡し方と、呼び出し口</span></a>
+<a class="toc-link toc-sub" href="#data-files">Files API で、一度上げて使い回す</a>
+<a class="toc-link toc-sub" href="#data-vendor">他社のクラウド経由で呼ぶ</a>
 <a class="itm toc-link" href="../02-apps/03-stream.html"><span class="itm-n">2-3</span><span class="itm-t">逐次で受け取る ─ streaming</span></a>
 <a class="itm toc-link" href="../02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a>
@@ -69,7 +71,46 @@
   <h2>2-2　データの渡し方と、呼び出し口</h2>
 </header>
 <p class="goal"><b>ゴール</b>資料の渡し方と、他社のクラウド経由で呼ぶときの違いを説明できる。</p>
+<p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
+<p class="lead">Claude に資料を読ませる道は2つあります。<b>リクエストに載せて渡す</b>か、<b>道具で取りに行かせる</b>かです。載せて渡すなら、中身を直接入れるか、URL を示すか、先に上げておいたファイルの ID を指します。</p>
 <p class="task" data-s="api-mechanics"><span class="tn">DOMAIN 2</span><b>Claude API Mechanics</b></p>
+
+<table class="tbl">
+  <thead><tr><th>渡し方</th><th>書き方</th><th>向くとき</th></tr></thead>
+  <tbody>
+    <tr><td data-l="渡し方">直接</td><td data-l="書き方">画像や PDF は base64 にして、文章はそのまま入れる</td><td data-l="向くとき">1回きりの資料</td></tr>
+    <tr><td data-l="渡し方">URL</td><td data-l="書き方">ネットにある場所を指す</td><td data-l="向くとき">公開されている資料</td></tr>
+    <tr><td data-l="渡し方">ID で指す</td><td data-l="書き方">Files API に一度上げ、ID で指す</td><td data-l="向くとき">同じ資料を何度も使う</td></tr>
+    <tr><td data-l="渡し方">道具で取る</td><td data-l="書き方">Web の取得・社内の検索・MCP で、要るときに読ませる</td><td data-l="向くとき">量が多く、どれが要るか先に分からない</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>1回きりなら直接、何度も使うならファイル ID、量が多いなら道具で取りに行かせる。どの渡し方でも、窓に入った分は入力トークンとして数える。</p>
+
+<h3 class="sub" id="data-files">Files API で、一度上げて使い回す</h3>
+<p class="goal"><b>ゴール</b>Files API を使う理由と、数え方の注意を言える。</p>
+<div class="detail">
+  <p>Files API にファイルを一度上げると、以後は ID を書くだけで、画像（<code>image</code>）や文書（<code>document</code>）のブロックに使えます。大きな資料を毎回送り直さずに済みます。上げるだけなら料金はかからず、<b>メッセージで使った分が、入力トークンとして数えられます</b>。ファイルは、消すまで残ります。</p>
+  <p>資料の渡し方と、資料の読み方は別の話です。長い資料は質問より先に置き（〈<a href="../06-prompt/01-place.html">指示は system に、材料は user に</a>〉）、出典を示させたいなら文書ブロックで引用の機能を使います。</p>
+</div>
+
+<h3 class="sub" id="data-vendor">他社のクラウド経由で呼ぶ</h3>
+<p class="goal"><b>ゴール</b>Amazon Bedrock・Google Cloud・Microsoft Foundry 経由で呼ぶときの違いを言える。</p>
+<div class="detail">
+  <p>Claude は、Anthropic の API のほかに、他社のクラウドからも呼べます。社内の契約や請求、認証の仕組みを1つのクラウドにまとめたいときに使います。SDK には各クラウド用のクライアントがあり、呼び出しの形（<code>messages.create</code>）は同じです。</p>
+  <table class="tbl">
+    <thead><tr><th>違い</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="違い">認証</td><td data-l="中身">Anthropic の API キーではなく、そのクラウドの認証と権限の仕組みを使う</td></tr>
+      <tr><td data-l="違い">ID</td><td data-l="中身">モデルの ID の書き方が、クラウドごとに違う</td></tr>
+      <tr><td data-l="違い">機能</td><td data-l="中身">新しい機能やベータの機能は、使えないか、遅れて届くことがある。Batch や Files API が無い経路もある</td></tr>
+      <tr><td data-l="違い">請求</td><td data-l="中身">そのクラウドの請求にまとまる</td></tr>
+    </tbody>
+  </table>
+  <div class="myth">
+    <span class="t">誤解</span><span>「どのクラウド経由でも、Anthropic の API と同じ機能が同じ日に使える」</span>
+    <span class="t o">実際は</span><span>他社が運営する経路では、<b>使える機能と、届く時期が違う</b>。設計の前に、使う経路でその機能が使えるかを確かめる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/01-blocks.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/03-stream.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +123,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

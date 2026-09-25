@@ -54,6 +54,7 @@
 <a class="itm toc-link" href="../02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a>
 <a class="itm toc-link" href="../02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a>
 <a class="itm toc-link on" href="../02-apps/16-schema.html"><span class="itm-n">2-16</span><span class="itm-t">入出力の形を設計する</span></a>
+<a class="toc-link toc-sub" href="#schema-result">道具の結果の形</a>
 <a class="itm toc-link" href="../02-apps/17-session.html"><span class="itm-n">2-17</span><span class="itm-t">セッションとプラグインを管理する</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a>
 <a class="itm toc-link" href="../02-apps/19-config.html"><span class="itm-n">2-19</span><span class="itm-t">構成を管理する ─ CLAUDE.md と settings.json</span></a>
@@ -69,7 +70,56 @@
   <h2>2-16　入出力の形を設計する</h2>
 </header>
 <p class="goal"><b>ゴール</b>ツールや出力の形を、間違えにくい形に設計できる。</p>
+<p class="lead">道具の引数も、構造化出力の応答も、形は JSON Schema で決めます。形の設計は、プロンプトの言葉を足すより確実に、表記の揺れと作り話を減らします。決めるのは、<b>正しい値の形と、迷ったときの逃げ道</b>の両方です。</p>
 <p class="task" data-s="app-design"><span class="tn">DOMAIN 2</span><b>Claude Application Design</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">請求書から抜き出す形</p>
+  <pre class="code"><span class="k">"properties"</span>: {
+  <span class="k">"amount_jpy"</span>: { <span class="k">"type"</span>: <span class="s">"integer"</span> },<span class="n">1</span>
+  <span class="k">"category"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span>,
+    <span class="k">"enum"</span>: [<span class="s">"物品"</span>, <span class="s">"役務"</span>, <span class="s">"その他"</span>] },<span class="n">2</span>
+  <span class="k">"detail"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span> },
+  <span class="k">"due_date"</span>: { <span class="k">"type"</span>: [<span class="s">"string"</span>, <span class="s">"null"</span>],
+    <span class="k">"description"</span>: <span class="s">"YYYY-MM-DD。無ければ null"</span> } },<span class="n">3</span>
+<span class="k">"required"</span>: [<span class="s">"amount_jpy"</span>, <span class="s">"category"</span>]<span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>型と単位を、型と名前で絞る。「1,200円」のような文字列は入らない。</span></li>
+    <li><span class="n">2</span><span>選択肢を閉じ、「その他」と自由に書ける欄を逃げ道に置く。無いと、近い分類へ無理に押し込まれる。</span></li>
+    <li><span class="n">3</span><span>見つからないときに「無い」と書けるようにする。書けないと、それらしい値を作られる。</span></li>
+    <li><span class="n">4</span><span>必ず埋まるものだけを必須にする。</span></li>
+  </ol>
+</div>
+<table class="tbl">
+  <thead><tr><th>決まり</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="決まり">型を絞る</td><td data-l="中身">数値や真偽を、文字列で受けない</td></tr>
+    <tr><td data-l="決まり">閉じる</td><td data-l="中身">決まった選択肢は <code>enum</code> にする。表記の揺れが消える</td></tr>
+    <tr><td data-l="決まり">逃げ道</td><td data-l="中身">「その他」や「無い」を選べるようにする</td></tr>
+    <tr><td data-l="決まり">名前</td><td data-l="中身">曖昧な名前を避ける（<code>user</code> より <code>user_id</code>）。単位や形式は、名前か説明に書く</td></tr>
+    <tr><td data-l="決まり">指示と組む</td><td data-l="中身">日付の書き方のように型で縛れない揺れは、そろえ方を指示に書く</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>形の設計は、正しい値の形と逃げ道の両方を決めること。逃げ道が無いと、Claude はそれらしい値で埋める。</p>
+
+<h3 class="sub" id="schema-result">道具の結果の形</h3>
+<p class="goal"><b>ゴール</b>道具が返す結果を、次の判断に使いやすい形にできる。</p>
+<table class="tbl">
+  <thead><tr><th>決まり</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="決まり">項目</td><td data-l="中身">次の判断に効く項目だけを返す。使わない項目や内部の技術的な値は省く</td></tr>
+    <tr><td data-l="決まり">名前</td><td data-l="中身">意味のない英数字の ID より、名前や題を返す。次の呼び出しに要る ID は残す</td></tr>
+    <tr><td data-l="決まり">量</td><td data-l="中身">件数の上限・絞り込み・ページ分けを用意し、既定値を小さめにする</td></tr>
+    <tr><td data-l="決まり">詳しさ</td><td data-l="中身">引数で「簡潔」か「詳細」かを選べるようにする</td></tr>
+    <tr><td data-l="決まり">失敗</td><td data-l="中身">何が悪く、どう直せばよいかを書く（〈<a href="../08-tools/03-fail.html">失敗の返し方と、承認の挟み方</a>〉）</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <div class="myth">
+    <span class="t">誤解</span><span>「項目を多く返すほど、Claude は正しく判断できる」</span>
+    <span class="t o">実際は</span><span>使わない項目や意味のない ID は、窓を食い、判断を迷わせる。<b>次の判断に効くものに絞る</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/15-boundary.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/17-session.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +132,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

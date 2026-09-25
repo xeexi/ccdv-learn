@@ -91,7 +91,7 @@
   <table class="tbl">
     <thead><tr><th><code>tool_choice</code></th><th>Claude の振る舞い</th></tr></thead>
     <tbody>
-      <tr><td data-l="tool_choice"><code>auto</code>（既定）</td><td data-l="Claude の振る舞い">使うかどうかを、Claude が決める</td></tr>
+      <tr><td data-l="tool_choice"><code>auto</code></td><td data-l="Claude の振る舞い">既定。使うかどうかを、Claude が決める</td></tr>
       <tr><td data-l="tool_choice"><code>any</code></td><td data-l="Claude の振る舞い">どれか1つは必ず使う</td></tr>
       <tr><td data-l="tool_choice"><code>tool</code></td><td data-l="Claude の振る舞い">名前で指定した道具を、必ず使う</td></tr>
       <tr><td data-l="tool_choice"><code>none</code></td><td data-l="Claude の振る舞い">使わない</td></tr>
@@ -105,10 +105,10 @@
 <table class="tbl">
   <thead><tr><th>起きること</th><th>直し方</th></tr></thead>
   <tbody>
-    <tr><td data-l="起きること">似た2つを取り違える</td><td data-l="直し方">説明に、違いと使い分けを書く。役目が重なるなら1つにまとめる</td></tr>
-    <tr><td data-l="起きること">数が多すぎて迷う</td><td data-l="直し方">その仕事に要るものだけに絞る。多いときは、必要な定義だけを探して読み込ませる（tool search）</td></tr>
-    <tr><td data-l="起きること">細かすぎて何度も呼ぶ</td><td data-l="直し方">いつも続けて使う操作は、1つの道具にまとめる</td></tr>
-    <tr><td data-l="起きること">引数を間違える</td><td data-l="直し方">型と <code>enum</code> で取りうる値を絞り、引数の説明に例を書く。<code>strict: true</code> を付けると、引数が形どおりになることを保証できる</td></tr>
+    <tr><td data-l="起きること">取り違え</td><td data-l="直し方">説明に、違いと使い分けを書く。役目が重なるなら1つにまとめる</td></tr>
+    <tr><td data-l="起きること">数の多さ</td><td data-l="直し方">その仕事に要るものだけに絞る。多いときは、必要な定義だけを探して読み込ませる（tool search）</td></tr>
+    <tr><td data-l="起きること">細かすぎ</td><td data-l="直し方">いつも続けて使う操作は、1つの道具にまとめる</td></tr>
+    <tr><td data-l="起きること">引数の誤り</td><td data-l="直し方">型と <code>enum</code> で取りうる値を絞り、引数の説明に例を書く。<code>strict: true</code> を付けると、引数が形どおりになることを保証できる</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>ツールの組は「少なく、重ならず、名前と説明で見分けがつく」形にそろえる。</p>
@@ -124,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

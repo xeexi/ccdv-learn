@@ -57,6 +57,8 @@
 <a class="itm toc-link" href="../02-apps/17-session.html"><span class="itm-n">2-17</span><span class="itm-t">セッションとプラグインを管理する</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a>
 <a class="itm toc-link on" href="../02-apps/19-config.html"><span class="itm-n">2-19</span><span class="itm-t">構成を管理する ─ CLAUDE.md と settings.json</span></a>
+<a class="toc-link toc-sub" href="#config-merge">重なったとき</a>
+<a class="toc-link toc-sub" href="#config-keep">共有するファイルを保つ</a>
 <a class="itm toc-link" href="../02-apps/20-version.html"><span class="itm-n">2-20</span><span class="itm-t">版を固定する ─ モデル・プロンプト・プラグイン</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/21-q5.html"><span class="itm-n">2-21</span><span class="itm-t">理解度チェック ─ 構成管理</span></a></nav>
 </aside>
@@ -69,7 +71,44 @@
   <h2>2-19　構成を管理する ─ CLAUDE.md と settings.json</h2>
 </header>
 <p class="goal"><b>ゴール</b>CLAUDE.md と settings.json を、チームで共有する構成として管理できる。</p>
+<p class="cast" data-cast="dev,cc"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span></p>
+<p class="lead">Claude Code の振る舞いは、2種類の設定ファイルで決まります。どう進めるかを書く CLAUDE.md と、何を許すかを決める settings.json です。どちらも、<b>チームで共有するものと個人のものを分け</b>、共有するものはコードと同じように管理します。</p>
 <p class="task" data-s="config-management"><span class="tn">DOMAIN 2</span><b>Configuration Management</b></p>
+
+<table class="tbl">
+  <thead><tr><th>範囲</th><th>CLAUDE.md</th><th>settings.json</th><th>共有</th></tr></thead>
+  <tbody>
+    <tr><td data-l="範囲">組織</td><td data-l="CLAUDE.md">管理用の場所（OS ごとに決まっている）</td><td data-l="settings.json">管理用の設定</td><td data-l="共有">全員に効き、利用者は外せない</td></tr>
+    <tr><td data-l="範囲">チーム</td><td data-l="CLAUDE.md"><code>./CLAUDE.md</code></td><td data-l="settings.json"><code>.claude/settings.json</code></td><td data-l="共有">git に入れて共有する</td></tr>
+    <tr><td data-l="範囲">個人</td><td data-l="CLAUDE.md"><code>~/.claude/CLAUDE.md</code></td><td data-l="settings.json"><code>~/.claude/settings.json</code></td><td data-l="共有">自分の、すべてのプロジェクトに効く</td></tr>
+    <tr><td data-l="範囲">ローカル</td><td data-l="CLAUDE.md"><code>./CLAUDE.local.md</code></td><td data-l="settings.json"><code>.claude/settings.local.json</code></td><td data-l="共有">自分だけ。git に入れない</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>チームの決まりはプロジェクトのファイルに書いて git で共有し、個人の好みは個人やローカルのファイルに置く。</p>
+
+<h3 class="sub" id="config-merge">重なったとき</h3>
+<p class="goal"><b>ゴール</b>同じ設定が複数の場所にあるとき、どれが効くかを言える。</p>
+<table class="tbl">
+  <thead><tr><th>ファイル</th><th>重なり方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="ファイル"><code>CLAUDE.md</code></td><td data-l="重なり方">上書きせず、見つかったものを全部つなげて読む。作業している場所に近いものほど後ろに入る</td></tr>
+    <tr><td data-l="ファイル"><code>settings.json</code></td><td data-l="重なり方">強いほうが勝つ。強い順に、組織 ＞ 起動時の指定 ＞ ローカル ＞ チーム ＞ 個人。許可の一覧のような配列は、つなげて使う</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>権限の規則は、禁止（<code>deny</code>）→ 確認（<code>ask</code>）→ 許可（<code>allow</code>）の順に見て、最初に当たったものが効きます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「個人の設定のほうが、チームの設定より強い」</span>
+    <span class="t o">実際は</span><span>強さは<b>その場に近いか</b>で決まる。ローカル（<code>.claude/settings.local.json</code>）はチームより強いが、個人（<code>~/.claude/settings.json</code>）はいちばん弱い。</span>
+  </div>
+</div>
+
+<h3 class="sub" id="config-keep">共有するファイルを保つ</h3>
+<p class="goal"><b>ゴール</b>共有する設定ファイルを、どう保つかを言える。</p>
+<div class="detail">
+  <p>CLAUDE.md は、読み込まれるたびに窓を使います。短く具体的に保ち、守られない決まりが出てきたら、長すぎて埋もれていないか、書き方が曖昧でないかを見直します。公式も、<b>CLAUDE.md をコードのように扱う</b>ことを勧めています。変えるときは、コードと同じようにレビューを通します。</p>
+  <p><code>.claude/settings.local.json</code> は、Claude Code が作ったなら git の対象から外されます。手で作ったときと、<code>CLAUDE.local.md</code> は、自分で <code>.gitignore</code> に足します。</p>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/18-q4.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/20-version.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

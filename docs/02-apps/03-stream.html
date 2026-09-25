@@ -41,6 +41,8 @@
   <nav class="toc-list"><a class="itm toc-link" href="../02-apps/01-blocks.html"><span class="itm-n">2-1</span><span class="itm-t">メッセージと content ブロック</span></a>
 <a class="itm toc-link" href="../02-apps/02-data.html"><span class="itm-n">2-2</span><span class="itm-t">データの渡し方と、呼び出し口</span></a>
 <a class="itm toc-link on" href="../02-apps/03-stream.html"><span class="itm-n">2-3</span><span class="itm-t">逐次で受け取る ─ streaming</span></a>
+<a class="toc-link toc-sub" href="#stream-sdk">組み立ては SDK に任せる</a>
+<a class="toc-link toc-sub" href="#stream-recover">途中で切れたら</a>
 <a class="itm toc-link" href="../02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a>
 <a class="itm toc-link itm-quiz" href="../02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a>
 <a class="itm toc-link" href="../02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a>
@@ -69,7 +71,57 @@
   <h2>2-3　逐次で受け取る ─ streaming</h2>
 </header>
 <p class="goal"><b>ゴール</b>逐次で受け取ると何が変わり、途中で切れたらどう立て直すかを説明できる。</p>
+<p class="cast" data-cast="claude,app"><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">逐次で受け取っても、全体にかかる時間とトークンは変わりません。変わるのは、<b>最初の文字が早く届く</b>ことと、長い応答でも待ち時間の上限に掛かりにくいことです。届くのは断片なので、組み立てはアプリの側で行います（届く順は〈<a href="../05-models/07-wire.html">つなぎ方の違い</a>〉）。</p>
 <p class="task" data-s="api-mechanics"><span class="tn">DOMAIN 2</span><b>Claude API Mechanics</b></p>
+
+<table class="tbl">
+  <thead><tr><th>差分の種類</th><th>何の断片か</th><th>組み立て方</th></tr></thead>
+  <tbody>
+    <tr><td data-l="差分の種類"><code>text_delta</code></td><td data-l="何の断片か">本文</td><td data-l="組み立て方">届いた順につなげる</td></tr>
+    <tr><td data-l="差分の種類"><code>input_json_delta</code></td><td data-l="何の断片か">道具の引数（JSON の文字列の切れ端）</td><td data-l="組み立て方">ブロックの終わり（<code>content_block_stop</code>）まで待ってから、JSON として読む</td></tr>
+    <tr><td data-l="差分の種類"><code>thinking_delta</code></td><td data-l="何の断片か">考えた内容</td><td data-l="組み立て方">つなげる。終わりの直前に、署名（<code>signature_delta</code>）が届く</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>断片は、ブロックの番号（<code>index</code>）ごとにつなげる。止まった理由は最後の <code>message_delta</code> で届くので、途中の断片を見て分岐しない。</p>
+
+<h3 class="sub" id="stream-sdk">組み立ては SDK に任せる</h3>
+<p class="goal"><b>ゴール</b>断片を自分で組み立てずに済む書き方を言える。</p>
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">逐次で受けて、最後に1つにまとめる（Python）</p>
+  <pre class="code"><span class="k">with</span> client.messages.stream(
+        model=MODEL, max_tokens=<span class="v">8192</span>,
+        messages=msgs) <span class="k">as</span> stream:
+    <span class="k">for</span> text <span class="k">in</span> stream.text_stream:<span class="n">1</span>
+        print(text, end=<span class="s">""</span>)
+    msg = stream.get_final_message()<span class="n">2</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>本文の断片だけを、届いた順に受け取る。</span></li>
+    <li><span class="n">2</span><span>組み立て済みの応答を1つ受け取る。止まった理由と使用量も、ここで見る。</span></li>
+  </ol>
+</div>
+<div class="detail">
+  <p>画面に出す必要がなくても、長い出力は逐次で受け、SDK に組み立てさせると安全です。SDK は、長くかかりそうな呼び出しを逐次にせずに送ろうとすると、送る前にエラーで止めます。</p>
+</div>
+
+<h3 class="sub" id="stream-recover">途中で切れたら</h3>
+<p class="goal"><b>ゴール</b>途中で切れた応答を立て直す手順を言える。</p>
+<div class="detail">
+  <p>応答が流れ始めた後でも、エラーは届きます。混雑しているときは、途中で <code>error</code> イベント（<code>overloaded_error</code> など）が流れてくることがあり、ネットワークが切れることもあります。</p>
+  <table class="tbl">
+    <thead><tr><th>手順</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td data-l="手順">残す</td><td data-l="中身">それまでに受け取った分を保存する</td></tr>
+      <tr><td data-l="手順">頼み直す</td><td data-l="中身">途中までの応答を示して「続きから書いて」と頼む、新しいリクエストを送る</td></tr>
+      <tr><td data-l="手順">限界</td><td data-l="中身">道具の依頼と考えた内容のブロックは、途中からは立て直せない。最後の文章のブロックから続ける</td></tr>
+    </tbody>
+  </table>
+  <p>イベントの種類は、今後増えることがあります。<b>知らない種類は、読み飛ばすように書きます</b>。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「逐次で受け取れば、全体の時間も費用も減る」</span>
+    <span class="t o">実際は</span><span>変わるのは、最初の文字が届くまでの時間。<b>全体の時間とトークンは同じ</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/02-data.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/04-batch.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -82,7 +134,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=d73d485f"></script>
-<script src="../assets/search-index.js?v=db0944de"></script>
+<script src="../assets/quiz-data.js?v=efa2c995"></script>
+<script src="../assets/search-index.js?v=1fcf657d"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
