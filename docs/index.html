@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja" data-theme="dark" data-theme-key="ccdvf-theme">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>トップ ─ CCDV-F 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=011a3864">
+</head>
+<body>
+<script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
+<nav class="domnav">
+  <a class="brand" href="index.html"><span class="brand-mark">CCDV-F</span><span class="brand-sub">学習ノート</span></a>
+  <div class="nav-list"><a class="nav-item" data-domain="models" href="index.html" title="Domain 5 モデルの選択と最適化">
+       <span class="nav-num">D5</span><span class="nav-title">モデル</span></a>
+<a class="nav-item" data-domain="apps" href="index.html" title="Domain 2 アプリケーション開発と連携">
+       <span class="nav-num">D2</span><span class="nav-title">アプリと連携</span></a>
+<a class="nav-item" data-domain="prompt" href="index.html" title="Domain 6 プロンプトとコンテキストの設計">
+       <span class="nav-num">D6</span><span class="nav-title">プロンプト</span></a>
+<a class="nav-item" data-domain="tools" href="index.html" title="Domain 8 ツールと MCP">
+       <span class="nav-num">D8</span><span class="nav-title">ツールと MCP</span></a>
+<a class="nav-item" data-domain="agents" href="index.html" title="Domain 1 エージェントとワークフロー">
+       <span class="nav-num">D1</span><span class="nav-title">エージェント</span></a>
+<a class="nav-item" data-domain="code" href="index.html" title="Domain 3 Claude Code">
+       <span class="nav-num">D3</span><span class="nav-title">Claude Code</span></a>
+<a class="nav-item" data-domain="security" href="index.html" title="Domain 7 セキュリティと安全">
+       <span class="nav-num">D7</span><span class="nav-title">セキュリティ</span></a>
+<a class="nav-item" data-domain="debug" href="index.html" title="Domain 4 評価・テスト・デバッグ">
+       <span class="nav-num">D4</span><span class="nav-title">デバッグ</span></a>
+<a class="nav-item" data-domain="summary" href="index.html" title="まとめ 全体をもう一度">
+       <span class="nav-num">まとめ</span><span class="nav-title">まとめ</span></a></div>
+  <div class="search-wrap">
+  <button class="search-btn" id="openSearch" aria-label="検索"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>検索</span><kbd>/</kbd></button>
+</div>
+</nav>
+<!-- ▼ 本文 ─ ここだけを編集する。この前後は tools/reindex.mjs が書き出す -->
+<div class="hero">
+  <span class="tag"><!--#credential-->CLAUDE CERTIFIED DEVELOPER ─ FOUNDATIONS<!--/#credential--></span>
+  <h1><!--#brand-->CCDV-F 学習ノート<!--/#brand--></h1>
+  <p>この試験が問うのは、Claude を使ったアプリケーション・エージェント・ワークフローを<b>作り、組み込み、本番に出す</b>ための判断です。API での組み込み、ツールとエージェントの組み立て、プロンプトとコンテキストの設計、評価、セキュリティ、モデルの選び方までが範囲に入ります。</p>
+  <p><!--#examfmt-->本試験は <b>53問・120分</b>、合格は 100〜1,000 の尺度で <b>720</b><!--/#examfmt-->。出る範囲は公式 Exam Guide の<b>ブループリント</b>（ドメインと、その中のスキル）で決まっていて、この教材はそれを目次にしています。<br>
+設問は<b>1つ選ぶものと、複数選ぶものが混じり</b>、何個選ぶかは設問に書かれています。<br>
+採点は<b>他の受験者との比較ではなく、決められた水準に達したか</b>で決まります。結果にはドメインごとの正答率も出ますが、<b>合否は総合点だけ</b>で決まります。</p>
+</div>
+
+<div class="hero" style="padding-top:0">
+  <h2>何が、何問出るか</h2>
+<!--#weightfig--><div class="figbox"><figure class="fig run">
+  <p class="fig-t">本試験 53 問の内訳 ─ 帯の全長が 53 問、区画の幅が重み</p>
+  <div class="fig-seg s1"><span class="seg" data-domain="agents" style="width:14.7%">8問</span><span class="seg" data-domain="apps" style="width:33.1%">17問</span><span class="seg" data-domain="code" style="width:3.1%"></span><span class="seg" data-domain="debug" style="width:2.6%"></span><span class="seg" data-domain="models" style="width:16.8%">9問</span><span class="seg" data-domain="prompt" style="width:11.0%">6問</span><span class="seg" data-domain="security" style="width:8.1%">4問</span><span class="seg" data-domain="tools" style="width:10.6%">6問</span></div>
+  <div class="fig-legend">
+    <span class="lg s1" data-domain="agents"><span class="sw"></span><b>Domain 1</b><span class="n">14.7%・約8問　エージェントとワークフロー</span></span>
+    <span class="lg s2" data-domain="apps"><span class="sw"></span><b>Domain 2</b><span class="n">33.1%・約17問　アプリケーション開発と連携</span></span>
+    <span class="lg s3" data-domain="code"><span class="sw"></span><b>Domain 3</b><span class="n">3.1%・約2問　Claude Code</span></span>
+    <span class="lg s4" data-domain="debug"><span class="sw"></span><b>Domain 4</b><span class="n">2.6%・約1問　評価・テスト・デバッグ</span></span>
+    <span class="lg s5" data-domain="models"><span class="sw"></span><b>Domain 5</b><span class="n">16.8%・約9問　モデルの選択と最適化</span></span>
+    <span class="lg s6" data-domain="prompt"><span class="sw"></span><b>Domain 6</b><span class="n">11.0%・約6問　プロンプトとコンテキストの設計</span></span>
+    <span class="lg s7" data-domain="security"><span class="sw"></span><b>Domain 7</b><span class="n">8.1%・約4問　セキュリティと安全</span></span>
+    <span class="lg s8" data-domain="tools"><span class="sw"></span><b>Domain 8</b><span class="n">10.6%・約6問　ツールと MCP</span></span>
+  </div>
+  <p class="fig-f">いちばん多い Domain 2 は約 17 問、いちばん少ない Domain 4 は約 1 問。<b>ドメインごとの正答率は成績表に出るが、合否は総合点だけで決まる</b>。</p>
+</figure></div><!--/#weightfig-->
+
+  <h2 style="margin-top:44px">読む順番</h2>
+  <p>公式のドメインは<b>名前のアルファベット順</b>に番号が振られていて、その順に読むと、エージェント（Domain 1）が API やツールより先に来てしまいます。この教材は<b>前提の少ないものから</b>並べています。</p>
+<!--#readorder--><div class="figbox"><figure class="fig run">
+  <p class="fig-t">読む順番 ─ 前へ／次へ（← →）はこの順に進む</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">Domain 5</span><span class="fig-do"><b>モデルの選択と最適化</b>　LLM の基礎・モデル選択・コスト</span></li>
+    <li class="s2"><span class="fig-who">Domain 2</span><span class="fig-do"><b>アプリケーション開発と連携</b>　API・設計・構成管理・開発の基礎</span></li>
+    <li class="s3"><span class="fig-who">Domain 6</span><span class="fig-do"><b>プロンプトとコンテキストの設計</b>　指示・文脈・出力の扱い</span></li>
+    <li class="s4"><span class="fig-who">Domain 8</span><span class="fig-do"><b>ツールと MCP</b>　ツールの実装と使い分け</span></li>
+    <li class="s5"><span class="fig-who">Domain 1</span><span class="fig-do"><b>エージェントとワークフロー</b>　組み方・作り方・型</span></li>
+    <li class="s6"><span class="fig-who">Domain 3</span><span class="fig-do"><b>Claude Code</b>　Claude Code の運用</span></li>
+    <li class="s7"><span class="fig-who">Domain 7</span><span class="fig-do"><b>セキュリティと安全</b>　入力・権限・秘密の守り方</span></li>
+    <li class="s8"><span class="fig-who">Domain 4</span><span class="fig-do"><b>評価・テスト・デバッグ</b>　障害の切り分けと立て直し</span></li>
+    <li class="s8"><span class="fig-who">まとめ</span><span class="fig-do"><b>全体をもう一度</b>　配点・例題・模擬試験</span></li>
+  </ol>
+  <p class="fig-f">公式の番号（Domain 1〜8）はアルファベット順で、学ぶ順ではない。<b>ディレクトリと項番号は公式の番号のまま</b>にして、並べる順だけを変えている。</p>
+</figure></div><!--/#readorder-->
+
+  <h2 style="margin-top:44px">公式のブループリント</h2>
+  <p>出題の単位は<b>スキル</b>です。スキルには<b>番号がなく</b>、名前と重みだけが決まっています。各項の冒頭に <code>DOMAIN 2</code> のような札とスキルの名前（原文のまま）が出ていれば、その項がそのスキルを扱っています。</p>
+<!--#blueprintfig--><table class="tbl bp">
+  <thead><tr><th>ドメイン</th><th>スキル（原文）</th><th>重み</th><th>扱う項</th></tr></thead>
+  <tbody>
+    <tr data-domain="agents"><td data-l="ドメイン" rowspan="3"><b>Domain 1</b>　14.7%<br><span class="n">Agents and Workflows</span></td><td data-l="スキル"><b>Agent Architecture</b></td><td data-l="重み">4.5%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="agents"><td data-l="スキル"><b>Agent Construction with Claude</b></td><td data-l="重み">5.3%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="agents"><td data-l="スキル"><b>Agent Patterns and Frameworks</b></td><td data-l="重み">4.9%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="ドメイン" rowspan="6"><b>Domain 2</b>　33.1%<br><span class="n">Applications and Integration</span></td><td data-l="スキル"><b>Understanding Requirements</b></td><td data-l="重み">3.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Systems Life Cycle</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Claude API Mechanics</b></td><td data-l="重み">6.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Software Engineering Foundations</b></td><td data-l="重み">7.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Claude Application Design</b></td><td data-l="重み">8.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Configuration Management</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="code"><td data-l="ドメイン" rowspan="1"><b>Domain 3</b>　3.1%<br><span class="n">Claude Code</span></td><td data-l="スキル"><b>Claude Code Operation</b></td><td data-l="重み">3.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="debug"><td data-l="ドメイン" rowspan="1"><b>Domain 4</b>　2.6%<br><span class="n">Eval, Testing, and Debugging</span></td><td data-l="スキル"><b>Debugging and Error Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="models"><td data-l="ドメイン" rowspan="4"><b>Domain 5</b>　16.8%<br><span class="n">Model Selection and Optimization</span></td><td data-l="スキル"><b>LLM Fundamentals</b></td><td data-l="重み">5.2%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Technical Fundamentals</b></td><td data-l="重み">6.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Model Selection and Tradeoffs</b></td><td data-l="重み">2.7%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Cost and Token Management</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="prompt"><td data-l="ドメイン" rowspan="3"><b>Domain 6</b>　11.0%<br><span class="n">Prompt and Context Engineering</span></td><td data-l="スキル"><b>Context Engineering</b></td><td data-l="重み">3.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="prompt"><td data-l="スキル"><b>Prompt Engineering</b></td><td data-l="重み">4.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="prompt"><td data-l="スキル"><b>Output Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="security"><td data-l="ドメイン" rowspan="4"><b>Domain 7</b>　8.1%<br><span class="n">Security and Safety</span></td><td data-l="スキル"><b>AI Application Security</b></td><td data-l="重み">3.2%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Guardrails and Safe Deployment</b></td><td data-l="重み">2.3%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Claude Hooks</b></td><td data-l="重み">1.0%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Identity, Secrets, and Key Management</b></td><td data-l="重み">1.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="tools"><td data-l="ドメイン" rowspan="3"><b>Domain 8</b>　10.6%<br><span class="n">Tools and MCPs</span></td><td data-l="スキル"><b>Tool Implementation</b></td><td data-l="重み">4.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="tools"><td data-l="スキル"><b>MCP Server Development</b></td><td data-l="重み">2.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="tools"><td data-l="スキル"><b>Agentic Customization</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+  </tbody>
+</table><!--/#blueprintfig-->
+</div>
+
+<div class="hero" id="all" style="padding-top:34px">
+  <h2>全項目一覧</h2>
+  <p>全 <!--#nsec-->0<!--/#nsec--> 項。<b>◇ が理解度チェック</b>で、そこが区切りです。1項＝1画面なので、区切りまでの項数がそのまま「一度に読む量」になります。</p>
+  <!--#alllist--><div class="alllist"><section class="al-dom" data-domain="models">
+  <h3><span class="al-num">Domain 5</span><a href="index.html">モデルの選択と最適化</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="apps">
+  <h3><span class="al-num">Domain 2</span><a href="index.html">アプリケーション開発と連携</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="prompt">
+  <h3><span class="al-num">Domain 6</span><a href="index.html">プロンプトとコンテキストの設計</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="tools">
+  <h3><span class="al-num">Domain 8</span><a href="index.html">ツールと MCP</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="agents">
+  <h3><span class="al-num">Domain 1</span><a href="index.html">エージェントとワークフロー</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="code">
+  <h3><span class="al-num">Domain 3</span><a href="index.html">Claude Code</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="security">
+  <h3><span class="al-num">Domain 7</span><a href="index.html">セキュリティと安全</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="debug">
+  <h3><span class="al-num">Domain 4</span><a href="index.html">評価・テスト・デバッグ</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section>
+<section class="al-dom" data-domain="summary">
+  <h3><span class="al-num">まとめ</span><a href="index.html">全体をもう一度</a></h3>
+  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+</section></div><!--/#alllist-->
+</div>
+
+<div class="hero" id="src" style="padding-top:34px">
+  <h2>参考資料</h2>
+  <p>この教材は、下の公式資料で裏を取って書いています。<b>食い違いを見つけたら、そちらが正です。</b>数値や仕様はモデルの世代で変わるので、迷ったら原文を見てください。</p>
+
+  <h3>試験そのもの</h3>
+  <table class="tbl pair">
+    <tbody>
+      <!--#guidesrc--><tr><th><a href="https://everpath-course-content.s3-accelerate.amazonaws.com/instructor%2F6nizmqk8tpzpfjvt6qmmav7rh%2Fpublic%2F1783542875%2FClaude+Certified+Developer+%E2%80%93+Foundations+Exam+Guide.pdf">Exam Guide</a><br><span class="n">PDF・英語・14ページ</span></th>
+        <td><b>8ドメイン25スキルの原文と重み</b>。出題形式（53問・120分・合格 720）。解説つきの例題3問。各項の <code>DOMAIN 2</code> の札の英文は、ここから写したものです。<br><span class="n">Version 1.0 ／ Effective July 2026 ／ CCDV-F</span></td></tr>
+      <tr><th><a href="https://anthropic-partners.skilljar.com/claude-certified-developer-foundations-certification">認定ページ</a></th>
+        <td>申し込みと、Exam Guide の最新版の入手先（<a href="https://anthropic-partners.skilljar.com/page/partner-certifications">認定の一覧</a>）</td></tr><!--/#guidesrc-->
+    </tbody>
+  </table>
+
+  <h3>Claude API</h3>
+  <table class="tbl pair">
+    <tbody>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/working-with-messages">Working with Messages</a></th>
+        <td><code>messages</code> ／ <code>content</code> ／ <code>stop_reason</code></td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use</a></th>
+        <td>ツールの定義と、ツールを使うやり取り</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/streaming">Streaming</a></th>
+        <td>応答を逐次で受け取るときのイベント</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/vision">Vision</a></th>
+        <td>画像を入力に含める</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking">Extended thinking</a></th>
+        <td><code>thinking</code> ブロック</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Prompt caching</a></th>
+        <td>キャッシュの置き方と、使用量の見方</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/build-with-claude/batch-processing">Batch processing</a></th>
+        <td>急がない大量の処理をまとめて送る</td></tr>
+      <tr><th><a href="https://platform.claude.com/docs/en/models/overview">Models overview</a></th>
+        <td>モデルの種類と選び方</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Claude Code と Agent SDK</h3>
+  <table class="tbl pair">
+    <tbody>
+      <tr><th><a href="https://code.claude.com/docs/en/overview">Claude Code overview</a></th>
+        <td>Claude Code の全体像</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/memory">Memory</a></th>
+        <td><code>CLAUDE.md</code> の置き場所と読まれ方</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/settings">Settings</a></th>
+        <td><code>settings.json</code> の階層</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/hooks">Hooks</a></th>
+        <td>決まった時点で必ず走る処理</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/sub-agents">Subagents</a></th>
+        <td>仕事を別の文脈に切り出す</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/skills">Skills</a></th>
+        <td>手順をまとめて呼び出せるようにする</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/headless">Headless</a></th>
+        <td>対話なしで動かす</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/agent-sdk/overview">Agent SDK</a></th>
+        <td>Claude Code と同じ仕組みでエージェントを作る</td></tr>
+    </tbody>
+  </table>
+
+  <h3>MCP</h3>
+  <table class="tbl pair">
+    <tbody>
+      <tr><th><a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol</a></th>
+        <td>サーバが提供するツール・リソース・プロンプト</td></tr>
+      <tr><th><a href="https://code.claude.com/docs/en/mcp">MCP in Claude Code</a></th>
+        <td>Claude Code からサーバに繋ぐ設定</td></tr>
+    </tbody>
+  </table>
+
+  <div class="detail">
+    <div class="ex"><span class="exl">先に解いておくもの ─ 公式の例題</span>
+    Exam Guide の「8. Sample Questions」に、<b>解説つきの例題</b>が入っています。<b>なぜその選択肢が正解で、他がなぜ誤りか</b>まで書かれています。<br>
+    <b>この教材の設問より、こちらが正です。</b>読み終えたら必ず解いて、答えが食い違ったら原文を採ってください。</div>
+<!--#examadmin--><div class="ex"><span class="exl">受験の実務 ─ 計画に効くものだけ</span>
+  <b>予約する前に</b>　身分証の氏名と<b>登録名が完全に一致</b>している必要があります。訂正は <code>certifications-support@anthropic.com</code> へ ── <b>予約する前に</b>済ませます。配慮（accommodations）が要るときも、Pearson VUE の承認を得てから予約します。<br>
+  <b>受け方</b>　オンライン監督つき、またはテストセンター（Pearson VUE）。受験料 <b>125 USD</b>。予約の変更・取消は<b>24時間前まで</b>。それを過ぎたとき、および無断欠席・遅刻は、受験料が戻らず登録し直しになります。<br>
+  <b>当日</b>　写真つきの本人確認書類が要ります。机の上に資料・端末は置けません（携帯・スマートウォッチ・ヘッドホン・参考書・録音機器も持ち込めません）。試験内容は<b>口外しない</b>という同意（NDA）に応じてから始まります。<br>
+  <b>落ちたとき</b>　待機は<b>14日 → 30日 → 90日</b>と伸びます。直近12か月で受けられるのは<b>4回</b>まで。<b>1回目で通す前提で組むほうが安上がり</b>です。<br>
+  <b>受かったあと</b>　有効期間は<b>12か月</b>。期限内なら<b>無料の更新試験</b>で更新でき、切らすと本試験を受け直しになります。</div><!--/#examadmin-->
+  </div>
+
+  <p class="note">※ いずれも Anthropic などの公開資料です。Exam Guide の PDF は認定プログラムの配布元にあるもので、改訂されることがあります。</p>
+</div>
+<!-- ▲ 本文 -->
+<div class="modal" id="searchModal" hidden>
+  <div class="modal-box">
+    <input id="searchInput" type="search" placeholder="用語・見出し・本文を検索（例: tool_use、キャッシュ）" autocomplete="off">
+    <div id="searchResults" class="results"></div>
+    <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
+  </div>
+</div>
+<script src="assets/quiz-data.js?v=5945f509"></script>
+<script src="assets/search-index.js?v=82915e32"></script>
+<script src="assets/app.js?v=2b56021b"></script>
+</body></html>

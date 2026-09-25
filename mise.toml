@@ -1,0 +1,22 @@
+# 使用ツールの固定（プロジェクトローカル）
+#
+# ★ホストには node を入れない。tools/*.mjs は tools/x が docker 越しに回す。
+#   ここで固定するのは、そのコンテナのイメージの版（tools/x がこの変数を読む）。
+[env]
+# reindex・check・任意の node コマンドを回すイメージ
+CCDVF_NODE_IMAGE = "node:22-alpine"
+# ブラウザ実測（measure）のイメージの版。tools/.cache に入れる playwright ライブラリも
+# この版にそろえる ── ズレるとブラウザのリビジョン検査で落ちる
+CCDVF_PW_VER = "1.62.1"
+
+[tasks.reindex]
+description = "本文の周りを書き出す ＋ 検索インデックス ＋ ?v= の打ち直し"
+run = "./tools/x reindex"
+
+[tasks.check]
+description = "静的チェック（exit 1 なら要修正）。書きかけの間は --dirs= で網羅系を絞る"
+run = "./tools/x check"
+
+[tasks.measure]
+description = "ブラウザ実測（文字サイズ・右端・横溢れ・ナビ・コントラスト）"
+run = "./tools/x measure"
