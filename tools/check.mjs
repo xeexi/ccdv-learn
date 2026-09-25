@@ -104,7 +104,8 @@ head('[2] 位置参照と、実装の話');
   const files = [...FILES, 'index.html'];
   files.forEach(f => {
     const body = f === 'index.html' ? (read(f).match(/▼ 本文[^\n]*-->([\s\S]*?)<!-- ▲ 本文/) || [])[1] || '' : bodyOf(f);
-    (body.replace(/<!--[\s\S]*?-->/g, ' ').match(NG_WORDS) || []).forEach(w => bad(`${f}: 「${w}」が本文に残っている`));
+    // 差し込み（<!--#名前-->…<!--/#名前-->）の中身は blueprint.mjs の原文から作る生成物なので、手書きの本文だけを見る
+    (body.replace(/<!--#([a-z]+)-->[\s\S]*?<!--\/#\1-->/g, ' ').replace(/<!--[\s\S]*?-->/g, ' ').match(NG_WORDS) || []).forEach(w => bad(`${f}: 「${w}」が本文に残っている`));
   });
   done(n0, files.length, `${files.length} ファイルの本文に、位置参照も道具の話もない`);
 }
@@ -395,18 +396,18 @@ head('[12] 分量の釣り合い（スキルの重みとの比）');
 /* --- 13. 設問の按分 ------------------------------------------------------
    1問ずつ s（スキル）を持つので、按分は設問データから数える。
    本文（ドメインのディレクトリ）の設問 … スキルの重みで QCONF.total 問を按分した数と一致すること
-   模擬試験（キーが QCONF.mock で始まる）… ドメインの重みで本番の問数を按分した数と一致すること */
+   模擬試験（キーが QCONF.mock で始まる）… **回ごとに**、ドメインの重みで本番の問数を按分した数と一致すること */
 head('[13] 設問の按分（スキル・ドメインの重みどおりか）');
 {
   const n0 = ng; let n = 0;
   const want = skillQuiz(QCONF.total), got = {};
-  const mockGot = {}; let mockN = 0;
+  const mockGot = {};   // 回（設問キー）ごとの { ドメイン: 問数 }
   order.forEach(s => {
     if (!s.quiz || !QUIZ[s.quiz]) return;
     const inDomain = !!BP_DOM[dirOf(s.f).key];
     QUIZ[s.quiz].forEach((x, i) => {
       if (!SKILLS[x.s]) { bad(`設問キー ${s.quiz} Q${i + 1}: s="${x.s}" が知らないスキル`); return; }
-      if (s.quiz.startsWith(QCONF.mock)) { mockN++; mockGot[SKILLS[x.s].d] = (mockGot[SKILLS[x.s].d] || 0) + 1; }
+      if (s.quiz.startsWith(QCONF.mock)) { const m = (mockGot[s.quiz] = mockGot[s.quiz] || {}); m[SKILLS[x.s].d] = (m[SKILLS[x.s].d] || 0) + 1; }
       else if (inDomain) got[x.s] = (got[x.s] || 0) + 1;
     });
   });
@@ -416,10 +417,16 @@ head('[13] 設問の按分（スキル・ドメインの重みどおりか）');
   });
   if (SCOPE_DIRS.has(summaryDir)) {
     const di = domainItems();
-    Object.keys(BP_DOM).forEach(d => { if ((mockGot[d] || 0) !== di[d]) bad(`模擬試験の Domain ${BP_DOM[d].n} が ${mockGot[d] || 0} 問、本番の按分なら ${di[d]} 問`); });
-    if (mockN !== EXAM.items) bad(`模擬試験が ${mockN} 問（本番は ${EXAM.items} 問）`);
+    const keys = Object.keys(QUIZ).filter(k => k.startsWith(QCONF.mock));
+    if (!keys.length) bad('模擬試験の設問キーが無い');
+    keys.forEach(k => {
+      const got = mockGot[k] || {};
+      const tot = Object.values(got).reduce((a, b) => a + b, 0);
+      Object.keys(BP_DOM).forEach(d => { if ((got[d] || 0) !== di[d]) bad(`模擬試験 ${k} の Domain ${BP_DOM[d].n} が ${got[d] || 0} 問、本番の按分なら ${di[d]} 問`); });
+      if (tot !== EXAM.items) bad(`模擬試験 ${k} が ${tot} 問（本番は ${EXAM.items} 問）`);
+    });
   }
-  if (n) done(n0, n, `${n} スキルの設問数が重みどおり（総数 ${QCONF.total} の按分）${SCOPE_DIRS.has(summaryDir) ? `・模擬試験 ${EXAM.items} 問もドメインの按分どおり` : ''}`);
+  if (n) done(n0, n, `${n} スキルの設問数が重みどおり（総数 ${QCONF.total} の按分）${SCOPE_DIRS.has(summaryDir) ? `・模擬試験 ${Object.keys(mockGot).length} 回も、各回 ${EXAM.items} 問がドメインの按分どおり` : ''}`);
   else console.log('  ⏭ 対象のスキルなし（--dirs）');
 }
 

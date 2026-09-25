@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
+<link rel="stylesheet" href="../assets/style.css?v=1b63c25e">
 </head>
 <body data-page="gloss">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -58,6 +58,155 @@
   <h2>9-5　公式の英語 ⇄ 日本語</h2>
 </header>
 <p class="goal"><b>ゴール</b>教材の日本語から、設問に出る英語を引ける。</p>
+<p class="lead">設問は英語で出ます。この教材で使った日本語と、Exam Guide の英語の対応を、ドメインごとに並べます。<b>英語はすべて Exam Guide の原文から写したもの</b>です。</p>
+
+<!--#glossfig--><h3>Domain 1　エージェントとワークフロー</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>a workflow versus an agent</code></th><td>ワークフローかエージェントかの判断</td></tr>
+    <tr><th><code>manager/supervisor hierarchies</code></th><td>監督役を置く階層</td></tr>
+    <tr><th><code>subagents</code></th><td>子（別の窓で動くエージェント）</td></tr>
+    <tr><th><code>tool-use loops</code></th><td>ツールを使うループ</td></tr>
+    <tr><th><code>memory</code></th><td>記憶（窓の外に残すメモ）</td></tr>
+    <tr><th><code>agentic abstraction frameworks</code></th><td>エージェントの枠組み</td></tr>
+    <tr><th><code>custom agent loops and harnesses</code></th><td>自前のループとハーネス</td></tr>
+    <tr><th><code>self-hosted vs. Anthropic-hosted</code></th><td>自前で動かすか、Anthropic が動かすか</td></tr>
+    <tr><th><code>hooks for deterministic actions</code></th><td>決まった処理を必ず行うフック</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 2　アプリケーション開発と連携</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>invoking Claude through third-party vendors</code></th><td>他社のクラウド経由での呼び出し</td></tr>
+    <tr><th><code>Messages API data access patterns</code></th><td>Messages API への資料の渡し方</td></tr>
+    <tr><th><code>tradeoffs between realtime and batch API selection</code></th><td>通常の呼び出しと Batch の選び分け</td></tr>
+    <tr><th><code>asynchronous programming</code></th><td>非同期処理</td></tr>
+    <tr><th><code>version control</code></th><td>バージョン管理</td></tr>
+    <tr><th><code>SDLC integration</code></th><td>開発工程への組み込み</td></tr>
+    <tr><th><code>code review</code></th><td>コードレビュー</td></tr>
+    <tr><th><code>small- and large-scale refactoring</code></th><td>小さな書き換えと大きな作り直し</td></tr>
+    <tr><th><code>Functional and infrastructure requirements</code></th><td>機能の要件と基盤の要件</td></tr>
+    <tr><th><code>business requirements and solution architecture</code></th><td>業務の要件と全体の構成</td></tr>
+    <tr><th><code>Systems life cycle management</code></th><td>システムのライフサイクル管理</td></tr>
+    <tr><th><code>how Claude interprets instructions across interfaces</code></th><td>入口ごとの指示の読まれ方</td></tr>
+    <tr><th><code>content boundaries</code></th><td>指示とデータの境目</td></tr>
+    <tr><th><code>schema design</code></th><td>入出力の形の設計</td></tr>
+    <tr><th><code>session hygiene</code></th><td>セッションの衛生</td></tr>
+    <tr><th><code>plugin management</code></th><td>プラグインの管理</td></tr>
+    <tr><th><code>model version pinning</code></th><td>モデルの版の固定</td></tr>
+    <tr><th><code>prompt versioning</code></th><td>プロンプトの版管理</td></tr>
+    <tr><th><code>plugin dependencies</code></th><td>プラグインの依存関係</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 3　Claude Code</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>Claude Code core components</code></th><td>Claude Code の部品</td></tr>
+    <tr><th><code>Agent Memory</code></th><td>エージェントの記憶</td></tr>
+    <tr><th><code>session management</code></th><td>セッションの管理</td></tr>
+    <tr><th><code>built-in and custom slash commands</code></th><td>組み込みと自作のスラッシュコマンド</td></tr>
+    <tr><th><code>headless mode</code></th><td>対話なしの実行</td></tr>
+    <tr><th><code>streaming mode</code></th><td>逐次の出力</td></tr>
+    <tr><th><code>auto-mode</code></th><td>自動で判定するモード（auto）</td></tr>
+    <tr><th><code>the CLAUDE.md hierarchy</code></th><td>CLAUDE.md の階層</td></tr>
+    <tr><th><code>repository initialization</code></th><td>リポジトリの初期化</td></tr>
+    <tr><th><code>settings.json configuration</code></th><td>settings.json の設定</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 4　評価・テスト・デバッグ</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>error type identification</code></th><td>エラーの種類の見分け</td></tr>
+    <tr><th><code>recovery strategy selection</code></th><td>立て直し方の選択</td></tr>
+    <tr><th><code>trace analysis to identify failure modes</code></th><td>トレースによる失敗の型の分析</td></tr>
+    <tr><th><code>problem origin isolation between the integration layer and model output</code></th><td>繋ぎ込みとモデルの出力の切り分け</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 5　モデルの選択と最適化</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>next-token generation</code></th><td>次の1トークンの生成</td></tr>
+    <tr><th><code>sampling</code></th><td>サンプリング（確率に従った選び方）</td></tr>
+    <tr><th><code>non-determinism</code></th><td>非決定性（同じ入力でも出力が揺れる性質）</td></tr>
+    <tr><th><code>context windows</code></th><td>窓（一度に扱えるトークンの上限）</td></tr>
+    <tr><th><code>extended thinking</code></th><td>予算を決めて考えさせる方式</td></tr>
+    <tr><th><code>adaptive thinking</code></th><td>考える量をモデルが決める方式</td></tr>
+    <tr><th><code>effort levels</code></th><td>力の入れ具合の段階</td></tr>
+    <tr><th><code>fast mode</code></th><td>同じモデルを速く動かす指定</td></tr>
+    <tr><th><code>multi-shot</code></th><td>例を複数見せる頼み方</td></tr>
+    <tr><th><code>integrating with SDKs that wrap REST APIs</code></th><td>REST API を包む SDK での接続</td></tr>
+    <tr><th><code>websockets</code></th><td>双方向の常時接続（WebSocket）</td></tr>
+    <tr><th><code>tradeoffs across quality/latency/cost parameters</code></th><td>品質・待ち時間・費用のかね合い</td></tr>
+    <tr><th><code>breaking behavior changes across model releases</code></th><td>版の更新による挙動の破壊的な変化</td></tr>
+    <tr><th><code>token usage tracking</code></th><td>トークン使用量の記録</td></tr>
+    <tr><th><code>cost modeling</code></th><td>費用の見積もり</td></tr>
+    <tr><th><code>prompt caching</code></th><td>プロンプトキャッシュ</td></tr>
+    <tr><th><code>cache check-pointing</code></th><td>キャッシュの区切りの置き方</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 6　プロンプトとコンテキストの設計</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>instruction clarity</code></th><td>指示のはっきりさ</td></tr>
+    <tr><th><code>few-shot examples</code></th><td>少数の例（few-shot）</td></tr>
+    <tr><th><code>system versus user placement</code></th><td>system と user の置き分け</td></tr>
+    <tr><th><code>output constraints</code></th><td>出力の制約</td></tr>
+    <tr><th><code>prompt and instruction placement across components</code></th><td>部品ごとの指示の置き場所</td></tr>
+    <tr><th><code>iterative refinement</code></th><td>結果を見ながらの手直し</td></tr>
+    <tr><th><code>input sanitization</code></th><td>渡す前の入力の整え方</td></tr>
+    <tr><th><code>prevention of context drift and bloat</code></th><td>文脈のずれと膨らみの防止</td></tr>
+    <tr><th><code>tool output pruning</code></th><td>ツールの結果の刈り込み</td></tr>
+    <tr><th><code>compaction</code></th><td>圧縮（会話を要約に置き換えること）</td></tr>
+    <tr><th><code>context isolation</code></th><td>文脈の切り分け</td></tr>
+    <tr><th><code>structured output patterns</code></th><td>構造化出力の型</td></tr>
+    <tr><th><code>response validation</code></th><td>応答の検証</td></tr>
+    <tr><th><code>defensive parsing</code></th><td>壊れた出力に備えた読み取り</td></tr>
+    <tr><th><code>skepticism toward confident output</code></th><td>自信のある出力への疑い</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 7　セキュリティと安全</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>prompt injection awareness and mitigation</code></th><td>インジェクションへの備えと対策</td></tr>
+    <tr><th><code>jailbreak defense</code></th><td>ジェイルブレイクへの守り</td></tr>
+    <tr><th><code>untrusted input handling</code></th><td>信頼できない入力の扱い</td></tr>
+    <tr><th><code>data leakage prevention</code></th><td>データの漏れの防止</td></tr>
+    <tr><th><code>PII handling</code></th><td>個人情報の扱い</td></tr>
+    <tr><th><code>content policy</code></th><td>内容の方針</td></tr>
+    <tr><th><code>guardrail layering</code></th><td>守りの重ね方</td></tr>
+    <tr><th><code>identity and access management</code></th><td>ID と権限の管理</td></tr>
+    <tr><th><code>least privilege</code></th><td>最小権限</td></tr>
+    <tr><th><code>prevent destructive actions within Claude applications</code></th><td>取り返しのつかない操作の防止</td></tr>
+    <tr><th><code>identity validation and authentication</code></th><td>本人の確認と認証</td></tr>
+    <tr><th><code>access approval and level verification</code></th><td>権限の承認と段階の確認</td></tr>
+    <tr><th><code>authorized access monitoring</code></th><td>許可された利用の見張り</td></tr>
+  </tbody>
+</table>
+
+<h3>Domain 8　ツールと MCP</h3>
+<table class="tbl pair">
+  <tbody>
+    <tr><th><code>tool use and function calling</code></th><td>ツール使用（関数呼び出し）</td></tr>
+    <tr><th><code>tool description writing</code></th><td>ツールの説明の書き方</td></tr>
+    <tr><th><code>tool set construction best practices</code></th><td>ツールの組のそろえ方</td></tr>
+    <tr><th><code>agentic harness dispatch</code></th><td>ハーネスによる呼び出しの振り分け</td></tr>
+    <tr><th><code>client-side vs. server-side tools</code></th><td>クライアント側とサーバ側のツール</td></tr>
+    <tr><th><code>approval patterns</code></th><td>承認の挟み方</td></tr>
+    <tr><th><code>server authoring</code></th><td>MCP サーバの作成</td></tr>
+    <tr><th><code>MCP resources, tools, and prompts</code></th><td>MCP のリソース・ツール・プロンプト</td></tr>
+    <tr><th><code>stdio</code></th><td>標準入出力でのつなぎ方（stdio）</td></tr>
+    <tr><th><code>Tradeoffs among built-in Tools, custom Tools, Skills, and MCPs</code></th><td>組み込み・自作・Skills・MCP の使い分け</td></tr>
+  </tbody>
+</table>
+
+<p class="note">※ 英語は Exam Guide から写した 97 組です。<b>こちらで作った英語はありません。</b></p><!--/#glossfig-->
+<p class="point"><b>ポイント</b>英語の設問で見慣れない語が出たら、ここで日本語を引き、その項に戻る。</p>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../09-summary/04-prepare.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../09-summary/06-mockabout.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +219,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
-<script src="../assets/search-index.js?v=86dce478"></script>
+<script src="../assets/quiz-data.js?v=fb4bf3f7"></script>
+<script src="../assets/search-index.js?v=d779389b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

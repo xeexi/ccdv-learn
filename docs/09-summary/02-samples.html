@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
+<link rel="stylesheet" href="../assets/style.css?v=1b63c25e">
 </head>
 <body data-page="samples">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -40,6 +40,7 @@
   <div class="toc-head">まとめ</div>
   <nav class="toc-list"><a class="itm toc-link" href="../09-summary/01-all.html"><span class="itm-n">9-1</span><span class="itm-t">全体を1枚で</span></a>
 <a class="itm toc-link on" href="../09-summary/02-samples.html"><span class="itm-n">9-2</span><span class="itm-t">公式の例題 ─ 誤答には型がある</span></a>
+<a class="toc-link toc-sub" href="#samples-back">間違えたら、どこへ戻るか</a>
 <a class="itm toc-link" href="../09-summary/03-read.html"><span class="itm-n">9-3</span><span class="itm-t">設問の読み方 ─ 限定語と、複数選ぶ設問</span></a>
 <a class="itm toc-link" href="../09-summary/04-prepare.html"><span class="itm-n">9-4</span><span class="itm-t">受験の準備 ─ 公式が勧めること</span></a>
 <a class="itm toc-link" href="../09-summary/05-gloss.html"><span class="itm-n">9-5</span><span class="itm-t">公式の英語 ⇄ 日本語</span></a>
@@ -58,6 +59,51 @@
   <h2>9-2　公式の例題 ─ 誤答には型がある</h2>
 </header>
 <p class="goal"><b>ゴール</b>例題の誤答を型で見分け、間違えたときに戻る項を選べる。</p>
+<p class="lead">公式 Exam Guide には、解説つきの例題が付いています。この教材では例題を訳して載せず、<b>誤答がどんな形で作られているか</b>を型に分けて載せます。本番の誤答も、同じ型で作られています。例題の原文は、トップの〈参考資料〉から Exam Guide で読めます。</p>
+
+<!--#samplefig--><table class="tbl">
+  <thead><tr><th>誤答の型（9個ぶんを分類）</th><th>こう見える</th><th>なぜ誤りか</th></tr></thead>
+  <tbody>
+    <tr><td data-l="誤答の型"><b>① 効かないつまみを回す</b><br><span class="n">9個中 3個</span></td>
+        <td data-l="こう見える">並列にする／max_tokens を下げる／temperature を上げる</td>
+        <td data-l="なぜ誤りか">動かしているのは、<b>問われている軸とは別のつまみ</b><br><span class="n">公式の解説より ─ &ldquo;does not address the batch-versus-realtime tradeoff&rdquo;</span></td></tr>
+    <tr><td data-l="誤答の型"><b>② モデルの大小で片づける</b><br><span class="n">9個中 2個</span></td>
+        <td data-l="こう見える">いちばん小さいモデルにする／大きいモデルにする</td>
+        <td data-l="なぜ誤りか">モデルを替えても<b>仕組みの問題は残る</b>。指示に従順なモデルほど注入に弱いこともある<br><span class="n">公式の解説より ─ &ldquo;a more instruction-following model (D) can be more susceptible, not less&rdquo;</span></td></tr>
+    <tr><td data-l="誤答の型"><b>③ 頼んで守らせる</b><br><span class="n">9個中 1個</span></td>
+        <td data-l="こう見える"><code>system</code> に「〜しないで」と書く</td>
+        <td data-l="なぜ誤りか">お願いは<b>強制力のある制御ではない</b><br><span class="n">公式の解説より ─ &ldquo;a polite request (C) is not an enforceable control&rdquo;</span></td></tr>
+    <tr><td data-l="誤答の型"><b>④ その場しのぎで使い回せない</b><br><span class="n">9個中 2個</span></td>
+        <td data-l="こう見える">プロンプトに書き込む／データを毎回貼る</td>
+        <td data-l="なぜ誤りか">動きはするが、<b>使い回せず保守もできない</b>。貼ったデータは古くなり窓を食う<br><span class="n">公式の解説より ─ &ldquo;Hard-coding logic into prompts (A) is neither reusable nor maintainable&rdquo;</span></td></tr>
+    <tr><td data-l="誤答の型"><b>⑤ 事実で消える</b><br><span class="n">9個中 1個</span></td>
+        <td data-l="こう見える">組み込みツールが何でも届く、のような機能の誤解</td>
+        <td data-l="なぜ誤りか">知っていれば読んだ瞬間に消える。<b>考える前に、まずこれを外す</b><br><span class="n">公式の解説より ─ &ldquo;built-in tools (D) do not automatically reach arbitrary internal APIs&rdquo;</span></td></tr>
+  </tbody>
+</table>
+
+<p class="point"><b>ポイント</b>3問の誤答9個は、この<b>5つで全部説明がつく</b>。最も多いのは<b>① 効かないつまみを回す（3個）</b>。</p>
+
+<h3 class="sub" id="samples-back">間違えたら、どこへ戻るか</h3>
+<p class="goal"><b>ゴール</b>例題で間違えた選択肢から、読み直す項を選べる。</p>
+<table class="tbl">
+  <thead><tr><th>問</th><th>問われていること</th><th>誤答3つの型</th><th>間違えたら戻る先</th></tr></thead>
+  <tbody>
+    <tr><td data-l="問"><b>Sample 1</b></td>
+        <td data-l="問われていること">急がない大量処理を、いちばん安く回す<br><span class="n">Domain 2</span></td>
+        <td data-l="誤答3つの型">① 効かないつまみを回す<b> ×2</b><br>② モデルの大小で片づける</td>
+        <td data-l="間違えたら戻る先"><span class="n secs"><a href="../02-apps/04-batch.html">2-4</a> <a href="../05-models/10-cost.html">5-10</a></span></td></tr>
+    <tr><td data-l="問"><b>Sample 2</b></td>
+        <td data-l="問われていること">読み込んだページに仕込まれた指示を、効かせない<br><span class="n">Domain 7</span></td>
+        <td data-l="誤答3つの型">① 効かないつまみを回す<br>③ 頼んで守らせる<br>② モデルの大小で片づける</td>
+        <td data-l="間違えたら戻る先"><span class="n secs"><a href="../07-security/01-inject.html">7-1</a> <a href="../02-apps/15-boundary.html">2-15</a></span></td></tr>
+    <tr><td data-l="問"><b>Sample 3</b></td>
+        <td data-l="問われていること">社内の REST API を、複数のアプリから使い回す<br><span class="n">Domain 8</span></td>
+        <td data-l="誤答3つの型">④ その場しのぎで使い回せない<b> ×2</b><br>⑤ 事実で消える</td>
+        <td data-l="間違えたら戻る先"><span class="n secs"><a href="../08-tools/05-mcp.html">8-5</a> <a href="../08-tools/08-extend.html">8-8</a></span></td></tr>
+  </tbody>
+</table>
+<p class="note">※ 「問われていること」は要旨です。<b>設問文・選択肢・解説は載せていません</b> ── 公式の例題そのもので、訳すと限定語が落ちて正解が変わるためです。原文を英語のまま解いてください。</p><!--/#samplefig-->
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../09-summary/01-all.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../09-summary/03-read.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +116,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
-<script src="../assets/search-index.js?v=86dce478"></script>
+<script src="../assets/quiz-data.js?v=fb4bf3f7"></script>
+<script src="../assets/search-index.js?v=d779389b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

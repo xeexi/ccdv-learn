@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
+<link rel="stylesheet" href="../assets/style.css?v=1b63c25e">
 </head>
 <body data-page="prepare">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -42,6 +42,7 @@
 <a class="itm toc-link" href="../09-summary/02-samples.html"><span class="itm-n">9-2</span><span class="itm-t">公式の例題 ─ 誤答には型がある</span></a>
 <a class="itm toc-link" href="../09-summary/03-read.html"><span class="itm-n">9-3</span><span class="itm-t">設問の読み方 ─ 限定語と、複数選ぶ設問</span></a>
 <a class="itm toc-link on" href="../09-summary/04-prepare.html"><span class="itm-n">9-4</span><span class="itm-t">受験の準備 ─ 公式が勧めること</span></a>
+<a class="toc-link toc-sub" href="#prepare-admin">申し込みと当日</a>
 <a class="itm toc-link" href="../09-summary/05-gloss.html"><span class="itm-n">9-5</span><span class="itm-t">公式の英語 ⇄ 日本語</span></a>
 <a class="itm toc-link" href="../09-summary/06-mockabout.html"><span class="itm-n">9-6</span><span class="itm-t">模擬試験の使い方</span></a>
 <a class="itm toc-link" href="../09-summary/07-mock1.html"><span class="itm-n">9-7</span><span class="itm-t">模擬試験 ①</span></a>
@@ -58,6 +59,38 @@
   <h2>9-4　受験の準備 ─ 公式が勧めること</h2>
 </header>
 <p class="goal"><b>ゴール</b>公式が勧める準備を、この教材のどの項で進めるかを言える。</p>
+<p class="lead">公式 Exam Guide は、準備として、読むことだけでなく<b>実際に作って動かすこと</b>を勧めています。試験が問うのは、作ったことのある人の判断だからです。</p>
+
+<!--#preparefig--><table class="tbl">
+  <thead><tr><th>準備</th><th>中身（下は原文）</th><th>対応する項</th></tr></thead>
+  <tbody>
+    <tr><td data-l="準備"><b>自己評価</b></td>
+        <td data-l="中身">ブループリント（§6）を読み、スキルごとに自分の理解を確かめる。トップの表の「扱う項」から各項へ戻れる<br><span class="n">&ldquo;Study the exam blueprint in Section 6 and self-assess against each objective&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n secs">─</span></td></tr>
+    <tr><td data-l="準備"><b>文書を読む</b></td>
+        <td data-l="中身">API・モデル・プロンプト・Claude Code・Skills・MCP の公式ドキュメントを読む<br><span class="n">&ldquo;Review official Anthropic documentation for the Claude API, models, prompt engineering, Claude Code, Skills, and MCP&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n secs"><a href="../02-apps/01-blocks.html">2-1</a> <a href="../05-models/09-choose.html">5-9</a> <a href="../06-prompt/02-clear.html">6-2</a> <a href="../03-claude-code/01-parts.html">3-1</a> <a href="../08-tools/08-extend.html">8-8</a> <a href="../08-tools/05-mcp.html">8-5</a></span></td></tr>
+    <tr><td data-l="準備"><b>1つ作る</b></td>
+        <td data-l="中身">API を使い、道具を1つ以上つなぎ、プロンプトと文脈を整え、簡単な守りと評価を入れたアプリを、作って動かす<br><span class="n">&ldquo;Build and operate at least one Claude application that exercises the API, integrates one or more tools, applies basic prompt and context engineering, and includes simple security and evaluation practices&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n secs"><a href="../01-agents/04-loop.html">1-4</a> <a href="../08-tools/02-dispatch.html">8-2</a> <a href="../06-prompt/01-place.html">6-1</a> <a href="../06-prompt/05-prune.html">6-5</a> <a href="../07-security/01-inject.html">7-1</a> <a href="../06-prompt/03-refine.html">6-3</a></span></td></tr>
+    <tr><td data-l="準備"><b>練習する</b></td>
+        <td data-l="中身">プロンプトと system・エージェントとワークフロー・Claude Code の設定・トークンと費用・ガードレール・自作の道具や MCP サーバを、手を動かして練習する<br><span class="n">&ldquo;Practice the developer competencies: writing prompts and system instructions, building agents and workflows, configuring Claude Code, managing tokens and cost, implementing guardrails, and creating custom tools or MCP servers&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n secs"><a href="../06-prompt/01-place.html">6-1</a> <a href="../01-agents/01-workflow.html">1-1</a> <a href="../03-claude-code/02-run.html">3-2</a> <a href="../05-models/10-cost.html">5-10</a> <a href="../07-security/03-layer.html">7-3</a> <a href="../08-tools/01-define.html">8-1</a> <a href="../08-tools/05-mcp.html">8-5</a></span></td></tr>
+    <tr><td data-l="準備"><b>例題を解く</b></td>
+        <td data-l="中身">例題（§8）を解き、設問の形に慣れる<br><span class="n">&ldquo;Complete the sample questions in Section 8 to familiarize yourself with item style&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n secs"><a href="../09-summary/02-samples.html">9-2</a></span></td></tr>
+  </tbody>
+</table><!--/#preparefig-->
+<p class="point"><b>ポイント</b>読んで分かったつもりの項ほど、小さなアプリを1つ作って確かめる。作ると、どこで判断が要るかが分かる。</p>
+
+<h3 class="sub" id="prepare-admin">申し込みと当日</h3>
+<p class="goal"><b>ゴール</b>受験の手続きで、行動が変わる決まりを言える。</p>
+<!--#examadmin--><div class="ex"><span class="exl">受験の実務 ─ 計画に効くものだけ</span>
+  <b>予約する前に</b>　身分証の氏名と<b>登録名が完全に一致</b>している必要があります。訂正は <code>certifications-support@anthropic.com</code> へ ── <b>予約する前に</b>済ませます。配慮（accommodations）が要るときも、Pearson VUE の承認を得てから予約します。<br>
+  <b>受け方</b>　オンライン監督つき、またはテストセンター（Pearson VUE）。受験料 <b>125 USD</b>。予約の変更・取消は<b>24時間前まで</b>。それを過ぎたとき、および無断欠席・遅刻は、受験料が戻らず登録し直しになります。<br>
+  <b>当日</b>　写真つきの本人確認書類が要ります。机の上に資料・端末は置けません（携帯・スマートウォッチ・ヘッドホン・参考書・録音機器も持ち込めません）。試験内容は<b>口外しない</b>という同意（NDA）に応じてから始まります。<br>
+  <b>落ちたとき</b>　待機は<b>14日 → 30日 → 90日</b>と伸びます。直近12か月で受けられるのは<b>4回</b>まで。<b>1回目で通す前提で組むほうが安上がり</b>です。<br>
+  <b>受かったあと</b>　有効期間は<b>12か月</b>。期限内なら<b>無料の更新試験</b>で更新でき、切らすと本試験を受け直しになります。</div><!--/#examadmin-->
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../09-summary/03-read.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../09-summary/05-gloss.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +103,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
-<script src="../assets/search-index.js?v=86dce478"></script>
+<script src="../assets/quiz-data.js?v=fb4bf3f7"></script>
+<script src="../assets/search-index.js?v=d779389b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

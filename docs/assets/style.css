@@ -914,6 +914,8 @@ html[data-theme="light"] .opt:hover:not(.done) .ol{ color:#fff }
 .tbl tbody td{ color:var(--ink-2) }
 /* 1列目のコード（--safe-mode など）はハイフンで割らない。割れると「--」だけが1行に残る */
 .tbl tbody td:first-child code{ white-space:nowrap }
+/* 項番号のリンクの並び（5-11 2-1 …）。「7-」と「3」に割れないよう、1つずつは折り返さない */
+.tbl .secs a{ white-space:nowrap }
 /* 2列の一覧（'.tbl.pair'）── 見出しでグループに分けた表を並べて1つの一覧にする形。
    〈参考資料〉と〈英語で読む〉で使う。幅を指定しないと表ごとに1列目が自動で伸び、
    説明の開始位置が表ごとにずれる（実測 215 / 315 / 190px。§7 #52 と同じ形）。

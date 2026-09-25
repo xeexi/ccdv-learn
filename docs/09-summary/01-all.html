@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
+<link rel="stylesheet" href="../assets/style.css?v=1b63c25e">
 </head>
 <body data-page="all">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -39,6 +39,7 @@
 <aside class="toc">
   <div class="toc-head">まとめ</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../09-summary/01-all.html"><span class="itm-n">9-1</span><span class="itm-t">全体を1枚で</span></a>
+<a class="toc-link toc-sub" href="#all-axis">問われる軸と、効く手</a>
 <a class="itm toc-link" href="../09-summary/02-samples.html"><span class="itm-n">9-2</span><span class="itm-t">公式の例題 ─ 誤答には型がある</span></a>
 <a class="itm toc-link" href="../09-summary/03-read.html"><span class="itm-n">9-3</span><span class="itm-t">設問の読み方 ─ 限定語と、複数選ぶ設問</span></a>
 <a class="itm toc-link" href="../09-summary/04-prepare.html"><span class="itm-n">9-4</span><span class="itm-t">受験の準備 ─ 公式が勧めること</span></a>
@@ -58,6 +59,39 @@
   <h2>9-1　全体を1枚で</h2>
 </header>
 <p class="goal"><b>ゴール</b>ドメインどうしのつながりを1枚で説明できる。</p>
+<p class="lead">8つのドメインは、Claude を使うアプリを作って動かす1本の流れの上に並びます。どの設問も、この流れのどこか1か所の判断を問っています。<b>どこの話かが分かれば、答えの軸も決まります</b>。</p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">アプリを作って動かす流れ ─ 設問はこのどこかを指している</p>
+  <div class="fig-row flow s1" style="--cols:4">
+    <div class="fig-card"><b class="fig-h">選ぶ（D5）</b><span class="fig-note">モデル・考える量・費用・つなぎ方</span></div>
+    <div class="fig-card"><b class="fig-h">伝える（D6）</b><span class="fig-note">置き場所・例・文脈・出力の形</span></div>
+    <div class="fig-card"><b class="fig-h">動かす（D8・D1）</b><span class="fig-note">道具・MCP・ループ・監督役・SDK</span></div>
+    <div class="fig-card"><b class="fig-h">組み込む（D2・D3）</b><span class="fig-note">API・開発の基礎・設計・構成・Claude Code</span></div>
+  </div>
+  <p class="fig-lbl s2">どの段にも掛かるもの</p>
+  <div class="fig-row s2" style="--cols:2">
+    <div class="fig-card key"><b class="fig-h">守る（D7）</b><span class="fig-note">境目・最小権限・フック・鍵</span></div>
+    <div class="fig-card key"><b class="fig-h">直す（D4）</b><span class="fig-note">エラーの種類・どこで壊れたかの切り分け</span></div>
+  </div>
+  <p class="fig-f">設問は、この流れのどこか1か所の判断を問う。まず「どこの話か」を特定する。</p>
+</figure></div>
+<p class="point"><b>ポイント</b>どこの話かを特定し、その段で問われている軸に効く、いちばん単純な手を選ぶ。</p>
+
+<h3 class="sub" id="all-axis">問われる軸と、効く手</h3>
+<p class="goal"><b>ゴール</b>設問の軸から、効く手と、よくある誤答の形を言える。</p>
+<table class="tbl">
+  <thead><tr><th>軸</th><th>効く手</th><th>よくある誤答</th></tr></thead>
+  <tbody>
+    <tr><td data-l="軸">費用と速さ</td><td data-l="効く手">Batch・キャッシュ・effort・区分（〈<a href="../05-models/10-cost.html">費用を見積もる</a>〉）</td><td data-l="よくある誤答">関係のないつまみを回す（並列にする・上限を下げる）</td></tr>
+    <tr><td data-l="軸">必ず守る</td><td data-l="効く手">権限・フック・道具の中での確かめ（〈<a href="../07-security/03-layer.html">守りを重ねる</a>〉）</td><td data-l="よくある誤答">system に書いて頼む</td></tr>
+    <tr><td data-l="軸">使い回す</td><td data-l="効く手">MCP・Skills・設定ファイル（〈<a href="../08-tools/08-extend.html">Skills か、MCP か</a>〉）</td><td data-l="よくある誤答">プロンプトに書き込む・データを毎回貼る</td></tr>
+    <tr><td data-l="軸">出来</td><td data-l="効く手">例・基準・評価・文脈の整理（〈<a href="../06-prompt/03-refine.html">直しながら寄せる</a>〉）</td><td data-l="よくある誤答">モデルを大きくするだけで片づける</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <div class="ex"><span class="exl">迷ったときに戻る一文</span>判断が要ることは Claude へ、必ず守らせたいことはコードへ。そして、効く一番単純な手を選ぶ。公式の例題の誤答も、この基準で外れる形をしています（〈<a href="02-samples.html">公式の例題</a>〉）。</div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../04-debug/03-q.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../09-summary/02-samples.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -70,7 +104,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
-<script src="../assets/search-index.js?v=86dce478"></script>
+<script src="../assets/quiz-data.js?v=fb4bf3f7"></script>
+<script src="../assets/search-index.js?v=d779389b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

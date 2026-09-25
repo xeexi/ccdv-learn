@@ -20,7 +20,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { GUIDE, EXAM, DOMAINS as BP_DOM, SKILLS, COVER, TRAPS, SAMPLES, QUALIFIERS, GLOSSARY, TERMS, CAST, domainItems, pct } from './blueprint.mjs';
+import { GUIDE, EXAM, DOMAINS as BP_DOM, SKILLS, COVER, PREPARE, TRAPS, SAMPLES, QUALIFIERS, GLOSSARY, TERMS, CAST, domainItems, pct } from './blueprint.mjs';
 import { DIRS, SITE } from './site.mjs';
 
 /* 成果物（HTML と assets）は docs/ の下 ─ GitHub Pages がそのまま公開できる名前。tools/ と CLAUDE.md はリポジトリ直下 */
@@ -45,11 +45,18 @@ const CLOSE = '<!-- ▲ 本文 -->';
    同じ図や表が2か所以上に要るとき、本文に <!--#名前--><!--/#名前--> と書いておけば
    reindex が中身を差し込む。手で2か所コピーすると必ず片方だけ古くなる。
    実体（BLOCKS）は部品を定義したあとに置くので、差し込みは読み込みの後に1回まとめて行う。 */
-const fillBlocks = (html) => Object.entries(BLOCKS).reduce(
-  (s, [name, make]) => s.replace(
-    new RegExp(`<!--#${name}-->[\\s\\S]*?<!--/#${name}-->`, 'g'),
-    () => `<!--#${name}-->${make()}<!--/#${name}-->`),
-  html);
+const fillBlocks = (html) => {
+  // 開きだけの目印・知らない名前は、黙って素通りさせずに止める（差し込まれないまま公開されるのを防ぐ）
+  for (const m of html.matchAll(/<!--#([a-z]+)-->/g)) {
+    if (!BLOCKS[m[1]] && m[1] !== 'alllist') throw new Error(`知らない差し込み <!--#${m[1]}-->（reindex.mjs の BLOCKS にない）`);
+    if (!html.includes(`<!--/#${m[1]}-->`)) throw new Error(`差し込みの目印 <!--#${m[1]}--> に閉じ <!--/#${m[1]}--> が無い`);
+  }
+  return Object.entries(BLOCKS).reduce(
+    (s, [name, make]) => s.replace(
+      new RegExp(`<!--#${name}-->[\\s\\S]*?<!--/#${name}-->`, 'g'),
+      () => `<!--#${name}-->${make()}<!--/#${name}-->`),
+    html);
+};
 
 /* ---------- 1. 節ファイルを読む ---------- */
 const pages = [];
@@ -162,7 +169,7 @@ const blueprintFig = (base = '') => {
       const secs = ((COVER[k] || {}).sections || []).map(id => secLink(id, base)).filter(Boolean).join(' ');
       const head = i === 0
         ? `<td data-l="ドメイン" rowspan="${ss.length}"><b>${esc(d.num)}</b>　${pct(BP_DOM[d.key].w)}<br><span class="n">${esc(BP_DOM[d.key].en)}</span></td>` : '';
-      return `    <tr data-domain="${d.key}">${head}<td data-l="スキル"><b>${esc(s.name)}</b></td><td data-l="重み">${pct(s.w)}</td><td data-l="扱う項"><span class="n">${secs || '─'}</span></td></tr>`;
+      return `    <tr data-domain="${d.key}">${head}<td data-l="スキル"><b>${esc(s.name)}</b></td><td data-l="重み">${pct(s.w)}</td><td data-l="扱う項"><span class="n secs">${secs || '─'}</span></td></tr>`;
     }).join('\n');
   }).join('\n');
   return `<table class="tbl bp">
@@ -208,7 +215,7 @@ const sampleFig = () => {
     return `    <tr><td data-l="問"><b>Sample ${s.n}</b></td>
         <td data-l="問われていること">${esc(s.ja)}<br><span class="n">Domain ${BP_DOM[s.d].n}</span></td>
         <td data-l="誤答${perQ}つの型">${traps}</td>
-        <td data-l="間違えたら戻る先"><span class="n">${secs || '─'}</span></td></tr>`;
+        <td data-l="間違えたら戻る先"><span class="n secs">${secs || '─'}</span></td></tr>`;
   }).join('\n');
   const top = keys.slice().sort((a, b) => (cnt[b] || 0) - (cnt[a] || 0))[0];
   return `<table class="tbl">
@@ -239,7 +246,7 @@ const prepareFig = () => `<table class="tbl">
   <tbody>
 ${PREPARE.map(p => `    <tr><td data-l="準備"><b>${esc(p.k)}</b></td>
         <td data-l="中身">${esc(p.ja)}<br><span class="n">&ldquo;${esc(p.en)}&rdquo;</span></td>
-        <td data-l="対応する項"><span class="n">${(p.sections || []).map(id => secLink(id, '../')).filter(Boolean).join(' ') || '─'}</span></td></tr>`).join('\n')}
+        <td data-l="対応する項"><span class="n secs">${(p.sections || []).map(id => secLink(id, '../')).filter(Boolean).join(' ') || '─'}</span></td></tr>`).join('\n')}
   </tbody>
 </table>`;
 
