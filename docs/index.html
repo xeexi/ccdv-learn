@@ -13,23 +13,23 @@
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
 <nav class="domnav">
   <a class="brand" href="index.html"><span class="brand-mark">CCDV-F</span><span class="brand-sub">学習ノート</span></a>
-  <div class="nav-list"><a class="nav-item" data-domain="models" href="index.html" title="Domain 5 モデルの選択と最適化">
+  <div class="nav-list"><a class="nav-item" data-domain="models" href="05-models/01-token.html" title="Domain 5 モデルの選択と最適化">
        <span class="nav-num">D5</span><span class="nav-title">モデル</span></a>
-<a class="nav-item" data-domain="apps" href="index.html" title="Domain 2 アプリケーション開発と連携">
-       <span class="nav-num">D2</span><span class="nav-title">アプリと連携</span></a>
-<a class="nav-item" data-domain="prompt" href="index.html" title="Domain 6 プロンプトとコンテキストの設計">
-       <span class="nav-num">D6</span><span class="nav-title">プロンプト</span></a>
-<a class="nav-item" data-domain="tools" href="index.html" title="Domain 8 ツールと MCP">
+<a class="nav-item" data-domain="tools" href="08-tools/01-define.html" title="Domain 8 ツールと MCP">
        <span class="nav-num">D8</span><span class="nav-title">ツールと MCP</span></a>
-<a class="nav-item" data-domain="agents" href="index.html" title="Domain 1 エージェントとワークフロー">
+<a class="nav-item" data-domain="prompt" href="06-prompt/01-place.html" title="Domain 6 プロンプトとコンテキストの設計">
+       <span class="nav-num">D6</span><span class="nav-title">プロンプト</span></a>
+<a class="nav-item" data-domain="agents" href="01-agents/01-workflow.html" title="Domain 1 エージェントとワークフロー">
        <span class="nav-num">D1</span><span class="nav-title">エージェント</span></a>
-<a class="nav-item" data-domain="code" href="index.html" title="Domain 3 Claude Code">
+<a class="nav-item" data-domain="apps" href="02-apps/01-blocks.html" title="Domain 2 アプリケーション開発と連携">
+       <span class="nav-num">D2</span><span class="nav-title">アプリと連携</span></a>
+<a class="nav-item" data-domain="code" href="03-claude-code/01-parts.html" title="Domain 3 Claude Code">
        <span class="nav-num">D3</span><span class="nav-title">Claude Code</span></a>
-<a class="nav-item" data-domain="security" href="index.html" title="Domain 7 セキュリティと安全">
+<a class="nav-item" data-domain="security" href="07-security/01-inject.html" title="Domain 7 セキュリティと安全">
        <span class="nav-num">D7</span><span class="nav-title">セキュリティ</span></a>
-<a class="nav-item" data-domain="debug" href="index.html" title="Domain 4 評価・テスト・デバッグ">
+<a class="nav-item" data-domain="debug" href="04-debug/01-errors.html" title="Domain 4 評価・テスト・デバッグ">
        <span class="nav-num">D4</span><span class="nav-title">デバッグ</span></a>
-<a class="nav-item" data-domain="summary" href="index.html" title="まとめ 全体をもう一度">
+<a class="nav-item" data-domain="summary" href="09-summary/01-all.html" title="まとめ 全体をもう一度">
        <span class="nav-num">まとめ</span><span class="nav-title">まとめ</span></a></div>
   <div class="search-wrap">
   <button class="search-btn" id="openSearch" aria-label="検索"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>検索</span><kbd>/</kbd></button>
@@ -68,11 +68,11 @@
 <!--#readorder--><div class="figbox"><figure class="fig run">
   <p class="fig-t">読む順番 ─ 前へ／次へ（← →）はこの順に進む</p>
   <ol class="fig-steps">
-    <li class="s1"><span class="fig-who">Domain 5</span><span class="fig-do"><b>モデルの選択と最適化</b>　LLM の基礎・モデル選択・コスト</span></li>
-    <li class="s2"><span class="fig-who">Domain 2</span><span class="fig-do"><b>アプリケーション開発と連携</b>　API・設計・構成管理・開発の基礎</span></li>
+    <li class="s1"><span class="fig-who">Domain 5</span><span class="fig-do"><b>モデルの選択と最適化</b>　LLM の基礎・API への接続・モデル選択・コスト</span></li>
+    <li class="s2"><span class="fig-who">Domain 8</span><span class="fig-do"><b>ツールと MCP</b>　ツールの実装と使い分け</span></li>
     <li class="s3"><span class="fig-who">Domain 6</span><span class="fig-do"><b>プロンプトとコンテキストの設計</b>　指示・文脈・出力の扱い</span></li>
-    <li class="s4"><span class="fig-who">Domain 8</span><span class="fig-do"><b>ツールと MCP</b>　ツールの実装と使い分け</span></li>
-    <li class="s5"><span class="fig-who">Domain 1</span><span class="fig-do"><b>エージェントとワークフロー</b>　組み方・作り方・型</span></li>
+    <li class="s4"><span class="fig-who">Domain 1</span><span class="fig-do"><b>エージェントとワークフロー</b>　組み方・型・作り方</span></li>
+    <li class="s5"><span class="fig-who">Domain 2</span><span class="fig-do"><b>アプリケーション開発と連携</b>　API・開発の基礎・要件・設計・構成管理</span></li>
     <li class="s6"><span class="fig-who">Domain 3</span><span class="fig-do"><b>Claude Code</b>　Claude Code の運用</span></li>
     <li class="s7"><span class="fig-who">Domain 7</span><span class="fig-do"><b>セキュリティと安全</b>　入力・権限・秘密の守り方</span></li>
     <li class="s8"><span class="fig-who">Domain 4</span><span class="fig-do"><b>評価・テスト・デバッグ</b>　障害の切り分けと立て直し</span></li>
@@ -86,73 +86,73 @@
 <!--#blueprintfig--><table class="tbl bp">
   <thead><tr><th>ドメイン</th><th>スキル（原文）</th><th>重み</th><th>扱う項</th></tr></thead>
   <tbody>
-    <tr data-domain="agents"><td data-l="ドメイン" rowspan="3"><b>Domain 1</b>　14.7%<br><span class="n">Agents and Workflows</span></td><td data-l="スキル"><b>Agent Architecture</b></td><td data-l="重み">4.5%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="agents"><td data-l="スキル"><b>Agent Construction with Claude</b></td><td data-l="重み">5.3%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="agents"><td data-l="スキル"><b>Agent Patterns and Frameworks</b></td><td data-l="重み">4.9%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="ドメイン" rowspan="6"><b>Domain 2</b>　33.1%<br><span class="n">Applications and Integration</span></td><td data-l="スキル"><b>Understanding Requirements</b></td><td data-l="重み">3.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="スキル"><b>Systems Life Cycle</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="スキル"><b>Claude API Mechanics</b></td><td data-l="重み">6.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="スキル"><b>Software Engineering Foundations</b></td><td data-l="重み">7.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="スキル"><b>Claude Application Design</b></td><td data-l="重み">8.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="apps"><td data-l="スキル"><b>Configuration Management</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="code"><td data-l="ドメイン" rowspan="1"><b>Domain 3</b>　3.1%<br><span class="n">Claude Code</span></td><td data-l="スキル"><b>Claude Code Operation</b></td><td data-l="重み">3.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="debug"><td data-l="ドメイン" rowspan="1"><b>Domain 4</b>　2.6%<br><span class="n">Eval, Testing, and Debugging</span></td><td data-l="スキル"><b>Debugging and Error Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="models"><td data-l="ドメイン" rowspan="4"><b>Domain 5</b>　16.8%<br><span class="n">Model Selection and Optimization</span></td><td data-l="スキル"><b>LLM Fundamentals</b></td><td data-l="重み">5.2%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="models"><td data-l="スキル"><b>Technical Fundamentals</b></td><td data-l="重み">6.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="models"><td data-l="スキル"><b>Model Selection and Tradeoffs</b></td><td data-l="重み">2.7%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="models"><td data-l="スキル"><b>Cost and Token Management</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="prompt"><td data-l="ドメイン" rowspan="3"><b>Domain 6</b>　11.0%<br><span class="n">Prompt and Context Engineering</span></td><td data-l="スキル"><b>Context Engineering</b></td><td data-l="重み">3.8%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="prompt"><td data-l="スキル"><b>Prompt Engineering</b></td><td data-l="重み">4.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="prompt"><td data-l="スキル"><b>Output Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="security"><td data-l="ドメイン" rowspan="4"><b>Domain 7</b>　8.1%<br><span class="n">Security and Safety</span></td><td data-l="スキル"><b>AI Application Security</b></td><td data-l="重み">3.2%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="security"><td data-l="スキル"><b>Guardrails and Safe Deployment</b></td><td data-l="重み">2.3%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="security"><td data-l="スキル"><b>Claude Hooks</b></td><td data-l="重み">1.0%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="security"><td data-l="スキル"><b>Identity, Secrets, and Key Management</b></td><td data-l="重み">1.6%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="tools"><td data-l="ドメイン" rowspan="3"><b>Domain 8</b>　10.6%<br><span class="n">Tools and MCPs</span></td><td data-l="スキル"><b>Tool Implementation</b></td><td data-l="重み">4.4%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="tools"><td data-l="スキル"><b>MCP Server Development</b></td><td data-l="重み">2.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
-    <tr data-domain="tools"><td data-l="スキル"><b>Agentic Customization</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n">─</span></td></tr>
+    <tr data-domain="agents"><td data-l="ドメイン" rowspan="3"><b>Domain 1</b>　14.7%<br><span class="n">Agents and Workflows</span></td><td data-l="スキル"><b>Agent Architecture</b></td><td data-l="重み">4.5%</td><td data-l="扱う項"><span class="n"><a href="01-agents/01-workflow.html">1-1</a> <a href="01-agents/02-supervisor.html">1-2</a></span></td></tr>
+    <tr data-domain="agents"><td data-l="スキル"><b>Agent Construction with Claude</b></td><td data-l="重み">5.3%</td><td data-l="扱う項"><span class="n"><a href="01-agents/08-sdk.html">1-8</a> <a href="01-agents/09-harness.html">1-9</a> <a href="01-agents/10-deploy.html">1-10</a> <a href="01-agents/11-hooks.html">1-11</a></span></td></tr>
+    <tr data-domain="agents"><td data-l="スキル"><b>Agent Patterns and Frameworks</b></td><td data-l="重み">4.9%</td><td data-l="扱う項"><span class="n"><a href="01-agents/04-loop.html">1-4</a> <a href="01-agents/05-memory.html">1-5</a> <a href="01-agents/06-framework.html">1-6</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="ドメイン" rowspan="6"><b>Domain 2</b>　33.1%<br><span class="n">Applications and Integration</span></td><td data-l="スキル"><b>Understanding Requirements</b></td><td data-l="重み">3.4%</td><td data-l="扱う項"><span class="n"><a href="02-apps/11-require.html">2-11</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Systems Life Cycle</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n"><a href="02-apps/12-lifecycle.html">2-12</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Claude API Mechanics</b></td><td data-l="重み">6.8%</td><td data-l="扱う項"><span class="n"><a href="05-models/11-cache.html">5-11</a> <a href="02-apps/01-blocks.html">2-1</a> <a href="02-apps/02-data.html">2-2</a> <a href="02-apps/03-stream.html">2-3</a> <a href="02-apps/04-batch.html">2-4</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Software Engineering Foundations</b></td><td data-l="重み">7.4%</td><td data-l="扱う項"><span class="n"><a href="02-apps/06-rest.html">2-6</a> <a href="02-apps/07-async.html">2-7</a> <a href="02-apps/08-change.html">2-8</a> <a href="02-apps/09-refactor.html">2-9</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Claude Application Design</b></td><td data-l="重み">8.6%</td><td data-l="扱う項"><span class="n"><a href="02-apps/14-surface.html">2-14</a> <a href="02-apps/15-boundary.html">2-15</a> <a href="02-apps/16-schema.html">2-16</a> <a href="02-apps/17-session.html">2-17</a></span></td></tr>
+    <tr data-domain="apps"><td data-l="スキル"><b>Configuration Management</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n"><a href="02-apps/19-config.html">2-19</a> <a href="02-apps/20-version.html">2-20</a></span></td></tr>
+    <tr data-domain="code"><td data-l="ドメイン" rowspan="1"><b>Domain 3</b>　3.1%<br><span class="n">Claude Code</span></td><td data-l="スキル"><b>Claude Code Operation</b></td><td data-l="重み">3.1%</td><td data-l="扱う項"><span class="n"><a href="03-claude-code/01-parts.html">3-1</a> <a href="03-claude-code/02-run.html">3-2</a></span></td></tr>
+    <tr data-domain="debug"><td data-l="ドメイン" rowspan="1"><b>Domain 4</b>　2.6%<br><span class="n">Eval, Testing, and Debugging</span></td><td data-l="スキル"><b>Debugging and Error Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n"><a href="04-debug/01-errors.html">4-1</a> <a href="04-debug/02-trace.html">4-2</a></span></td></tr>
+    <tr data-domain="models"><td data-l="ドメイン" rowspan="4"><b>Domain 5</b>　16.8%<br><span class="n">Model Selection and Optimization</span></td><td data-l="スキル"><b>LLM Fundamentals</b></td><td data-l="重み">5.2%</td><td data-l="扱う項"><span class="n"><a href="05-models/01-token.html">5-1</a> <a href="05-models/02-window.html">5-2</a> <a href="05-models/03-think.html">5-3</a> <a href="05-models/04-shot.html">5-4</a></span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Technical Fundamentals</b></td><td data-l="重み">6.1%</td><td data-l="扱う項"><span class="n"><a href="05-models/06-sdk.html">5-6</a> <a href="05-models/07-wire.html">5-7</a></span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Model Selection and Tradeoffs</b></td><td data-l="重み">2.7%</td><td data-l="扱う項"><span class="n"><a href="05-models/09-choose.html">5-9</a></span></td></tr>
+    <tr data-domain="models"><td data-l="スキル"><b>Cost and Token Management</b></td><td data-l="重み">2.8%</td><td data-l="扱う項"><span class="n"><a href="05-models/10-cost.html">5-10</a> <a href="05-models/11-cache.html">5-11</a></span></td></tr>
+    <tr data-domain="prompt"><td data-l="ドメイン" rowspan="3"><b>Domain 6</b>　11.0%<br><span class="n">Prompt and Context Engineering</span></td><td data-l="スキル"><b>Context Engineering</b></td><td data-l="重み">3.8%</td><td data-l="扱う項"><span class="n"><a href="06-prompt/05-prune.html">6-5</a> <a href="06-prompt/06-isolate.html">6-6</a></span></td></tr>
+    <tr data-domain="prompt"><td data-l="スキル"><b>Prompt Engineering</b></td><td data-l="重み">4.6%</td><td data-l="扱う項"><span class="n"><a href="06-prompt/01-place.html">6-1</a> <a href="06-prompt/02-clear.html">6-2</a> <a href="06-prompt/03-refine.html">6-3</a></span></td></tr>
+    <tr data-domain="prompt"><td data-l="スキル"><b>Output Handling</b></td><td data-l="重み">2.6%</td><td data-l="扱う項"><span class="n"><a href="06-prompt/07-struct.html">6-7</a> <a href="06-prompt/08-doubt.html">6-8</a></span></td></tr>
+    <tr data-domain="security"><td data-l="ドメイン" rowspan="4"><b>Domain 7</b>　8.1%<br><span class="n">Security and Safety</span></td><td data-l="スキル"><b>AI Application Security</b></td><td data-l="重み">3.2%</td><td data-l="扱う項"><span class="n"><a href="07-security/01-inject.html">7-1</a> <a href="07-security/02-leak.html">7-2</a></span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Guardrails and Safe Deployment</b></td><td data-l="重み">2.3%</td><td data-l="扱う項"><span class="n"><a href="07-security/03-layer.html">7-3</a></span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Claude Hooks</b></td><td data-l="重み">1.0%</td><td data-l="扱う項"><span class="n"><a href="07-security/04-hooks.html">7-4</a></span></td></tr>
+    <tr data-domain="security"><td data-l="スキル"><b>Identity, Secrets, and Key Management</b></td><td data-l="重み">1.6%</td><td data-l="扱う項"><span class="n"><a href="07-security/05-secret.html">7-5</a></span></td></tr>
+    <tr data-domain="tools"><td data-l="ドメイン" rowspan="3"><b>Domain 8</b>　10.6%<br><span class="n">Tools and MCPs</span></td><td data-l="スキル"><b>Tool Implementation</b></td><td data-l="重み">4.4%</td><td data-l="扱う項"><span class="n"><a href="08-tools/01-define.html">8-1</a> <a href="08-tools/02-dispatch.html">8-2</a> <a href="08-tools/03-fail.html">8-3</a></span></td></tr>
+    <tr data-domain="tools"><td data-l="スキル"><b>MCP Server Development</b></td><td data-l="重み">2.1%</td><td data-l="扱う項"><span class="n"><a href="08-tools/05-mcp.html">8-5</a> <a href="08-tools/06-transport.html">8-6</a></span></td></tr>
+    <tr data-domain="tools"><td data-l="スキル"><b>Agentic Customization</b></td><td data-l="重み">4.1%</td><td data-l="扱う項"><span class="n"><a href="08-tools/07-builtin.html">8-7</a> <a href="08-tools/08-extend.html">8-8</a></span></td></tr>
   </tbody>
 </table><!--/#blueprintfig-->
 </div>
 
 <div class="hero" id="all" style="padding-top:34px">
   <h2>全項目一覧</h2>
-  <p>全 <!--#nsec-->0<!--/#nsec--> 項。<b>◇ が理解度チェック</b>で、そこが区切りです。1項＝1画面なので、区切りまでの項数がそのまま「一度に読む量」になります。</p>
+  <p>全 <!--#nsec-->85<!--/#nsec--> 項。<b>◇ が理解度チェック</b>で、そこが区切りです。1項＝1画面なので、区切りまでの項数がそのまま「一度に読む量」になります。</p>
   <!--#alllist--><div class="alllist"><section class="al-dom" data-domain="models">
-  <h3><span class="al-num">Domain 5</span><a href="index.html">モデルの選択と最適化</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
-</section>
-<section class="al-dom" data-domain="apps">
-  <h3><span class="al-num">Domain 2</span><a href="index.html">アプリケーション開発と連携</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
-</section>
-<section class="al-dom" data-domain="prompt">
-  <h3><span class="al-num">Domain 6</span><a href="index.html">プロンプトとコンテキストの設計</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 5</span><a href="05-models/01-token.html">モデルの選択と最適化</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="05-models/01-token.html"><span class="itm-n">5-1</span><span class="itm-t">次の1トークンを選び続ける</span></a></li><li><a class="itm al-link" href="05-models/02-window.html"><span class="itm-n">5-2</span><span class="itm-t">コンテキストウィンドウ ─ 入力と出力が同じ枠を使う</span></a></li><li><a class="itm al-link" href="05-models/03-think.html"><span class="itm-n">5-3</span><span class="itm-t">考えさせる量を選ぶ ─ thinking・effort・fast mode</span></a></li><li><a class="itm al-link" href="05-models/04-shot.html"><span class="itm-n">5-4</span><span class="itm-t">例を何個見せるか ─ zero・single・multi-shot</span></a></li><li><a class="itm al-link itm-quiz" href="05-models/05-q1.html"><span class="itm-n">5-5</span><span class="itm-t">理解度チェック ─ LLM の基礎</span></a></li><li><a class="itm al-link" href="05-models/06-sdk.html"><span class="itm-n">5-6</span><span class="itm-t">SDK は REST を包んでいる</span></a></li><li><a class="itm al-link" href="05-models/07-wire.html"><span class="itm-n">5-7</span><span class="itm-t">つなぎ方の違い ─ REST・SSE・websockets</span></a></li><li><a class="itm al-link itm-quiz" href="05-models/08-q2.html"><span class="itm-n">5-8</span><span class="itm-t">理解度チェック ─ API につなぐ</span></a></li><li><a class="itm al-link" href="05-models/09-choose.html"><span class="itm-n">5-9</span><span class="itm-t">モデルを選ぶ・乗り換える</span></a></li><li><a class="itm al-link" href="05-models/10-cost.html"><span class="itm-n">5-10</span><span class="itm-t">トークンを数え、費用を見積もる</span></a></li><li><a class="itm al-link" href="05-models/11-cache.html"><span class="itm-n">5-11</span><span class="itm-t">プロンプトキャッシュ ─ 同じ前半を安く使い回す</span></a></li><li><a class="itm al-link itm-quiz" href="05-models/12-q3.html"><span class="itm-n">5-12</span><span class="itm-t">理解度チェック ─ モデル選択とコスト</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="tools">
-  <h3><span class="al-num">Domain 8</span><a href="index.html">ツールと MCP</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 8</span><a href="08-tools/01-define.html">ツールと MCP</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="08-tools/01-define.html"><span class="itm-n">8-1</span><span class="itm-t">ツールを渡すとは、説明書を渡すこと</span></a></li><li><a class="itm al-link" href="08-tools/02-dispatch.html"><span class="itm-n">8-2</span><span class="itm-t">実行するのはアプリ ─ 呼び出しの配り方</span></a></li><li><a class="itm al-link" href="08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a></li><li><a class="itm al-link itm-quiz" href="08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a></li><li><a class="itm al-link" href="08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a></li><li><a class="itm al-link" href="08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a></li><li><a class="itm al-link" href="08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a></li><li><a class="itm al-link" href="08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a></li><li><a class="itm al-link itm-quiz" href="08-tools/09-q2.html"><span class="itm-n">8-9</span><span class="itm-t">理解度チェック ─ MCP と使い分け</span></a></li></ul>
+</section>
+<section class="al-dom" data-domain="prompt">
+  <h3><span class="al-num">Domain 6</span><a href="06-prompt/01-place.html">プロンプトとコンテキストの設計</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="06-prompt/01-place.html"><span class="itm-n">6-1</span><span class="itm-t">指示は system に、材料は user に</span></a></li><li><a class="itm al-link" href="06-prompt/02-clear.html"><span class="itm-n">6-2</span><span class="itm-t">はっきり頼む ─ 基準・制約・例</span></a></li><li><a class="itm al-link" href="06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a></li><li><a class="itm al-link itm-quiz" href="06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a></li><li><a class="itm al-link" href="06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a></li><li><a class="itm al-link" href="06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a></li><li><a class="itm al-link" href="06-prompt/07-struct.html"><span class="itm-n">6-7</span><span class="itm-t">出力を形で受け取り、確かめる</span></a></li><li><a class="itm al-link" href="06-prompt/08-doubt.html"><span class="itm-n">6-8</span><span class="itm-t">自信のある出力ほど疑う</span></a></li><li><a class="itm al-link itm-quiz" href="06-prompt/09-q2.html"><span class="itm-n">6-9</span><span class="itm-t">理解度チェック ─ 文脈と出力</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="agents">
-  <h3><span class="al-num">Domain 1</span><a href="index.html">エージェントとワークフロー</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 1</span><a href="01-agents/01-workflow.html">エージェントとワークフロー</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="01-agents/01-workflow.html"><span class="itm-n">1-1</span><span class="itm-t">ワークフローか、エージェントか</span></a></li><li><a class="itm al-link" href="01-agents/02-supervisor.html"><span class="itm-n">1-2</span><span class="itm-t">監督役と子 ─ 仕事を分ける形</span></a></li><li><a class="itm al-link itm-quiz" href="01-agents/03-q1.html"><span class="itm-n">1-3</span><span class="itm-t">理解度チェック ─ 組み方</span></a></li><li><a class="itm al-link" href="01-agents/04-loop.html"><span class="itm-n">1-4</span><span class="itm-t">ループの1周 ─ ツールを使い続ける</span></a></li><li><a class="itm al-link" href="01-agents/05-memory.html"><span class="itm-n">1-5</span><span class="itm-t">長く動かす ─ 記憶・窓・子</span></a></li><li><a class="itm al-link" href="01-agents/06-framework.html"><span class="itm-n">1-6</span><span class="itm-t">枠組みを使うか ─ Strands・LangGraph・PydanticAI</span></a></li><li><a class="itm al-link itm-quiz" href="01-agents/07-q2.html"><span class="itm-n">1-7</span><span class="itm-t">理解度チェック ─ エージェントの型</span></a></li><li><a class="itm al-link" href="01-agents/08-sdk.html"><span class="itm-n">1-8</span><span class="itm-t">Agent SDK で作る</span></a></li><li><a class="itm al-link" href="01-agents/09-harness.html"><span class="itm-n">1-9</span><span class="itm-t">自前のループとハーネス</span></a></li><li><a class="itm al-link" href="01-agents/10-deploy.html"><span class="itm-n">1-10</span><span class="itm-t">どこで動かすか ─ 自前か、Anthropic が動かすか</span></a></li><li><a class="itm al-link" href="01-agents/11-hooks.html"><span class="itm-n">1-11</span><span class="itm-t">決まった処理はフックで</span></a></li><li><a class="itm al-link itm-quiz" href="01-agents/12-q3.html"><span class="itm-n">1-12</span><span class="itm-t">理解度チェック ─ エージェントの作り方</span></a></li></ul>
+</section>
+<section class="al-dom" data-domain="apps">
+  <h3><span class="al-num">Domain 2</span><a href="02-apps/01-blocks.html">アプリケーション開発と連携</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="02-apps/01-blocks.html"><span class="itm-n">2-1</span><span class="itm-t">メッセージと content ブロック</span></a></li><li><a class="itm al-link" href="02-apps/02-data.html"><span class="itm-n">2-2</span><span class="itm-t">データの渡し方と、呼び出し口</span></a></li><li><a class="itm al-link" href="02-apps/03-stream.html"><span class="itm-n">2-3</span><span class="itm-t">逐次で受け取る ─ streaming</span></a></li><li><a class="itm al-link" href="02-apps/04-batch.html"><span class="itm-n">2-4</span><span class="itm-t">まとめて安く ─ Batch API</span></a></li><li><a class="itm al-link itm-quiz" href="02-apps/05-q1.html"><span class="itm-n">2-5</span><span class="itm-t">理解度チェック ─ API の仕組み</span></a></li><li><a class="itm al-link" href="02-apps/06-rest.html"><span class="itm-n">2-6</span><span class="itm-t">REST と JSON</span></a></li><li><a class="itm al-link" href="02-apps/07-async.html"><span class="itm-n">2-7</span><span class="itm-t">待たずに進める ─ 非同期処理</span></a></li><li><a class="itm al-link" href="02-apps/08-change.html"><span class="itm-n">2-8</span><span class="itm-t">変更を管理する ─ バージョン管理・開発工程・レビュー</span></a></li><li><a class="itm al-link" href="02-apps/09-refactor.html"><span class="itm-n">2-9</span><span class="itm-t">リファクタリングを任せる ─ 小さく・大きく</span></a></li><li><a class="itm al-link itm-quiz" href="02-apps/10-q2.html"><span class="itm-n">2-10</span><span class="itm-t">理解度チェック ─ 開発の基礎</span></a></li><li><a class="itm al-link" href="02-apps/11-require.html"><span class="itm-n">2-11</span><span class="itm-t">要件 ─ 業務から機能と基盤へ</span></a></li><li><a class="itm al-link" href="02-apps/12-lifecycle.html"><span class="itm-n">2-12</span><span class="itm-t">作って終わりではない ─ システムのライフサイクル</span></a></li><li><a class="itm al-link itm-quiz" href="02-apps/13-q3.html"><span class="itm-n">2-13</span><span class="itm-t">理解度チェック ─ 要件とライフサイクル</span></a></li><li><a class="itm al-link" href="02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a></li><li><a class="itm al-link" href="02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a></li><li><a class="itm al-link" href="02-apps/16-schema.html"><span class="itm-n">2-16</span><span class="itm-t">入出力の形を設計する</span></a></li><li><a class="itm al-link" href="02-apps/17-session.html"><span class="itm-n">2-17</span><span class="itm-t">セッションとプラグインを管理する</span></a></li><li><a class="itm al-link itm-quiz" href="02-apps/18-q4.html"><span class="itm-n">2-18</span><span class="itm-t">理解度チェック ─ アプリの設計</span></a></li><li><a class="itm al-link" href="02-apps/19-config.html"><span class="itm-n">2-19</span><span class="itm-t">構成を管理する ─ CLAUDE.md と settings.json</span></a></li><li><a class="itm al-link" href="02-apps/20-version.html"><span class="itm-n">2-20</span><span class="itm-t">版を固定する ─ モデル・プロンプト・プラグイン</span></a></li><li><a class="itm al-link itm-quiz" href="02-apps/21-q5.html"><span class="itm-n">2-21</span><span class="itm-t">理解度チェック ─ 構成管理</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="code">
-  <h3><span class="al-num">Domain 3</span><a href="index.html">Claude Code</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 3</span><a href="03-claude-code/01-parts.html">Claude Code</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="03-claude-code/01-parts.html"><span class="itm-n">3-1</span><span class="itm-t">Claude Code の部品</span></a></li><li><a class="itm al-link" href="03-claude-code/02-run.html"><span class="itm-n">3-2</span><span class="itm-t">Claude Code の動かし方</span></a></li><li><a class="itm al-link itm-quiz" href="03-claude-code/03-q.html"><span class="itm-n">3-3</span><span class="itm-t">理解度チェック ─ Claude Code</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="security">
-  <h3><span class="al-num">Domain 7</span><a href="index.html">セキュリティと安全</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 7</span><a href="07-security/01-inject.html">セキュリティと安全</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="07-security/01-inject.html"><span class="itm-n">7-1</span><span class="itm-t">仕込まれた指示を効かせない</span></a></li><li><a class="itm al-link" href="07-security/02-leak.html"><span class="itm-n">7-2</span><span class="itm-t">漏らさない ─ 個人情報と、認証・認可</span></a></li><li><a class="itm al-link" href="07-security/03-layer.html"><span class="itm-n">7-3</span><span class="itm-t">守りを重ねる ─ ガードレールと最小権限</span></a></li><li><a class="itm al-link" href="07-security/04-hooks.html"><span class="itm-n">7-4</span><span class="itm-t">壊す操作はフックで止める</span></a></li><li><a class="itm al-link" href="07-security/05-secret.html"><span class="itm-n">7-5</span><span class="itm-t">鍵と秘密の置き場所</span></a></li><li><a class="itm al-link itm-quiz" href="07-security/06-q.html"><span class="itm-n">7-6</span><span class="itm-t">理解度チェック ─ セキュリティ</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="debug">
-  <h3><span class="al-num">Domain 4</span><a href="index.html">評価・テスト・デバッグ</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">Domain 4</span><a href="04-debug/01-errors.html">評価・テスト・デバッグ</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="04-debug/01-errors.html"><span class="itm-n">4-1</span><span class="itm-t">エラーの種類と、立て直し方</span></a></li><li><a class="itm al-link" href="04-debug/02-trace.html"><span class="itm-n">4-2</span><span class="itm-t">どこで壊れたかを切り分ける</span></a></li><li><a class="itm al-link itm-quiz" href="04-debug/03-q.html"><span class="itm-n">4-3</span><span class="itm-t">理解度チェック ─ デバッグ</span></a></li></ul>
 </section>
 <section class="al-dom" data-domain="summary">
-  <h3><span class="al-num">まとめ</span><a href="index.html">全体をもう一度</a></h3>
-  <ul class="al-list"><li class="al-none">（まだ項がありません）</li></ul>
+  <h3><span class="al-num">まとめ</span><a href="09-summary/01-all.html">全体をもう一度</a></h3>
+  <ul class="al-list"><li><a class="itm al-link" href="09-summary/01-all.html"><span class="itm-n">9-1</span><span class="itm-t">全体を1枚で</span></a></li><li><a class="itm al-link" href="09-summary/02-samples.html"><span class="itm-n">9-2</span><span class="itm-t">公式の例題 ─ 誤答には型がある</span></a></li><li><a class="itm al-link" href="09-summary/03-read.html"><span class="itm-n">9-3</span><span class="itm-t">設問の読み方 ─ 限定語と、複数選ぶ設問</span></a></li><li><a class="itm al-link" href="09-summary/04-prepare.html"><span class="itm-n">9-4</span><span class="itm-t">受験の準備 ─ 公式が勧めること</span></a></li><li><a class="itm al-link" href="09-summary/05-gloss.html"><span class="itm-n">9-5</span><span class="itm-t">公式の英語 ⇄ 日本語</span></a></li><li><a class="itm al-link" href="09-summary/06-mockabout.html"><span class="itm-n">9-6</span><span class="itm-t">模擬試験の使い方</span></a></li><li><a class="itm al-link" href="09-summary/07-mock1.html"><span class="itm-n">9-7</span><span class="itm-t">模擬試験 ①</span></a></li><li><a class="itm al-link" href="09-summary/08-mock2.html"><span class="itm-n">9-8</span><span class="itm-t">模擬試験 ②</span></a></li><li><a class="itm al-link" href="09-summary/09-mock3.html"><span class="itm-n">9-9</span><span class="itm-t">模擬試験 ③</span></a></li><li><a class="itm al-link" href="09-summary/10-mock4.html"><span class="itm-n">9-10</span><span class="itm-t">模擬試験 ④</span></a></li></ul>
 </section></div><!--/#alllist-->
 </div>
 
@@ -246,7 +246,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="assets/quiz-data.js?v=5945f509"></script>
-<script src="assets/search-index.js?v=82915e32"></script>
+<script src="assets/quiz-data.js?v=9bbfaa86"></script>
+<script src="assets/search-index.js?v=f0213d9d"></script>
 <script src="assets/app.js?v=2b56021b"></script>
 </body></html>

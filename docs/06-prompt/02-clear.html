@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja" data-theme="dark" data-theme-key="ccdvf-theme">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6-2　はっきり頼む ─ 基準・制約・例 ─ Domain 6 ─ CCDV-F 学習ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+</head>
+<body data-page="clear">
+<script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
+<nav class="domnav">
+  <a class="brand" href="../index.html"><span class="brand-mark">CCDV-F</span><span class="brand-sub">学習ノート</span></a>
+  <div class="nav-list"><a class="nav-item" data-domain="models" href="../05-models/01-token.html" title="Domain 5 モデルの選択と最適化">
+       <span class="nav-num">D5</span><span class="nav-title">モデル</span></a>
+<a class="nav-item" data-domain="tools" href="../08-tools/01-define.html" title="Domain 8 ツールと MCP">
+       <span class="nav-num">D8</span><span class="nav-title">ツールと MCP</span></a>
+<a class="nav-item on" data-domain="prompt" href="../06-prompt/01-place.html" title="Domain 6 プロンプトとコンテキストの設計">
+       <span class="nav-num">D6</span><span class="nav-title">プロンプト</span></a>
+<a class="nav-item" data-domain="agents" href="../01-agents/01-workflow.html" title="Domain 1 エージェントとワークフロー">
+       <span class="nav-num">D1</span><span class="nav-title">エージェント</span></a>
+<a class="nav-item" data-domain="apps" href="../02-apps/01-blocks.html" title="Domain 2 アプリケーション開発と連携">
+       <span class="nav-num">D2</span><span class="nav-title">アプリと連携</span></a>
+<a class="nav-item" data-domain="code" href="../03-claude-code/01-parts.html" title="Domain 3 Claude Code">
+       <span class="nav-num">D3</span><span class="nav-title">Claude Code</span></a>
+<a class="nav-item" data-domain="security" href="../07-security/01-inject.html" title="Domain 7 セキュリティと安全">
+       <span class="nav-num">D7</span><span class="nav-title">セキュリティ</span></a>
+<a class="nav-item" data-domain="debug" href="../04-debug/01-errors.html" title="Domain 4 評価・テスト・デバッグ">
+       <span class="nav-num">D4</span><span class="nav-title">デバッグ</span></a>
+<a class="nav-item" data-domain="summary" href="../09-summary/01-all.html" title="まとめ 全体をもう一度">
+       <span class="nav-num">まとめ</span><span class="nav-title">まとめ</span></a></div>
+  <div class="search-wrap">
+  <button class="search-btn" id="openSearch" aria-label="検索"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>検索</span><kbd>/</kbd></button>
+</div>
+</nav>
+<div class="shell">
+<aside class="toc">
+  <div class="toc-head">Domain 6</div>
+  <nav class="toc-list"><a class="itm toc-link" href="../06-prompt/01-place.html"><span class="itm-n">6-1</span><span class="itm-t">指示は system に、材料は user に</span></a>
+<a class="itm toc-link on" href="../06-prompt/02-clear.html"><span class="itm-n">6-2</span><span class="itm-t">はっきり頼む ─ 基準・制約・例</span></a>
+<a class="itm toc-link" href="../06-prompt/03-refine.html"><span class="itm-n">6-3</span><span class="itm-t">直しながら寄せる・入力を整える</span></a>
+<a class="itm toc-link itm-quiz" href="../06-prompt/04-q1.html"><span class="itm-n">6-4</span><span class="itm-t">理解度チェック ─ プロンプト</span></a>
+<a class="itm toc-link" href="../06-prompt/05-prune.html"><span class="itm-n">6-5</span><span class="itm-t">窓を守る ─ 刈り込みと圧縮</span></a>
+<a class="itm toc-link" href="../06-prompt/06-isolate.html"><span class="itm-n">6-6</span><span class="itm-t">文脈を分ける ─ 子と段階処理</span></a>
+<a class="itm toc-link" href="../06-prompt/07-struct.html"><span class="itm-n">6-7</span><span class="itm-t">出力を形で受け取り、確かめる</span></a>
+<a class="itm toc-link" href="../06-prompt/08-doubt.html"><span class="itm-n">6-8</span><span class="itm-t">自信のある出力ほど疑う</span></a>
+<a class="itm toc-link itm-quiz" href="../06-prompt/09-q2.html"><span class="itm-n">6-9</span><span class="itm-t">理解度チェック ─ 文脈と出力</span></a></nav>
+</aside>
+<main class="doc">
+<p class="crumb" data-domain="prompt"><b>Domain 6</b><span>プロンプトとコンテキストの設計</span></p>
+<nav class="secpager top"><a class="pgv prev" href="../06-prompt/01-place.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/03-refine.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
+<!-- ▼ 本文 ─ ここだけを編集する。この前後は tools/reindex.mjs が書き出す -->
+<section class="sec" id="clear">
+<header class="sec-head">
+  <h2>6-2　はっきり頼む ─ 基準・制約・例</h2>
+</header>
+<p class="goal"><b>ゴール</b>あいまいな指示を、基準・出力の制約・例で直せる。</p>
+<p class="task" data-s="prompt-engineering"><span class="tn">DOMAIN 6</span><b>Prompt Engineering</b></p>
+</section>
+<!-- ▲ 本文 -->
+<nav class="secpager btm"><a class="pgv prev" href="../06-prompt/01-place.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../06-prompt/03-refine.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
+</main>
+</div>
+<div class="modal" id="searchModal" hidden>
+  <div class="modal-box">
+    <input id="searchInput" type="search" placeholder="用語・見出し・本文を検索（例: tool_use、キャッシュ）" autocomplete="off">
+    <div id="searchResults" class="results"></div>
+    <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
+  </div>
+</div>
+<script src="../assets/quiz-data.js?v=9bbfaa86"></script>
+<script src="../assets/search-index.js?v=f0213d9d"></script>
+<script src="../assets/app.js?v=2b56021b"></script>
+</body></html>

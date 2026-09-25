@@ -226,7 +226,33 @@ export const GLUE = ["including", "and", "based", "on", "used", "to", "for"];
  *  **ドメインを書くときに足す**（先に書くと、本文の書き方に合わず書き直しになる）。
  *  形: { "<スキルのキー>": { sections: ["節のid", …], topics: { "<topics の原文>": "正規表現" | ["正規表現", …] } } }
  *  正規表現は、そのスキルの sections の本文の中だけで照合する（関係のない節で偶然当たる穴を塞ぐ）。 */
-export const COVER = {};
+export const COVER = {
+  "llm-fundamentals": { sections: ["token", "window", "think", "shot"], topics: {} },
+  "technical-fundamentals": { sections: ["sdk", "wire"], topics: {} },
+  "model-selection": { sections: ["choose"], topics: {} },
+  "cost-tokens": { sections: ["cost", "cache"], topics: {} },
+  "api-mechanics": { sections: ["cache", "blocks", "data", "stream", "batch"], topics: {} },
+  "tool-implementation": { sections: ["define", "dispatch", "fail"], topics: {} },
+  "mcp-server": { sections: ["mcp", "transport"], topics: {} },
+  "agentic-customization": { sections: ["builtin", "extend"], topics: {} },
+  "prompt-engineering": { sections: ["place", "clear", "refine"], topics: {} },
+  "context-engineering": { sections: ["prune", "isolate"], topics: {} },
+  "output-handling": { sections: ["struct", "doubt"], topics: {} },
+  "agent-architecture": { sections: ["workflow", "supervisor"], topics: {} },
+  "agent-patterns": { sections: ["loop", "memory", "framework"], topics: {} },
+  "agent-construction": { sections: ["agentsdk", "harness", "deploy", "hooks"], topics: {} },
+  "se-foundations": { sections: ["rest", "async", "change", "refactor"], topics: {} },
+  "requirements": { sections: ["require"], topics: {} },
+  "life-cycle": { sections: ["lifecycle"], topics: {} },
+  "app-design": { sections: ["surface", "boundary", "schema", "session"], topics: {} },
+  "config-management": { sections: ["config", "version"], topics: {} },
+  "claude-code-operation": { sections: ["parts", "run"], topics: {} },
+  "app-security": { sections: ["inject", "leak"], topics: {} },
+  "guardrails": { sections: ["layer"], topics: {} },
+  "hooks": { sections: ["hookstop"], topics: {} },
+  "secrets": { sections: ["secret"], topics: {} },
+  "debugging": { sections: ["errors", "trace"], topics: {} },
+};
 
 /** 7. How to Prepare ─ 原文の5項目。日本語の要旨と対応する節は、まとめを書くときに足す */
 export const PREPARE = [

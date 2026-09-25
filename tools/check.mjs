@@ -786,7 +786,8 @@ head('[30] 検索インデックスの同期');
    ② ディスクにあるのに site.mjs に無いディレクトリ（ナビにも検索にも載らない）
    ③ ディレクトリ名の番号 ＝ 公式の Domain 番号
    ④ 項番号「5-2」＝ ディレクトリの番号 ＋ ディレクトリの中の順（ファイル名の NN とも一致）
-   ⑤ 全ドメインに、両テーマのアクセント色がある（無いと黙って既定色になる） */
+   ⑤ 全ドメインに、両テーマのアクセント色がある（無いと黙って既定色になる）
+   ⑥ 節の id がサイト全体で重複しない（COVER・例題の戻り先・リンクは id で節を引く） */
 head('[31] サイトの構成');
 {
   const n0 = ng;
@@ -807,6 +808,8 @@ head('[31] サイトの構成');
       if (+f.split('/')[1].slice(0, 2) !== i + 1) bad(`${f}: ファイル名の番号が並び順（${i + 1}）と合わない`);
     });
   });
+  const seen = {};
+  order.forEach(s => { if (seen[s.id]) bad(`節の id「${s.id}」が ${seen[s.id]} と ${s.f} で重複している`); else seen[s.id] = s.f; });
   const css = fs.readFileSync(path.join(ROOT, 'assets/style.css'), 'utf8');
   DIRS.forEach(d => {
     if (!css.includes(`\n[data-domain="${d.key}"]`)) bad(`style.css にドメイン「${d.key}」のダークのアクセント色が無い`);

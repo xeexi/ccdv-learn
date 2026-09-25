@@ -12,15 +12,20 @@
    D1（エージェント）が API・ツール・コンテキストより前に来てしまうため。
    ========================================================= */
 
-/** 読む順。key が blueprint.mjs の DOMAINS にあるものが「配点のあるドメイン」。
+/** 読む順（2026-09-26 に利用者の確認を経て確定）。
+ *    基礎（D5）→ 部品（D8 ツール）→ 指示と文脈（D6）→ 組み立て（D1 エージェント）
+ *    → アプリとして仕上げる（D2）→ 開発道具（D3）→ 守る（D7）→ 直す（D4）→ まとめ
+ *  D2 を後ろに回したのは、アプリの設計（プラグイン・入出力の形）と構成管理（CLAUDE.md）が
+ *  ツール・エージェント・Claude Code を前提にしているため。
+ *  key が blueprint.mjs の DOMAINS にあるものが「配点のあるドメイン」。
  *  num は配点のないもの（まとめ）にだけ書く ── ドメインの番号は blueprint から出す。
  *  h1 はドメインの見出し、nav は上部ナビの短い名前、sub は一覧に添える1行。 */
 export const DIRS = [
-  { dir: '05-models',      key: 'models',   h1: 'モデルの選択と最適化',          nav: 'モデル',       sub: 'LLM の基礎・モデル選択・コスト' },
-  { dir: '02-apps',        key: 'apps',     h1: 'アプリケーション開発と連携',    nav: 'アプリと連携', sub: 'API・設計・構成管理・開発の基礎' },
-  { dir: '06-prompt',      key: 'prompt',   h1: 'プロンプトとコンテキストの設計', nav: 'プロンプト',   sub: '指示・文脈・出力の扱い' },
+  { dir: '05-models',      key: 'models',   h1: 'モデルの選択と最適化',          nav: 'モデル',       sub: 'LLM の基礎・API への接続・モデル選択・コスト' },
   { dir: '08-tools',       key: 'tools',    h1: 'ツールと MCP',                  nav: 'ツールと MCP', sub: 'ツールの実装と使い分け' },
-  { dir: '01-agents',      key: 'agents',   h1: 'エージェントとワークフロー',    nav: 'エージェント', sub: '組み方・作り方・型' },
+  { dir: '06-prompt',      key: 'prompt',   h1: 'プロンプトとコンテキストの設計', nav: 'プロンプト',   sub: '指示・文脈・出力の扱い' },
+  { dir: '01-agents',      key: 'agents',   h1: 'エージェントとワークフロー',    nav: 'エージェント', sub: '組み方・型・作り方' },
+  { dir: '02-apps',        key: 'apps',     h1: 'アプリケーション開発と連携',    nav: 'アプリと連携', sub: 'API・開発の基礎・要件・設計・構成管理' },
   { dir: '03-claude-code', key: 'code',     h1: 'Claude Code',                   nav: 'Claude Code',  sub: 'Claude Code の運用' },
   { dir: '07-security',    key: 'security', h1: 'セキュリティと安全',            nav: 'セキュリティ', sub: '入力・権限・秘密の守り方' },
   { dir: '04-debug',       key: 'debug',    h1: '評価・テスト・デバッグ',        nav: 'デバッグ',     sub: '障害の切り分けと立て直し' },
