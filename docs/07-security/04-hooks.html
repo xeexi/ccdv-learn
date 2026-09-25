@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="hookstop">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -42,6 +42,8 @@
 <a class="itm toc-link" href="../07-security/02-leak.html"><span class="itm-n">7-2</span><span class="itm-t">漏らさない ─ 個人情報と、認証・認可</span></a>
 <a class="itm toc-link" href="../07-security/03-layer.html"><span class="itm-n">7-3</span><span class="itm-t">守りを重ねる ─ ガードレールと最小権限</span></a>
 <a class="itm toc-link on" href="../07-security/04-hooks.html"><span class="itm-n">7-4</span><span class="itm-t">壊す操作はフックで止める</span></a>
+<a class="toc-link toc-sub" href="#hookstop-rules">フックと権限の規則</a>
+<a class="toc-link toc-sub" href="#hookstop-trust">フック自体の危うさ</a>
 <a class="itm toc-link" href="../07-security/05-secret.html"><span class="itm-n">7-5</span><span class="itm-t">鍵と秘密の置き場所</span></a>
 <a class="itm toc-link itm-quiz" href="../07-security/06-q.html"><span class="itm-n">7-6</span><span class="itm-t">理解度チェック ─ セキュリティ</span></a></nav>
 </aside>
@@ -54,7 +56,56 @@
   <h2>7-4　壊す操作はフックで止める</h2>
 </header>
 <p class="goal"><b>ゴール</b>取り返しのつかない操作を、フックで確実に止める形を説明できる。</p>
+<p class="cast" data-cast="claude,hook,tool"><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">フック</span><span class="c-ar">→</span><span class="c-blue">ツール</span></p>
+<p class="lead">ファイルの一括削除や、履歴を書き換える push のような取り返しのつかない操作は、頼んで避けさせるのではなく、実行の手前で止めます。<code>PreToolUse</code> のフックは道具が動く前に呼ばれ、止めると決めた呼び出しを必ず止めます（フックの基本は〈<a href="../01-agents/11-hooks.html">決まった処理はフックで</a>〉）。</p>
 <p class="task" data-s="hooks"><span class="tn">DOMAIN 7</span><b>Claude Hooks</b></p>
+
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">.claude/settings.json ─ Bash のたびに呼ぶ</p>
+  <pre class="code">{ <span class="k">"hooks"</span>: { <span class="k">"PreToolUse"</span>: [{
+    <span class="k">"matcher"</span>: <span class="s">"Bash"</span>,<span class="n">1</span>
+    <span class="k">"hooks"</span>: [{ <span class="k">"type"</span>: <span class="s">"command"</span>,
+      <span class="k">"command"</span>: <span class="s">".claude/hooks/guard.sh"</span> }] }] } }</pre>
+  <p class="codelabel">.claude/hooks/guard.sh ─ 呼ばれるスクリプト</p>
+  <pre class="code">cmd=$(jq -r <span class="s">'.tool_input.command'</span>)<span class="n">2</span>
+<span class="k">case</span> <span class="s">"$cmd"</span> <span class="k">in</span>
+  *<span class="s">"rm -rf"</span>*|*<span class="s">"push --force"</span>*)
+    echo <span class="s">"破壊的な操作は止めました"</span> &gt;&amp;2
+    exit <span class="v">2</span> ;;<span class="n">3</span>
+<span class="k">esac</span>
+exit <span class="v">0</span><span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span><code>matcher</code> が見るのは道具の名前。コマンドの中身は、フックの中で見る。</span></li>
+    <li><span class="n">2</span><span>実行されようとしている引数が、標準入力に JSON で届く。</span></li>
+    <li><span class="n">3</span><span>2 で終えると止まり、標準エラーの文が Claude に届く。Claude はそれを読んで、別の進め方を考える。</span></li>
+    <li><span class="n">4</span><span>0 は「許可」ではなく「意見なし」。いつもの規則とモードの判定に戻る。</span></li>
+  </ol>
+</div>
+<p class="point"><b>ポイント</b>止めるのは、フックの <code>exit 2</code>（または拒否の判定）。止めるフックは許可の規則より強く、プロンプトの頼みごとと違って必ず効く。</p>
+
+<h3 class="sub" id="hookstop-rules">フックと権限の規則</h3>
+<p class="goal"><b>ゴール</b>フックの判定と権限の規則が重なったとき、どちらが効くかを言える。</p>
+<table class="tbl">
+  <thead><tr><th>フック</th><th>規則</th><th>結果</th></tr></thead>
+  <tbody>
+    <tr><td data-l="フック">止める</td><td data-l="規則">許可</td><td data-l="結果">止まる。止めるフックが、許可の規則に勝つ</td></tr>
+    <tr><td data-l="フック">許す</td><td data-l="規則">禁止</td><td data-l="結果">止まる。禁止の規則は、フックが許しても外れない</td></tr>
+    <tr><td data-l="フック">意見なし</td><td data-l="規則">─</td><td data-l="結果">いつもの規則とモードで決まる</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>コマンドの文字列の照合は、書き方を変えるとすり抜けられることがあります。フックは、禁止の規則やサンドボックスと重ねて使います（〈<a href="03-layer.html">守りを重ねる</a>〉）。</p>
+</div>
+
+<h3 class="sub" id="hookstop-trust">フック自体の危うさ</h3>
+<p class="goal"><b>ゴール</b>フックを動かすときに気をつけることを言える。</p>
+<div class="detail">
+  <p>フックは、<b>自分の権限で任意のコマンドを動かします</b>。見知らぬリポジトリの <code>.claude/settings.json</code> に書かれたフックは、対話なしの実行（<code>-p</code>）や Agent SDK では、信頼の確認なしに動きます。CI では設定を読まない実行（<code>--bare</code>）を使うか、リポジトリの設定を確かめてから動かします（〈<a href="../03-claude-code/02-run.html">Claude Code の動かし方</a>〉）。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「フックは Claude が判断して呼ぶので、Claude が言いくるめられると止まらない」</span>
+    <span class="t o">実際は</span><span>フックを呼ぶのは Claude Code（アプリ）。<b>Claude がどう判断しても</b>、止めると決めた呼び出しは止まる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../07-security/03-layer.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../07-security/05-secret.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -67,7 +118,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

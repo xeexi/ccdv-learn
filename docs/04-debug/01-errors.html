@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="errors">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 4</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../04-debug/01-errors.html"><span class="itm-n">4-1</span><span class="itm-t">エラーの種類と、立て直し方</span></a>
+<a class="toc-link toc-sub" href="#errors-200">200 で返る失敗</a>
+<a class="toc-link toc-sub" href="#errors-retry">再試行の決まり</a>
 <a class="itm toc-link" href="../04-debug/02-trace.html"><span class="itm-n">4-2</span><span class="itm-t">どこで壊れたかを切り分ける</span></a>
 <a class="itm toc-link itm-quiz" href="../04-debug/03-q.html"><span class="itm-n">4-3</span><span class="itm-t">理解度チェック ─ デバッグ</span></a></nav>
 </aside>
@@ -51,7 +53,57 @@
   <h2>4-1　エラーの種類と、立て直し方</h2>
 </header>
 <p class="goal"><b>ゴール</b>エラーを種類で見分け、再試行するか直すかを選べる。</p>
+<p class="cast" data-cast="claude,app"><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">アプリ</span></p>
+<p class="lead">Claude のアプリの失敗は、大きく3つに分かれます。API が HTTP のエラーを返すもの、成功（<code>200</code>）で返ったのに途中で止まっているもの、形は正しいのに中身が違うものです。<b>種類ごとに、再試行するか、直すか、別の手に回すかが決まります</b>。</p>
 <p class="task" data-s="debugging"><span class="tn">DOMAIN 4</span><b>Debugging and Error Handling</b></p>
+
+<table class="tbl">
+  <thead><tr><th>状態</th><th>種類</th><th>次の手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="状態"><code>400</code></td><td data-l="種類"><code>invalid_request_error</code></td><td data-l="次の手">リクエストの形の誤り。直してから送る</td></tr>
+    <tr><td data-l="状態"><code>401</code></td><td data-l="種類"><code>authentication_error</code></td><td data-l="次の手">鍵が無いか、正しくない。鍵を確かめる</td></tr>
+    <tr><td data-l="状態"><code>403</code></td><td data-l="種類"><code>permission_error</code></td><td data-l="次の手">その鍵には許されていない。権限を確かめる</td></tr>
+    <tr><td data-l="状態"><code>404</code></td><td data-l="種類"><code>not_found_error</code></td><td data-l="次の手">宛先やモデルの ID を確かめる</td></tr>
+    <tr><td data-l="状態"><code>413</code></td><td data-l="種類"><code>request_too_large</code></td><td data-l="次の手">大きすぎる。中身を減らすか分ける</td></tr>
+    <tr><td data-l="状態"><code>429</code></td><td data-l="種類"><code>rate_limit_error</code></td><td data-l="次の手">送りすぎ。間を空けて再試行する</td></tr>
+    <tr><td data-l="状態"><code>500</code></td><td data-l="種類"><code>api_error</code></td><td data-l="次の手">受けた側の不調。間を空けて再試行する</td></tr>
+    <tr><td data-l="状態"><code>529</code></td><td data-l="種類"><code>overloaded_error</code></td><td data-l="次の手">混雑。間を空けて再試行する</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>再試行してよいのは、混雑や受けた側の不調が原因のもの（<code>429</code>・<code>5xx</code>・接続の切断）。<code>4xx</code> の多くは、同じ内容で送り直しても通らない。</p>
+
+<h3 class="sub" id="errors-200">200 で返る失敗</h3>
+<p class="goal"><b>ゴール</b>HTTP では成功なのに、仕事としては失敗している応答を見分けられる。</p>
+<table class="tbl">
+  <thead><tr><th>止まった理由</th><th>起きていること</th><th>次の手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="止まった理由"><code>max_tokens</code></td><td data-l="起きていること">上限で切れた</td><td data-l="次の手">上限を上げるか、続きを頼む。そのまま使わない</td></tr>
+    <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断った</td><td data-l="次の手">同じまま送り直しても、たいてい断られる。別の経路へ回し、記録する</td></tr>
+    <tr><td data-l="止まった理由"><code>pause_turn</code></td><td data-l="起きていること">サーバ側の道具の途中</td><td data-l="次の手">応答をそのまま足して、送り直す</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p><code>refusal</code> は HTTP の <code>200</code> で返るので、<b>エラーの率だけを見張っていると気づけません</b>。止まった理由の内訳を、別の記録として見張ります（〈<a href="../02-apps/12-lifecycle.html">作って終わりではない</a>〉）。</p>
+</div>
+
+<h3 class="sub" id="errors-retry">再試行の決まり</h3>
+<p class="goal"><b>ゴール</b>再試行を安全に組むための決まりを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>決まり</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="決まり">間を延ばす</td><td data-l="中身">間隔を少しずつ延ばして再試行する（指数バックオフ）。<code>retry-after</code> が付いていれば従う</td></tr>
+    <tr><td data-l="決まり">重ねない</td><td data-l="中身">SDK は既定で再試行する。その上に自前の再試行を重ねない（〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉）</td></tr>
+    <tr><td data-l="決まり">上限</td><td data-l="中身">回数に上限を置き、超えたら人に知らせる</td></tr>
+    <tr><td data-l="決まり">二重にしない</td><td data-l="中身">副作用のある道具は、同じ要求が2回来ても一度しか実行しない形にしておく</td></tr>
+    <tr><td data-l="決まり">記録</td><td data-l="中身">応答ごとに付く <code>request-id</code> を記録し、追跡や問い合わせに使う</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <div class="myth">
+    <span class="t">誤解</span><span>「エラーが出たら、とりあえず同じ内容で何度か再試行すればよい」</span>
+    <span class="t o">実際は</span><span><code>400</code> や <code>401</code> のように送った側の誤りは、何度送っても通らない。<b>種類で分け、直すものは直す</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../07-security/06-q.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../04-debug/02-trace.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -64,7 +116,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

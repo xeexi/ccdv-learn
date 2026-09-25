@@ -359,20 +359,46 @@ export const COVER = {
     "the CLAUDE.md hierarchy":            "CLAUDE.md の階層",
     "repository initialization":          "/init",
     "settings.json configuration":        "settings.json で決めておく" } },
-  "app-security": { sections: ["inject", "leak"], topics: {} },
-  "guardrails": { sections: ["layer"], topics: {} },
-  "hooks": { sections: ["hookstop"], topics: {} },
-  "secrets": { sections: ["secret"], topics: {} },
-  "debugging": { sections: ["errors", "trace"], topics: {} },
+  "app-security": { sections: ["inject", "leak"], topics: {
+    "prompt injection awareness and mitigation": "間接のインジェクション",
+    "jailbreak defense":                         "ジェイルブレイクへの守り",
+    "untrusted input handling":                  "信頼しないデータ",
+    "data leakage prevention":                   "漏れる道",
+    "PII handling":                              "個人情報の扱い",
+    "ensuring authentication, authorization, confidentiality, privacy, and integrity": ["認証", "認可", "機密性", "完全性", "プライバシー"] } },
+  "guardrails": { sections: ["layer"], topics: {
+    "content policy":                 "使用ポリシー",
+    "guardrail layering":             "層を重ね",
+    "privacy":                        "プライバシー",
+    "identity and access management": "ID と権限の管理",
+    "least privilege":                "最小権限" } },
+  "hooks": { sections: ["hookstop"], topics: {
+    "Leveraging hooks for guardrails and safety controls":    ["PreToolUse", "exit 2"],
+    "prevent destructive actions within Claude applications": "取り返しのつかない操作" } },
+  "secrets": { sections: ["secret"], topics: {
+    "Managing secrets, credentials, and API keys across Claude development and production environments": ["開発", "本番", "シークレットマネージャ"],
+    "identity validation and authentication": "Workload Identity Federation",
+    "access approval and level verification": "役割",
+    "authorized access monitoring":           "使われ方を見張る" } },
+  "debugging": { sections: ["errors", "trace"], topics: {
+    "error type identification":   "invalid_request_error",
+    "recovery strategy selection": "再試行の決まり",
+    "trace analysis to identify failure modes": "トレース",
+    "problem origin isolation between the integration layer and model output": ["繋ぎ込み", "モデルの出力"] } },
 };
 
-/** 7. How to Prepare ─ 原文の5項目。日本語の要旨と対応する節は、まとめを書くときに足す */
+/** 7. How to Prepare ─ 原文の項目。k は表の1列目の短いラベル、ja は要旨、sections は対応する節（〈受験の準備〉に差し込む） */
 export const PREPARE = [
-  { en: "Study the exam blueprint in Section 6 and self-assess against each objective" },
-  { en: "Review official Anthropic documentation for the Claude API, models, prompt engineering, Claude Code, Skills, and MCP" },
-  { en: "Build and operate at least one Claude application that exercises the API, integrates one or more tools, applies basic prompt and context engineering, and includes simple security and evaluation practices" },
-  { en: "Practice the developer competencies: writing prompts and system instructions, building agents and workflows, configuring Claude Code, managing tokens and cost, implementing guardrails, and creating custom tools or MCP servers" },
-  { en: "Complete the sample questions in Section 8 to familiarize yourself with item style" },
+  { k: "自己評価", ja: "ブループリント（§6）を読み、スキルごとに自分の理解を確かめる。トップの表の「扱う項」から各項へ戻れる",
+    en: "Study the exam blueprint in Section 6 and self-assess against each objective", sections: [] },
+  { k: "文書を読む", ja: "API・モデル・プロンプト・Claude Code・Skills・MCP の公式ドキュメントを読む",
+    en: "Review official Anthropic documentation for the Claude API, models, prompt engineering, Claude Code, Skills, and MCP", sections: ["blocks", "choose", "clear", "parts", "extend", "mcp"] },
+  { k: "1つ作る", ja: "API を使い、道具を1つ以上つなぎ、プロンプトと文脈を整え、簡単な守りと評価を入れたアプリを、作って動かす",
+    en: "Build and operate at least one Claude application that exercises the API, integrates one or more tools, applies basic prompt and context engineering, and includes simple security and evaluation practices", sections: ["loop", "dispatch", "place", "prune", "inject", "refine"] },
+  { k: "練習する", ja: "プロンプトと system・エージェントとワークフロー・Claude Code の設定・トークンと費用・ガードレール・自作の道具や MCP サーバを、手を動かして練習する",
+    en: "Practice the developer competencies: writing prompts and system instructions, building agents and workflows, configuring Claude Code, managing tokens and cost, implementing guardrails, and creating custom tools or MCP servers", sections: ["place", "workflow", "run", "cost", "layer", "define", "mcp"] },
+  { k: "例題を解く", ja: "例題（§8）を解き、設問の形に慣れる",
+    en: "Complete the sample questions in Section 8 to familiarize yourself with item style", sections: ["samples"] },
 ];
 
 /** 8. Sample Questions ─ 公式の例題3問（どれも4択で、正解はすべて B）。
@@ -407,9 +433,9 @@ export const TRAPS = {
 /** 3問。d は原文のラベルのドメイン、answer は正解の記号、traps は誤答3つの型（A・C・D の順）、
  *  sections は間違えたときの戻り先（まとめを書くときに足す）。 */
 export const SAMPLES = [
-  { n: 1, d: "apps",     answer: "B", ja: "急がない大量処理を、いちばん安く回す",           traps: ["lever", "lever", "model"], sections: [] },
-  { n: 2, d: "security", answer: "B", ja: "読み込んだページに仕込まれた指示を、効かせない", traps: ["lever", "ask", "model"],   sections: [] },
-  { n: 3, d: "tools",    answer: "B", ja: "社内の REST API を、複数のアプリから使い回す",   traps: ["reuse", "reuse", "fact"],  sections: [] },
+  { n: 1, d: "apps",     answer: "B", ja: "急がない大量処理を、いちばん安く回す",           traps: ["lever", "lever", "model"], sections: ["batch", "cost"] },
+  { n: 2, d: "security", answer: "B", ja: "読み込んだページに仕込まれた指示を、効かせない", traps: ["lever", "ask", "model"],   sections: ["inject", "boundary"] },
+  { n: 3, d: "tools",    answer: "B", ja: "社内の REST API を、複数のアプリから使い回す",   traps: ["reuse", "reuse", "fact"],  sections: ["mcp", "extend"] },
 ];
 
 /** 8. Sample Questions の設問文から抜いた、**正解を決める限定語**。
@@ -507,6 +533,25 @@ export const GLOSSARY = [
   { d: "code", en: "the CLAUDE.md hierarchy",             ja: "CLAUDE.md の階層" },
   { d: "code", en: "repository initialization",           ja: "リポジトリの初期化" },
   { d: "code", en: "settings.json configuration",         ja: "settings.json の設定" },
+
+  { d: "security", en: "prompt injection awareness and mitigation",               ja: "インジェクションへの備えと対策" },
+  { d: "security", en: "jailbreak defense",                                       ja: "ジェイルブレイクへの守り" },
+  { d: "security", en: "untrusted input handling",                                ja: "信頼できない入力の扱い" },
+  { d: "security", en: "data leakage prevention",                                 ja: "データの漏れの防止" },
+  { d: "security", en: "PII handling",                                            ja: "個人情報の扱い" },
+  { d: "security", en: "content policy",                                          ja: "内容の方針" },
+  { d: "security", en: "guardrail layering",                                      ja: "守りの重ね方" },
+  { d: "security", en: "identity and access management",                          ja: "ID と権限の管理" },
+  { d: "security", en: "least privilege",                                         ja: "最小権限" },
+  { d: "security", en: "prevent destructive actions within Claude applications",  ja: "取り返しのつかない操作の防止" },
+  { d: "security", en: "identity validation and authentication",                  ja: "本人の確認と認証" },
+  { d: "security", en: "access approval and level verification",                  ja: "権限の承認と段階の確認" },
+  { d: "security", en: "authorized access monitoring",                            ja: "許可された利用の見張り" },
+
+  { d: "debug", en: "error type identification",                                          ja: "エラーの種類の見分け" },
+  { d: "debug", en: "recovery strategy selection",                                        ja: "立て直し方の選択" },
+  { d: "debug", en: "trace analysis to identify failure modes",                           ja: "トレースによる失敗の型の分析" },
+  { d: "debug", en: "problem origin isolation between the integration layer and model output", ja: "繋ぎ込みとモデルの出力の切り分け" },
 ];
 
 /** 原文の行のうち、GLOSSARY や TERMS の出どころになったもので、SKILLS 以外の章にあるもの（**原文のまま**）。 */
@@ -528,6 +573,9 @@ export const TERMS = {
   "非同期処理":         "asynchronous programming",
   "ライフサイクル管理":  "life cycle management",
   "セッションの衛生":    "session hygiene",
+  "ジェイルブレイク":    "jailbreak",
+  "インジェクション":    "prompt injection",
+  "最小権限":           "least privilege",
 };
 
 /** 節の「登場人物」。本文に `<p class="cast" data-cast="app,claude"></p>` と置くと

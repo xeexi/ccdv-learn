@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="trace">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -40,6 +40,7 @@
   <div class="toc-head">Domain 4</div>
   <nav class="toc-list"><a class="itm toc-link" href="../04-debug/01-errors.html"><span class="itm-n">4-1</span><span class="itm-t">エラーの種類と、立て直し方</span></a>
 <a class="itm toc-link on" href="../04-debug/02-trace.html"><span class="itm-n">4-2</span><span class="itm-t">どこで壊れたかを切り分ける</span></a>
+<a class="toc-link toc-sub" href="#trace-tools">記録を取る手段</a>
 <a class="itm toc-link itm-quiz" href="../04-debug/03-q.html"><span class="itm-n">4-3</span><span class="itm-t">理解度チェック ─ デバッグ</span></a></nav>
 </aside>
 <main class="doc">
@@ -51,7 +52,51 @@
   <h2>4-2　どこで壊れたかを切り分ける</h2>
 </header>
 <p class="goal"><b>ゴール</b>トレースから、繋ぎ込み側の不具合かモデルの出力の問題かを切り分けられる。</p>
+<p class="lead">エージェントがおかしな答えを返したとき、原因は大きく2か所にあります。アプリの<b>繋ぎ込み</b>（送った中身・道具・データ）か、<b>モデルの出力</b>そのものかです。1周ごとの記録（トレース）を並べれば、どちらかを切り分けられます。</p>
 <p class="task" data-s="debugging"><span class="tn">DOMAIN 4</span><b>Debugging and Error Handling</b></p>
+
+<div class="figbox"><figure class="fig run">
+  <p class="fig-t">切り分けの順 ─ 入力と道具を先に疑う</p>
+  <ol class="fig-steps">
+    <li class="s1"><span class="fig-who">並べる</span><span class="fig-do">送った履歴・道具の定義・道具の結果・応答を、1周ずつ並べる</span></li>
+    <li class="s2"><span class="fig-who">入力</span><span class="fig-do">Claude に届いた中身が、意図どおりかを見る。資料の抜けや古い結果はないか</span></li>
+    <li class="s3"><span class="fig-who">道具</span><span class="fig-do">道具は成功したか。失敗や空の結果が、答えを歪めていないか</span></li>
+    <li class="s4"><span class="fig-who">再現</span><span class="fig-do">記録の入力をそのまま送り直し、同じ出力になるかを見る</span></li>
+    <li class="s5"><span class="fig-who">直す</span><span class="fig-do">入力や道具なら繋ぎ込みを、出力ならプロンプト・形・モデルを直す</span></li>
+  </ol>
+  <p class="fig-f">入力と道具の結果が正しいのに出力が違うとき、<b>初めてモデルの側を疑う</b>。</p>
+</figure></div>
+<table class="tbl">
+  <thead><tr><th>見えたこと</th><th>中身</th><th>疑う場所</th></tr></thead>
+  <tbody>
+    <tr><td data-l="見えたこと">道具の失敗</td><td data-l="中身">道具の結果が空か、エラーになっている</td><td data-l="疑う場所">繋ぎ込み（道具・データ）</td></tr>
+    <tr><td data-l="見えたこと">資料の抜け</td><td data-l="中身">送った履歴に、要る資料が無いか古い</td><td data-l="疑う場所">繋ぎ込み（組み立て）</td></tr>
+    <tr><td data-l="見えたこと">JSON 切れ</td><td data-l="中身">出力の JSON が途中で終わっている</td><td data-l="疑う場所"><code>stop_reason</code> と出力の上限</td></tr>
+    <tr><td data-l="見えたこと">答えの誤り</td><td data-l="中身">入力は正しいのに、答えが違う</td><td data-l="疑う場所">モデルの出力（プロンプト・形・区分）</td></tr>
+    <tr><td data-l="見えたこと">答えの揺れ</td><td data-l="中身">同じ入力で、答えが回ごとに違う</td><td data-l="疑う場所">非決定性。判定の仕方を見直す</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>まず繋ぎ込み（入力・道具・データ）を記録で確かめ、それが正しいと分かってから、モデルの出力を疑う。</p>
+
+<h3 class="sub" id="trace-tools">記録を取る手段</h3>
+<p class="goal"><b>ゴール</b>Claude Code・Agent SDK・Managed Agents で、1周ごとの記録を見る手段を言える。</p>
+<table class="tbl">
+  <thead><tr><th>手段</th><th>見えること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手段"><code>--verbose</code></td><td data-l="見えること">Claude Code の、1周ごとの全部の出力</td></tr>
+    <tr><td data-l="手段"><code>--debug</code></td><td data-l="見えること">MCP の接続やフックなどを含む、詳しい動きの記録</td></tr>
+    <tr><td data-l="手段"><code>--safe-mode</code></td><td data-l="見えること">CLAUDE.md・Skills・フック・MCP などを全部外して起動し、設定が原因かを比べる</td></tr>
+    <tr><td data-l="手段">Agent SDK</td><td data-l="見えること">流れてくるメッセージと、最後の結果の種類（上限で止まったか、など）。OpenTelemetry にも書き出せる</td></tr>
+    <tr><td data-l="手段">Managed Agents</td><td data-l="見えること">Console のセッションの画面で、イベントの履歴と道具の結果を見る</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>Claude Code で設定した指示や機能が効かないときは、たいていファイルが読み込まれていないか、別の場所から読まれているか、別のファイルに上書きされています。<code>/memory</code> で読み込まれている CLAUDE.md を確かめ、<code>--safe-mode</code> と比べます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「おかしな答えが出たら、まずプロンプトを書き足して直す」</span>
+    <span class="t o">実際は</span><span>原因が道具の失敗や資料の抜けなら、プロンプトをいくら直しても治らない。<b>記録で入力と道具の結果を先に確かめる</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../04-debug/01-errors.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../04-debug/03-q.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -64,7 +109,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

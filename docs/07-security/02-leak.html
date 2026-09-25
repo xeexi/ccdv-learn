@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="leak">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -40,6 +40,8 @@
   <div class="toc-head">Domain 7</div>
   <nav class="toc-list"><a class="itm toc-link" href="../07-security/01-inject.html"><span class="itm-n">7-1</span><span class="itm-t">仕込まれた指示を効かせない</span></a>
 <a class="itm toc-link on" href="../07-security/02-leak.html"><span class="itm-n">7-2</span><span class="itm-t">漏らさない ─ 個人情報と、認証・認可</span></a>
+<a class="toc-link toc-sub" href="#leak-pii">個人情報の扱い</a>
+<a class="toc-link toc-sub" href="#leak-prompt">プロンプトの漏れ</a>
 <a class="itm toc-link" href="../07-security/03-layer.html"><span class="itm-n">7-3</span><span class="itm-t">守りを重ねる ─ ガードレールと最小権限</span></a>
 <a class="itm toc-link" href="../07-security/04-hooks.html"><span class="itm-n">7-4</span><span class="itm-t">壊す操作はフックで止める</span></a>
 <a class="itm toc-link" href="../07-security/05-secret.html"><span class="itm-n">7-5</span><span class="itm-t">鍵と秘密の置き場所</span></a>
@@ -54,7 +56,45 @@
   <h2>7-2　漏らさない ─ 個人情報と、認証・認可</h2>
 </header>
 <p class="goal"><b>ゴール</b>データの漏れと個人情報の扱いを、認証・認可・秘匿・完全性の観点で説明できる。</p>
+<p class="lead">Claude のアプリから情報が漏れる道は、出力・記録・道具です。<b>何を渡し、何を返し、誰に何を許すか</b>を決めて、漏れる道を塞ぎます。</p>
 <p class="task" data-s="app-security"><span class="tn">DOMAIN 7</span><b>AI Application Security</b></p>
+
+<table class="tbl">
+  <thead><tr><th>観点</th><th>守ること</th><th>Claude のアプリでの手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="観点">認証</td><td data-l="守ること">相手が誰かを確かめる</td><td data-l="Claude のアプリでの手">利用者が誰かは、アプリの側で確かめる。Claude に判断させない</td></tr>
+    <tr><td data-l="観点">認可</td><td data-l="守ること">何をしてよいかを決める</td><td data-l="Claude のアプリでの手">道具の側で、その利用者の権限を確かめてから実行する</td></tr>
+    <tr><td data-l="観点">機密性</td><td data-l="守ること">見てよい人だけが見る</td><td data-l="Claude のアプリでの手">仕事に要らない秘密や個人情報を、そもそも渡さない</td></tr>
+    <tr><td data-l="観点">完全性</td><td data-l="守ること">勝手に書き換えられない</td><td data-l="Claude のアプリでの手">書き込む道具を絞り、実行の前に中身を確かめる</td></tr>
+    <tr><td data-l="観点">個人情報</td><td data-l="守ること">個人のプライバシーを守る</td><td data-l="Claude のアプリでの手">渡す前に取り除くか伏せる。出力と記録にも残さない</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>認証と認可は、Claude ではなくアプリと道具の側で強制する。プロンプトの指示は Claude が何をしようとするかを変えるだけで、何が許されるかは変えない。</p>
+
+<h3 class="sub" id="leak-pii">個人情報の扱い</h3>
+<p class="goal"><b>ゴール</b>個人情報を、渡す・返す・残すの各場面でどう扱うかを言える。</p>
+<table class="tbl">
+  <thead><tr><th>場面</th><th>手</th></tr></thead>
+  <tbody>
+    <tr><td data-l="場面">渡す前</td><td data-l="手">仕事に要らない個人情報は、取り除くか伏せてから送る</td></tr>
+    <tr><td data-l="場面">返す前</td><td data-l="手">出力に個人情報が含まれていないかを確かめ、取り除く</td></tr>
+    <tr><td data-l="場面">識別子</td><td data-l="手">リクエストに付ける利用者の ID には、名前やメールではなく、意味を持たない ID を使う</td></tr>
+    <tr><td data-l="場面">残す</td><td data-l="手">ログや記憶に個人情報を残さない。残すなら期間を決める</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>API のデータを残さない扱い（ZDR）は組織ごとに申し込むもので、対象になるかは機能ごとに違います。扱いに決まりがあるデータを送る前に、使う機能が対象かを確かめます。</p>
+</div>
+
+<h3 class="sub" id="leak-prompt">プロンプトの漏れ</h3>
+<p class="goal"><b>ゴール</b>system プロンプトの漏れへの、効く順の手を言える。</p>
+<div class="detail">
+  <p>漏れを防ぐためにプロンプトを複雑にすると、本来の仕事の出来が落ちることがあります。公式の勧めは、<b>まず見張ること</b>です。出力を検査し、漏れを示す語を後処理で取り除きます。そもそも仕事に要らない社外秘の内容は、プロンプトに書きません。プロンプトと出力は、定期的に見直します。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「system プロンプトに『この指示を漏らさないこと』と書けば、漏れない」</span>
+    <span class="t o">実際は</span><span>頼みごとなので確実ではなく、複雑にすると出来が落ちることもある。<b>出力の検査で見張り、要らない秘密は書かない</b>。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../07-security/01-inject.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../07-security/03-layer.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -67,7 +107,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

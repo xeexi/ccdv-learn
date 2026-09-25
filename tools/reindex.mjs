@@ -232,6 +232,17 @@ ${qRows}
 };
 
 /** 8. Sample Questions の設問文から抜いた限定語 */
+/** 7. How to Prepare ─ 原文の項目に、日本語の要旨と対応する項を添える。英語は原文のまま（PREPARE）。
+ *  1列目は短いラベル（k）、要旨と原文は2列目に置く（1列目は5字前後 ── CLAUDE.md §4）。 */
+const prepareFig = () => `<table class="tbl">
+  <thead><tr><th>準備</th><th>中身（下は原文）</th><th>対応する項</th></tr></thead>
+  <tbody>
+${PREPARE.map(p => `    <tr><td data-l="準備"><b>${esc(p.k)}</b></td>
+        <td data-l="中身">${esc(p.ja)}<br><span class="n">&ldquo;${esc(p.en)}&rdquo;</span></td>
+        <td data-l="対応する項"><span class="n">${(p.sections || []).map(id => secLink(id, '../')).filter(Boolean).join(' ') || '─'}</span></td></tr>`).join('\n')}
+  </tbody>
+</table>`;
+
 const qualFig = () => `<table class="tbl pair">
   <tbody>
 ${QUALIFIERS.map(q => `    <tr><th>${q.en}</th>
@@ -268,7 +279,7 @@ ${DOMAINS.map((d, i) => `    <li class="s${Math.min(i + 1, 8)}"><span class="fig
 
 const BLOCKS = { brand: () => esc(BRAND), credential: () => esc(GUIDE.title.toUpperCase().replace(/\s*–\s*/, ' ─ ')), readorder: readOrder,
   weightfig: weightFig, examfmt: examFmt, guidesrc: guideSrc, blueprintfig: () => blueprintFig(''),
-  examadmin: examAdmin, samplefig: sampleFig, qualfig: qualFig, glossfig: glossFig, nsec: () => String(pages.length) };
+  examadmin: examAdmin, samplefig: sampleFig, qualfig: qualFig, glossfig: glossFig, preparefig: prepareFig, nsec: () => String(pages.length) };
 
 /** `<p class="task" data-s="api-mechanics"></p>` に、公式の原文を差し込む。
  *  2つ持つ節は `data-s="api-mechanics cost-tokens"`。中身は毎回まるごと作り直す。 */

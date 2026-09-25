@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="layer">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -41,6 +41,8 @@
   <nav class="toc-list"><a class="itm toc-link" href="../07-security/01-inject.html"><span class="itm-n">7-1</span><span class="itm-t">仕込まれた指示を効かせない</span></a>
 <a class="itm toc-link" href="../07-security/02-leak.html"><span class="itm-n">7-2</span><span class="itm-t">漏らさない ─ 個人情報と、認証・認可</span></a>
 <a class="itm toc-link on" href="../07-security/03-layer.html"><span class="itm-n">7-3</span><span class="itm-t">守りを重ねる ─ ガードレールと最小権限</span></a>
+<a class="toc-link toc-sub" href="#layer-policy">内容の方針</a>
+<a class="toc-link toc-sub" href="#layer-least">最小権限</a>
 <a class="itm toc-link" href="../07-security/04-hooks.html"><span class="itm-n">7-4</span><span class="itm-t">壊す操作はフックで止める</span></a>
 <a class="itm toc-link" href="../07-security/05-secret.html"><span class="itm-n">7-5</span><span class="itm-t">鍵と秘密の置き場所</span></a>
 <a class="itm toc-link itm-quiz" href="../07-security/06-q.html"><span class="itm-n">7-6</span><span class="itm-t">理解度チェック ─ セキュリティ</span></a></nav>
@@ -54,7 +56,48 @@
   <h2>7-3　守りを重ねる ─ ガードレールと最小権限</h2>
 </header>
 <p class="goal"><b>ゴール</b>内容の方針・守りの重ね方・最小権限を組み合わせて設計できる。</p>
+<p class="lead">どの守りも、1つだけでは破られることがあります。入力・指示・権限・出力・人の確認と<b>層を重ね</b>、どれかが抜けても次の層で止まるようにします。</p>
 <p class="task" data-s="guardrails"><span class="tn">DOMAIN 7</span><b>Guardrails and Safe Deployment</b></p>
+
+<table class="tbl">
+  <thead><tr><th>層</th><th>止めるもの</th><th>例</th></tr></thead>
+  <tbody>
+    <tr><td data-l="層">入力</td><td data-l="止めるもの">危ない依頼を、本筋に届く前に</td><td data-l="例">軽いモデルでの事前の検査</td></tr>
+    <tr><td data-l="層">指示</td><td data-l="止めるもの">決まりから外れた振る舞いを</td><td data-l="例">system の方針と断り方</td></tr>
+    <tr><td data-l="層">権限</td><td data-l="止めるもの">できてはいけない操作を</td><td data-l="例">要る道具だけ・禁止の規則・サンドボックス</td></tr>
+    <tr><td data-l="層">出力</td><td data-l="止めるもの">漏れや誤りを、出す前に</td><td data-l="例">出力の検査・後処理</td></tr>
+    <tr><td data-l="層">人</td><td data-l="止めるもの">取り返しのつかない操作を</td><td data-l="例">実行前の承認</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>守りは重ねる。頼む層（指示）は確率で破られるので、強制する層（権限・検査・承認）と組にする。</p>
+
+<h3 class="sub" id="layer-policy">内容の方針</h3>
+<p class="goal"><b>ゴール</b>アプリが守る内容の方針が、どこから来て、どう効かせるかを言える。</p>
+<div class="detail">
+  <p>Claude を使うアプリは、Anthropic の使用ポリシーを守ります。利用者に直接届く高リスクの用途では、人が確かめる仕組みと、AI を使っていることの開示が求められます。その上に、アプリ自身の方針（扱う話題・断るもの）を決め、system と入力・出力の検査で効かせます。</p>
+  <p>設計の最初から、<b>プライバシー</b>（要らない個人情報を集めない・残さない）と、<b>誰に何を許すか</b>（ID と権限の管理）を組み込みます。後から足す守りは、抜けやすくなります。</p>
+</div>
+
+<h3 class="sub" id="layer-least">最小権限</h3>
+<p class="goal"><b>ゴール</b>Claude と人に渡す権限を、要る分だけに絞れる。</p>
+<div class="detail">
+  <p>権限は、仕事に要る分だけを渡します。これが<span data-en="最小権限">最小権限（least privilege）</span>の考え方で、破られたときの被害の大きさを、渡した権限の範囲に閉じ込めます。</p>
+</div>
+<table class="tbl">
+  <thead><tr><th>手</th><th>中身</th></tr></thead>
+  <tbody>
+    <tr><td data-l="手">道具</td><td data-l="中身">仕事に要る道具だけを渡す。読むだけで足りるなら、書き込む道具は渡さない</td></tr>
+    <tr><td data-l="手">規則</td><td data-l="中身">禁止・確認・許可の規則で、道具と引数を絞る。規則は Claude ではなく Claude Code が強制する</td></tr>
+    <tr><td data-l="手">隔離</td><td data-l="中身">サンドボックスで、ファイルとネットワークの届く範囲を閉じる。インジェクションで Claude の判断が破られても効く</td></tr>
+    <tr><td data-l="手">人の役割</td><td data-l="中身">人にも要る役割だけを与える（使うだけ・鍵を作れる・設定を変えられる、など）</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <div class="myth">
+    <span class="t">誤解</span><span>「system プロンプトで禁止しておけば、道具の権限は広くてもよい」</span>
+    <span class="t o">実際は</span><span>指示は確率で破られる。<b>できることそのものを権限で絞っておけば</b>、破られても被害は限られる。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../07-security/02-leak.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../07-security/04-hooks.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -67,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

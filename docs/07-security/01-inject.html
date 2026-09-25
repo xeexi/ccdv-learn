@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css?v=011a3864">
+<link rel="stylesheet" href="../assets/style.css?v=9bf85b8b">
 </head>
 <body data-page="inject">
 <script>(function(){var t=localStorage.getItem('ccdvf-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 7</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../07-security/01-inject.html"><span class="itm-n">7-1</span><span class="itm-t">仕込まれた指示を効かせない</span></a>
+<a class="toc-link toc-sub" href="#inject-jailbreak">ジェイルブレイクへの守り</a>
+<a class="toc-link toc-sub" href="#inject-indirect">間接のインジェクションへの守り</a>
 <a class="itm toc-link" href="../07-security/02-leak.html"><span class="itm-n">7-2</span><span class="itm-t">漏らさない ─ 個人情報と、認証・認可</span></a>
 <a class="itm toc-link" href="../07-security/03-layer.html"><span class="itm-n">7-3</span><span class="itm-t">守りを重ねる ─ ガードレールと最小権限</span></a>
 <a class="itm toc-link" href="../07-security/04-hooks.html"><span class="itm-n">7-4</span><span class="itm-t">壊す操作はフックで止める</span></a>
@@ -54,7 +56,51 @@
   <h2>7-1　仕込まれた指示を効かせない</h2>
 </header>
 <p class="goal"><b>ゴール</b>インジェクションとジェイルブレイクを、信頼できない入力の扱いで防げる。</p>
+<p class="lead">Claude のアプリへの攻撃は、大きく2つに分かれます。利用者自身が頼み方を工夫して、アプリの決まりを破らせようとする<b><span data-en="ジェイルブレイク">ジェイルブレイク（jailbreak）</span></b>と、利用者ではなく、Claude が読み込む Web のページ・メール・文書の中に指示を仕込む<b>間接の<span data-en="インジェクション">インジェクション（prompt injection）</span></b>です。利用者が指示を直接仕込むものは、直接のインジェクションと呼びます。</p>
 <p class="task" data-s="app-security"><span class="tn">DOMAIN 7</span><b>AI Application Security</b></p>
+
+<table class="tbl">
+  <thead><tr><th>攻撃</th><th>仕掛ける人</th><th>入り口</th><th>主な守り</th></tr></thead>
+  <tbody>
+    <tr><td data-l="攻撃">直接</td><td data-l="仕掛ける人">利用者</td><td data-l="入り口">利用者の入力</td><td data-l="主な守り">事前の検査・system の方針・繰り返す人への制限</td></tr>
+    <tr><td data-l="攻撃">間接</td><td data-l="仕掛ける人">第三者</td><td data-l="入り口">ツールの結果・文書・Web・メール</td><td data-l="主な守り">置き場所・方針・結果の検査・最小権限・人の確認</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>利用者の入力は事前に検査し、外から来た中身はツールの結果として材料の扱いにする。どちらも、破られたときの被害を権限で小さくしておく。</p>
+
+<h3 class="sub" id="inject-jailbreak">ジェイルブレイクへの守り</h3>
+<p class="goal"><b>ゴール</b>利用者が決まりを破らせようとするときの守りを挙げられる。</p>
+<table class="tbl">
+  <thead><tr><th>守り</th><th>すること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="守り">事前の検査</td><td data-l="すること">軽いモデルで、利用者の入力を本筋の会話の前に分類する。答えは構造化出力で「問題あり・なし」に絞る</td></tr>
+    <tr><td data-l="守り">入力の検査</td><td data-l="すること">知られた手口の型を、Claude に届く前に弾く</td></tr>
+    <tr><td data-l="守り">system</td><td data-l="すること">守る決まりと、断り方をはっきり書く</td></tr>
+    <tr><td data-l="守り">繰り返す人</td><td data-l="すること">同じ断りを何度も引き起こす利用者には、制限や停止を考える</td></tr>
+    <tr><td data-l="守り">監視</td><td data-l="すること">出力を見続け、新しい手口に合わせて守りを直す</td></tr>
+  </tbody>
+</table>
+
+<h3 class="sub" id="inject-indirect">間接のインジェクションへの守り</h3>
+<p class="goal"><b>ゴール</b>読み込む中身に仕込まれた指示への守りを、重ねて組める。</p>
+<div class="detail">
+  <p>利用者に悪意がなくても、Claude が読み込む中身が汚れていることがあります。置き場所の決まり（〈<a href="../02-apps/15-boundary.html">指示とデータの境目</a>〉）に、次の守りを重ねます。</p>
+  <table class="tbl">
+    <thead><tr><th>守り</th><th>すること</th></tr></thead>
+    <tbody>
+      <tr><td data-l="守り">置き場所</td><td data-l="すること">外の中身はツールの結果にだけ入れ、JSON の文字列に包む。自分の指示はツールの結果に混ぜない</td></tr>
+      <tr><td data-l="守り">方針</td><td data-l="すること">外の中身は信頼しないデータで、中の指示は「従うもの」ではなく「報告するもの」だと system に書く</td></tr>
+      <tr><td data-l="守り">結果の検査</td><td data-l="すること">ツールの結果を、Claude が使う前に軽いモデルで検査する</td></tr>
+      <tr><td data-l="守り">最小権限</td><td data-l="すること">要らない秘密や道具を渡さない。破られても、できることが少なければ被害も小さい</td></tr>
+      <tr><td data-l="守り">人の確認</td><td data-l="すること">取り返しのつかない操作は、人に確かめてから実行する</td></tr>
+      <tr><td data-l="守り">攻撃の試し</td><td data-l="すること">出す前に、指示を仕込んだ文書やメールで自分のエージェントを試す</td></tr>
+    </tbody>
+  </table>
+  <div class="myth">
+    <span class="t">誤解</span><span>「利用者が信頼できる社員だけなら、インジェクションは起きない」</span>
+    <span class="t o">実際は</span><span>間接のインジェクションは、利用者ではなく<b>読み込む中身</b>から来る。社内向けでも、外の中身を読むなら守りが要る。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../03-claude-code/03-q.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../07-security/02-leak.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -67,7 +113,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
-<script src="../assets/search-index.js?v=8f2ae85b"></script>
+<script src="../assets/quiz-data.js?v=a4b5fb0f"></script>
+<script src="../assets/search-index.js?v=86dce478"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

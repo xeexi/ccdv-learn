@@ -95,7 +95,7 @@ head・上部ナビ・目次・パンくず・前後の送り・検索窓・ス�
 
 本文に目印だけ置いて、実体は `reindex.mjs` の `BLOCKS` に書く。**手で書くと、出所が2つになる。**
 
-いまある13個（`brand` `credential` `readorder` `weightfig` `examfmt` `guidesrc` `blueprintfig` `examadmin` `samplefig` `qualfig` `glossfig` `nsec` `alllist`）。
+いまある14個（`brand` `credential` `readorder` `weightfig` `examfmt` `guidesrc` `blueprintfig` `examadmin` `samplefig` `qualfig` `glossfig` `preparefig` `nsec` `alllist`）。
 `alllist` だけは index.html 専用の特別扱い。一覧と実物の一致は検査28が見る。
 
 **札・原語・登場人物も差し込みで受ける。** 本文には目印だけ書く：
@@ -567,15 +567,15 @@ docker run --rm -v "$SCRATCH":/s alpine sh -c \
 
 ## 10. 引き継ぎ ─ いまの状態
 
-**段階3（残りのドメイン）の途中。** 読む順で D5・D8・D6・D1・D2・D3 まで書き終え、次は D7。計画の段取りは次のとおり。①②では利用者の確認を待つ。
+**段階4（まとめ）の途中。** 本文の8ドメインは書き終えた（本文の設問80問）。残りはまとめの6項と模擬試験4回。計画の段取りは次のとおり。①②では利用者の確認を待つ。
 
 | 段階 | 中身 | 状態 |
 |---|---|---|
 | 0 | 土台（ツール・blueprint・site・index・CLAUDE.md） | 済 |
 | 1 | 目次の設計 ── スキルとトピックを節に割り付け、読む順を用語の初出で確定、分量と設問数を重みで配分 → **確認①** → 骨組みのページを生成 | 済（読む順 D5 → D8 → D6 → D1 → D2 → D3 → D7 → D4 → まとめ） |
 | 2 | 見本のドメイン（読む順の先頭）を本文・図・設問まで仕上げる → **確認②** | 済（D5。「この調子で」と承認） |
-| 3 | 残りのドメインを1ドメインずつ（終えるたびに check・measure・報告・commit） | D8・D6・D1・D2・D3 済。次は D7 → D4 |
-| 4 | まとめ（配点・例題の誤答の型と戻り先・受験の準備と実務・設問に出る語・対訳表・模擬試験） | |
+| 3 | 残りのドメインを1ドメインずつ（終えるたびに check・measure・報告・commit） | 済（D8・D6・D1・D2・D3・D7・D4） |
+| 4 | まとめ（配点・例題の誤答の型と戻り先・受験の準備と実務・設問に出る語・対訳表・模擬試験） | これから |
 | 5 | 総点検（網羅・例題・設問の通読・事実の再確認・measure 全条件）→ 公開するかの確認 | |
 
 ccaf-learn の本文は**素材として使える**（ループ・ツール・MCP・フック・CLAUDE.md・プロンプト・構造化出力・コンテキスト）。
