@@ -39,6 +39,8 @@
 <aside class="toc">
   <div class="toc-head">Domain 3</div>
   <nav class="toc-list"><a class="itm toc-link on" href="../03-claude-code/01-parts.html"><span class="itm-n">3-1</span><span class="itm-t">Claude Code の部品</span></a>
+<a class="toc-link toc-sub" href="#parts-claudemd">CLAUDE.md の階層と、始め方</a>
+<a class="toc-link toc-sub" href="#parts-memory">CLAUDE.md と記憶</a>
 <a class="itm toc-link" href="../03-claude-code/02-run.html"><span class="itm-n">3-2</span><span class="itm-t">Claude Code の動かし方</span></a>
 <a class="itm toc-link itm-quiz" href="../03-claude-code/03-q.html"><span class="itm-n">3-3</span><span class="itm-t">理解度チェック ─ Claude Code</span></a></nav>
 </aside>
@@ -51,7 +53,55 @@
   <h2>3-1　Claude Code の部品</h2>
 </header>
 <p class="goal"><b>ゴール</b>部品と CLAUDE.md の階層が、それぞれ何を担うかを言える。</p>
+<p class="cast" data-cast="dev,cc"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span></p>
+<p class="lead">Claude Code は、いつも守る決まり・必要なときだけの手順・呼び出す定型・別の窓で動く子・学んだことの記憶を、それぞれ別の部品としてファイルに置きます。<b>どの部品に書くかで、いつ読まれ、誰が書くかが変わります</b>。</p>
 <p class="task" data-s="claude-code-operation"><span class="tn">DOMAIN 3</span><b>Claude Code Operation</b></p>
+
+<table class="tbl">
+  <thead><tr><th>部品</th><th>置き場所</th><th>読まれる時</th><th>書くもの</th></tr></thead>
+  <tbody>
+    <tr><td data-l="部品">CLAUDE.md</td><td data-l="置き場所"><code>./CLAUDE.md</code> など</td><td data-l="読まれる時">毎回、会話の最初に</td><td data-l="書くもの">いつも守る決まり（ビルドの手順・書き方・構成）</td></tr>
+    <tr><td data-l="部品">Rules</td><td data-l="置き場所"><code>.claude/rules/*.md</code></td><td data-l="読まれる時">毎回。<code>paths</code> を付けると、合うファイルを読んだ時だけ</td><td data-l="書くもの">話題ごと・場所ごとの決まり</td></tr>
+    <tr><td data-l="部品">Skills</td><td data-l="置き場所"><code>.claude/skills/名前/SKILL.md</code></td><td data-l="読まれる時">名前と説明は毎回、本文は要る時</td><td data-l="書くもの">何段もある手順や参照資料。<code>/名前</code> でも呼べる</td></tr>
+    <tr><td data-l="部品">Commands</td><td data-l="置き場所"><code>.claude/commands/*.md</code></td><td data-l="読まれる時"><code>/名前</code> で呼んだ時</td><td data-l="書くもの">定型の頼み方。いまは Skills と同じ扱いで、古い形として残る</td></tr>
+    <tr><td data-l="部品">Agents</td><td data-l="置き場所"><code>.claude/agents/*.md</code></td><td data-l="読まれる時">Claude が任せると決めた時（別の窓で動く）</td><td data-l="書くもの">子の役割・使える道具・モデル</td></tr>
+    <tr><td data-l="部品">記憶</td><td data-l="置き場所"><code>~/.claude/projects/…/memory/</code></td><td data-l="読まれる時">索引（<code>MEMORY.md</code>）の先頭を毎回、細部は要る時</td><td data-l="書くもの">Claude が学んだこと。<b>Claude 自身が書く</b></td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>毎回要る決まりは CLAUDE.md と Rules、要る時だけの手順は Skills、別の窓で任せる仕事は Agents。学んだことは、Claude 自身が記憶に書く。</p>
+
+<h3 class="sub" id="parts-claudemd">CLAUDE.md の階層と、始め方</h3>
+<p class="goal"><b>ゴール</b>CLAUDE.md が読まれる順と、リポジトリでの始め方を言える。</p>
+<div class="detail">
+  <p>置き場所ごとの効く範囲は〈<a href="../02-apps/19-config.html">構成を管理する</a>〉のとおりで、見つかった CLAUDE.md は全部つなげて読まれます。作業しているディレクトリより上の CLAUDE.md は起動時に、<b>下のディレクトリの CLAUDE.md は、そのディレクトリのファイルを読んだ時に</b>読まれます。大きなリポジトリでは、決まりを使う場所の近くに置きます。</p>
+  <table class="tbl">
+    <thead><tr><th>手</th><th>すること</th></tr></thead>
+    <tbody>
+      <tr><td data-l="手"><code>/init</code></td><td data-l="すること">コードを調べさせ、ビルドやテストの手順を書いた最初の CLAUDE.md を作る。あれば直す案を出す</td></tr>
+      <tr><td data-l="手"><code>/memory</code></td><td data-l="すること">読み込まれている CLAUDE.md と記憶を見て、直す</td></tr>
+      <tr><td data-l="手"><code>@path</code></td><td data-l="すること">別のファイルの中身を、CLAUDE.md に取り込む</td></tr>
+    </tbody>
+  </table>
+  <p>CLAUDE.md は毎回、窓を使います。公式の目安は1ファイル200行未満で、長いほど窓を使い、守られにくくなります。何段もある手順は Skills に分けます。</p>
+</div>
+
+<h3 class="sub" id="parts-memory">CLAUDE.md と記憶</h3>
+<p class="goal"><b>ゴール</b>CLAUDE.md と自動の記憶の違いを言える。</p>
+<table class="tbl">
+  <thead><tr><th>比べる点</th><th>CLAUDE.md</th><th>記憶（自動）</th></tr></thead>
+  <tbody>
+    <tr><td data-l="比べる点">書く人</td><td data-l="CLAUDE.md">利用者</td><td data-l="記憶（自動）">Claude</td></tr>
+    <tr><td data-l="比べる点">中身</td><td data-l="CLAUDE.md">指示と決まり</td><td data-l="記憶（自動）">学んだことや、利用者に直されたこと</td></tr>
+    <tr><td data-l="比べる点">範囲</td><td data-l="CLAUDE.md">プロジェクト・個人・組織</td><td data-l="記憶（自動）">リポジトリごと。その機械の中だけ</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>子（Agents）も、定義に <code>memory</code> を書けば、会話をまたいで残る自分専用の記憶を持てます。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「CLAUDE.md や記憶に書いたことは、設定として強制される」</span>
+    <span class="t o">実際は</span><span>どちらも<b>文脈として読まれるだけ</b>。必ず止めたい操作は、フック（<code>PreToolUse</code>）や権限の設定で止める。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/21-q5.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../03-claude-code/02-run.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -64,7 +114,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=efa2c995"></script>
-<script src="../assets/search-index.js?v=1fcf657d"></script>
+<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
+<script src="../assets/search-index.js?v=8f2ae85b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

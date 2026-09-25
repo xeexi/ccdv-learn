@@ -40,6 +40,9 @@
   <div class="toc-head">Domain 3</div>
   <nav class="toc-list"><a class="itm toc-link" href="../03-claude-code/01-parts.html"><span class="itm-n">3-1</span><span class="itm-t">Claude Code の部品</span></a>
 <a class="itm toc-link on" href="../03-claude-code/02-run.html"><span class="itm-n">3-2</span><span class="itm-t">Claude Code の動かし方</span></a>
+<a class="toc-link toc-sub" href="#run-headless">対話なしで動かす</a>
+<a class="toc-link toc-sub" href="#run-settings">settings.json で決めておく</a>
+<a class="toc-link toc-sub" href="#run-session">セッションとコマンド</a>
 <a class="itm toc-link itm-quiz" href="../03-claude-code/03-q.html"><span class="itm-n">3-3</span><span class="itm-t">理解度チェック ─ Claude Code</span></a></nav>
 </aside>
 <main class="doc">
@@ -51,7 +54,79 @@
   <h2>3-2　Claude Code の動かし方</h2>
 </header>
 <p class="goal"><b>ゴール</b>セッション・コマンド・対話なしの実行・権限の任せ方を、場面で選び分けられる。</p>
+<p class="cast" data-cast="dev,cc"><span class="c-blue">開発者</span><span class="c-ar">→</span><span class="c-blue">Claude Code</span></p>
+<p class="lead">Claude Code は、画面で対話しながら使うほかに、CI やスクリプトから対話なしでも動かせます。どちらでも、<b>何を確認なしで許すか（権限のモード）</b>を決めてから動かします。</p>
 <p class="task" data-s="claude-code-operation"><span class="tn">DOMAIN 3</span><b>Claude Code Operation</b></p>
+
+<table class="tbl">
+  <thead><tr><th>モード</th><th>確認なしで動くもの</th><th>向く場面</th></tr></thead>
+  <tbody>
+    <tr><td data-l="モード"><code>default</code></td><td data-l="確認なしで動くもの">読み取りだけ</td><td data-l="向く場面">1つずつ自分で確かめたい</td></tr>
+    <tr><td data-l="モード"><code>acceptEdits</code></td><td data-l="確認なしで動くもの">読み取り・ファイルの編集・よく使うファイル操作</td><td data-l="向く場面">見ながら直させる</td></tr>
+    <tr><td data-l="モード"><code>plan</code></td><td data-l="確認なしで動くもの">読み取り。変更はしない</td><td data-l="向く場面">変える前に調べて、計画を出させる</td></tr>
+    <tr><td data-l="モード"><code>auto</code></td><td data-l="確認なしで動くもの">ほぼすべて。裏で別のモデル（分類器）が見て、危ない操作だけを止める</td><td data-l="向く場面">長い仕事で、確認の手間を減らす</td></tr>
+    <tr><td data-l="モード"><code>dontAsk</code></td><td data-l="確認なしで動くもの">読み取りと、先に許可した道具だけ。確認が要るものは断る</td><td data-l="向く場面">締めた CI やスクリプト</td></tr>
+    <tr><td data-l="モード"><code>bypassPermissions</code></td><td data-l="確認なしで動くもの">すべて</td><td data-l="向く場面">隔離したコンテナや VM の中だけ</td></tr>
+  </tbody>
+</table>
+<p class="point"><b>ポイント</b>人が見ていない実行ほど、確認なしで許す範囲を狭くする。すべてを許すのは、隔離した環境の中だけ。</p>
+
+<h3 class="sub" id="run-headless">対話なしで動かす</h3>
+<p class="goal"><b>ゴール</b>対話なしの実行の書き方と、CI での注意を言える。</p>
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">CI の手順から動かす</p>
+  <pre class="code">claude --bare -p <span class="s">"テストが落ちる原因を直して"</span> \<span class="n">1</span>
+  --allowedTools <span class="s">"Read,Edit,Bash"</span> \<span class="n">2</span>
+  --output-format json<span class="n">3</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span><code>-p</code> で、1回の依頼を対話なしで実行して終わる。<code>--bare</code> を付けると、フック・Skills・MCP サーバ・CLAUDE.md などを読み込まない。</span></li>
+    <li><span class="n">2</span><span>確認なしで使わせる道具。人が承認できないので、先に決める。</span></li>
+    <li><span class="n">3</span><span>結果の形。<code>json</code> なら答えに費用やセッションの ID が付き、<code>stream-json</code> なら出来事が1行ずつ逐次で届く。</span></li>
+  </ol>
+</div>
+<div class="detail">
+  <p><code>--bare</code> を付けないと、<code>-p</code> はプロジェクトの設定にあるフックや MCP サーバも、信頼の確認なしに動かします。<b>どのマシンでも同じ結果にしたい CI では、<code>--bare</code> で動かす</b>のが安全です。</p>
+</div>
+
+<h3 class="sub" id="run-settings">settings.json で決めておく</h3>
+<p class="goal"><b>ゴール</b>settings.json に書く主な項目と、その効き方を言える。</p>
+<div class="figbox" style="padding:16px 18px">
+  <p class="codelabel">.claude/settings.json</p>
+  <pre class="code">{ <span class="k">"permissions"</span>: {
+    <span class="k">"allow"</span>: [<span class="s">"Bash(npm test *)"</span>],<span class="n">1</span>
+    <span class="k">"deny"</span>: [<span class="s">"Read(./.env)"</span>],<span class="n">2</span>
+    <span class="k">"defaultMode"</span>: <span class="s">"acceptEdits"</span> },<span class="n">3</span>
+  <span class="k">"env"</span>: { <span class="k">"NODE_ENV"</span>: <span class="s">"test"</span> } }<span class="n">4</span></pre>
+  <ol class="ann">
+    <li><span class="n">1</span><span>確認なしで許す操作。道具の名前と、引数の形で書く。</span></li>
+    <li><span class="n">2</span><span>禁止する操作。<b>どのモードでも効く</b>（<code>bypassPermissions</code> でも）。</span></li>
+    <li><span class="n">3</span><span>始めるときの権限のモード。</span></li>
+    <li><span class="n">4</span><span>セッションに渡す環境変数。</span></li>
+  </ol>
+</div>
+<div class="detail">
+  <p>フック（〈<a href="../01-agents/11-hooks.html">決まった処理はフックで</a>〉）やモデルも、ここに書きます。どのファイルの設定が勝つかは〈<a href="../02-apps/19-config.html">構成を管理する</a>〉で扱いました。</p>
+</div>
+
+<h3 class="sub" id="run-session">セッションとコマンド</h3>
+<p class="goal"><b>ゴール</b>セッションの続け方と、組み込み・自作のコマンドの使い分けを言える。</p>
+<table class="tbl">
+  <thead><tr><th>コマンド</th><th>すること</th></tr></thead>
+  <tbody>
+    <tr><td data-l="コマンド"><code>--continue</code></td><td data-l="すること">直前の会話を続ける。<code>--resume</code> なら一覧から選ぶ</td></tr>
+    <tr><td data-l="コマンド"><code>--fork-session</code></td><td data-l="すること">続けるときに付けると、元の会話を残したまま、別の ID で枝分かれする</td></tr>
+    <tr><td data-l="コマンド"><code>/compact</code></td><td data-l="すること">会話を要約して窓を空ける。何を残すかを指示できる</td></tr>
+    <tr><td data-l="コマンド"><code>/model</code></td><td data-l="すること">モデルを切り替える</td></tr>
+    <tr><td data-l="コマンド"><code>/permissions</code></td><td data-l="すること">許可・確認・禁止の規則を見て直す</td></tr>
+  </tbody>
+</table>
+<div class="detail">
+  <p>自分で作るコマンドは、Skills として <code>.claude/skills/名前/SKILL.md</code> に書けば <code>/名前</code> で呼べます（古い形の <code>.claude/commands/</code> も使えます）。会話を分ける・捨てる判断は〈<a href="../02-apps/17-session.html">セッションとプラグインを管理する</a>〉で扱いました。</p>
+  <div class="myth">
+    <span class="t">誤解</span><span>「CI では、止まらないように <code>bypassPermissions</code> で動かせばよい」</span>
+    <span class="t o">実際は</span><span>人が見ていない場所で、すべてを許すことになる。<b>使う道具だけを許し</b>、それ以外は断らせる（<code>dontAsk</code> や <code>--allowedTools</code>）。</span>
+  </div>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../03-claude-code/01-parts.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../03-claude-code/03-q.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -64,7 +139,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=efa2c995"></script>
-<script src="../assets/search-index.js?v=1fcf657d"></script>
+<script src="../assets/quiz-data.js?v=c5bf0bcc"></script>
+<script src="../assets/search-index.js?v=8f2ae85b"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
