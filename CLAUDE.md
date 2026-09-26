@@ -557,17 +557,19 @@ docker run --rm -v "$SCRATCH":/s alpine sh -c \
 
 ## 9. git の現状
 
-ブランチ `main`。**remote はまだ無い**（GitHub にリポジトリを作るか・push するか・Pages で公開するかは、利用者の確認を取ってから）。
+ブランチ `main`。remote `origin` は **public** の https://github.com/xeexi/ccdv-learn（2026-09-26 に利用者の確認を経て公開）。
+GitHub Pages が `main` の `/docs` から https://xeexi.github.io/ccdv-learn/ に出している（ccaf-learn と同じ設定）。
+**`main` に push したものは、そのまま公開される** ── push の前に `check` を通し、見た目を変えたなら `measure` も通す（§7 #85）。
 
 - commit は区切りごと。**`git add -A` は使わず、ファイル名を1つずつ指定する**（利用者の指示）
 - `user.name` / `user.email` はグローバルに設定済み（xeexi）
-- Pages で出すときは Settings → Pages → Deploy from a branch → `/docs`。**Pages のサイトはリポジトリが private でも公開される**
+- Pages のビルドの成否は `gh api repos/xeexi/ccdv-learn/pages/builds/latest` で見る
 
 ---
 
 ## 10. 引き継ぎ ─ いまの状態
 
-**段階5（総点検）は済み。GitHub に公開するかは、利用者の確認を待っている。** 本文の8ドメイン（設問80問）・まとめの6項・模擬試験4回（各53問）がそろった。計画の段取りは次のとおり。①②では利用者の確認を待つ。
+**段階5（総点検）まで済み、2026-09-26 に公開した**（§9）。本文の8ドメイン（設問80問）・まとめの6項・模擬試験4回（各53問）がそろっている。段取りと結果は次のとおり。
 
 | 段階 | 中身 | 状態 |
 |---|---|---|
@@ -576,7 +578,7 @@ docker run --rm -v "$SCRATCH":/s alpine sh -c \
 | 2 | 見本のドメイン（読む順の先頭）を本文・図・設問まで仕上げる → **確認②** | 済（D5。「この調子で」と承認） |
 | 3 | 残りのドメインを1ドメインずつ（終えるたびに check・measure・報告・commit） | 済（D8・D6・D1・D2・D3・D7・D4） |
 | 4 | まとめ（配点・例題の誤答の型と戻り先・受験の準備と実務・設問に出る語・対訳表・模擬試験） | 済（模擬試験は4回・各53問をドメインの按分で） |
-| 5 | 総点検（網羅・例題・設問の通読・事実の再確認・measure 全条件）→ 公開するかの確認 | 点検は済（2026-09-26。measure は chromium 全幅・webkit 390/1440、両テーマで ✗ 0）。公開は確認待ち |
+| 5 | 総点検（網羅・例題・設問の通読・事実の再確認・measure 全条件）→ 公開するかの確認 | 済（2026-09-26。measure は chromium 全幅・webkit 390/1440、両テーマで ✗ 0）。同日、利用者の確認を経て公開（§9） |
 
 ccaf-learn の本文は**素材として使える**（ループ・ツール・MCP・フック・CLAUDE.md・プロンプト・構造化出力・コンテキスト）。
 ただし CCDV-F のスキルの枠で書き直し、事実は取り直す。CCAR-F で範囲外として削った
