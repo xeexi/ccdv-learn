@@ -45,7 +45,7 @@
 <a class="toc-link toc-sub" href="#dispatch-config">外のシステムにつなぐ設定</a>
 <a class="itm toc-link" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
-<a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
+<a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ Tools・Resources・Prompts</span></a>
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
 <a class="itm toc-link" href="../08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a>
 <a class="itm toc-link" href="../08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a>
@@ -96,13 +96,13 @@
   </tbody>
 </table>
 <div class="detail">
-  <p>サーバ側の道具は、Anthropic の中で呼び出しと実行を繰り返します。長くかかると、途中で止めた印（<code>pause_turn</code>）付きで応答が返るので、そのまま送り返して続けさせます。自作の道具と同じ応答に並んだときは、サーバ側の結果は後の応答で届きます。アプリは自作の道具の結果だけを返します。</p>
+  <p>サーバ側の道具は、Anthropic の中で呼び出しと実行を繰り返します。長くかかると、途中で止めた印（<code>pause_turn</code>）付きで応答が返るので、そのまま送り返して続けさせます。自作の道具と同じ応答に並んだときは、サーバ側の結果は後の応答で届きます。アプリは自作の道具の <code>tool_result</code> だけを返します。</p>
 </div>
 
 <h3 class="sub" id="dispatch-config">外のシステムにつなぐ設定</h3>
 <p class="goal"><b>ゴール</b>外のシステムへの接続の情報を、どこに置くかを言える。</p>
 <div class="detail">
-  <p>ツールの中身が社内の API やデータベースを呼ぶとき、<b>接続先・鍵・待ち時間の上限は、アプリ側の設定に置きます</b>。ツールの定義やプロンプトには書きません。Claude が見るのはツールの定義（名前・説明・入力の形と、入力の例）だけで、鍵を知る必要はありません。</p>
+  <p>ツールの中身が社内の API やデータベースを呼ぶとき、<b>接続先・鍵・待ち時間の上限は、アプリ側の設定に置きます</b>。ツールの定義やプロンプトには書きません。Claude が見るのはツールの定義（<code>name</code>・<code>description</code>・<code>input_schema</code> と <code>input_examples</code>）だけで、鍵を知る必要はありません。</p>
   <p>同じ接続を複数のアプリで使い回したいなら、ツールを MCP サーバとして切り出します（〈<a href="05-mcp.html">MCP サーバが出すもの</a>〉）。</p>
 </div>
 <p class="point"><b>ポイント</b>Claude は頼むだけで、実行も鍵もアプリの側にある。サーバ側の道具だけは、Anthropic が実行する。</p>
@@ -118,7 +118,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

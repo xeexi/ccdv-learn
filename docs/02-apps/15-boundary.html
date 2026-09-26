@@ -80,7 +80,7 @@
   <div class="fig-row" style="--cols:3">
     <div class="fig-card blue s1"><b class="fig-h">運営する側（system）</b><span class="fig-note">役割と方針。いちばん強い指示として読まれる</span></div>
     <div class="fig-card s2"><b class="fig-h">利用者（user）</b><span class="fig-note">今回の依頼。運営する側の方針の範囲で従う</span></div>
-    <div class="fig-card red s3"><b class="fig-h">外から来た中身</b><span class="fig-note">ツールの結果や文書。材料として読み、中の指示には従わない</span></div>
+    <div class="fig-card red s3"><b class="fig-h">外から来た中身</b><span class="fig-note"><code>tool_result</code> や文書。材料として読み、中の指示には従わない</span></div>
   </div>
   <p class="fig-f">境目は、言葉で「これは材料です」と書くより、<b>置き場所で示す</b>ほうが崩れにくい。</p>
 </figure></div>
@@ -91,8 +91,8 @@
 <table class="tbl">
   <thead><tr><th>決めること</th><th>中身</th></tr></thead>
   <tbody>
-    <tr><td data-l="決めること">経路</td><td data-l="中身">入力ごとに、どこに入れるかを決める（system・user・ツールの結果・文書のブロック）</td></tr>
-    <tr><td data-l="決めること">印</td><td data-l="中身">材料はタグや文書のブロックで囲み、出どころを添える（〈<a href="../06-prompt/03-refine.html">直しながら寄せる・入力を整える</a>〉）</td></tr>
+    <tr><td data-l="決めること">経路</td><td data-l="中身">入力ごとに、どこに入れるかを決める（system・user・<code>tool_result</code>・<code>document</code> のブロック）</td></tr>
+    <tr><td data-l="決めること">印</td><td data-l="中身">材料はタグや <code>document</code> のブロックで囲み、出どころを添える（〈<a href="../06-prompt/03-refine.html">直しながら寄せる・入力を整える</a>〉）</td></tr>
     <tr><td data-l="決めること">方針</td><td data-l="中身">材料の中の指示には従わないことを、system に書いておく</td></tr>
     <tr><td data-l="決めること">権限</td><td data-l="中身">外の中身を読んだ後に使える道具を絞る（〈<a href="../07-security/01-inject.html">仕込まれた指示を効かせない</a>〉）</td></tr>
   </tbody>
@@ -122,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

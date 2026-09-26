@@ -96,7 +96,7 @@
       <tr><td data-l="起きること">窓を超える</td><td data-l="どこで分かるか">入力だけで窓を超えると、リクエストがエラーで返る</td><td data-l="打つ手">古い部分を刈り込む・要約する（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
       <tr><td data-l="起きること">上限切れ</td><td data-l="どこで分かるか">出力が途中で打ち切られ、<code>stop_reason</code> が <code>max_tokens</code>。指定した出力の上限に達した</td><td data-l="打つ手">出力の上限を上げる。入力を減らしても直らない</td></tr>
       <tr><td data-l="起きること">窓切れ</td><td data-l="どこで分かるか">出力が途中で打ち切られ、<code>stop_reason</code> が <code>model_context_window_exceeded</code>。書く途中で窓の端に届いた</td><td data-l="打つ手">入力を減らす。切れた応答として扱う</td></tr>
-      <tr><td data-l="起きること">重くなる</td><td data-l="どこで分かるか">往復のたびに遅く、高くなる。使用量のトークン数が、回ごとに増える</td><td data-l="打つ手">同じ前半を使い回す（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
+      <tr><td data-l="起きること">重くなる</td><td data-l="どこで分かるか">往復のたびに遅く、高くなる。<code>usage</code> のトークン数が、回ごとに増える</td><td data-l="打つ手">同じ前半を使い回す（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
     </tbody>
   </table>
   <div class="myth">
@@ -117,7 +117,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -67,7 +67,7 @@
 <table class="tbl">
   <thead><tr><th>手</th><th>すること</th><th>向くとき</th><th>残るもの</th></tr></thead>
   <tbody>
-    <tr><td data-l="手"><b>刈り込み</b></td><td data-l="すること">古いツールの結果（や、考えた内容）を消す</td><td data-l="向くとき">ツールを何度も呼ぶ長い作業で、結果はもう読み終えた</td><td data-l="残るもの">会話の流れは残り、古い結果の中身だけが消える</td></tr>
+    <tr><td data-l="手"><b>刈り込み</b></td><td data-l="すること">古いツールの結果（や <code>thinking</code> のブロック）を消す</td><td data-l="向くとき">ツールを何度も呼ぶ長い作業で、結果はもう読み終えた</td><td data-l="残るもの">会話の流れは残り、古い結果の中身だけが消える</td></tr>
     <tr><td data-l="手"><b>圧縮</b></td><td data-l="すること">それまでの会話を、要約に置き換える</td><td data-l="向くとき">窓の上限に近づいた</td><td data-l="残るもの">要約に書かれたことだけ。細部は落ちる</td></tr>
     <tr><td data-l="手"><b>記憶</b></td><td data-l="すること">大事なことを窓の外のファイルに書き出し、要るときに読む</td><td data-l="向くとき">会話やセッションをまたいで続く仕事</td><td data-l="残るもの">書き出したものは、窓を空にしても残る</td></tr>
   </tbody>
@@ -92,7 +92,7 @@
 <p class="goal"><b>ゴール</b>圧縮で失われるものと、その備えを言える。</p>
 <div class="detail">
   <p>圧縮は、それまでの会話を要約に置き換えて、窓を空けます。API の機能（compaction、ベータ）には、<b>アプリが決めたときに要約させる</b>方式と、上限に近づいたところで自動で要約する方式があり、公式は使える所では前者を勧めています。Claude Code では <code>/compact</code> で自分から、または上限の手前で自動で行われます。</p>
-  <p>アプリの側で履歴の一部をその場で要約して書き換えると、キャッシュが外れ、新しいモデルでは思考のブロックも無効になります。刈り込みと圧縮は、なるべく API の機能に任せます。</p>
+  <p>アプリの側で履歴の一部をその場で要約して書き換えると、キャッシュが外れ、新しいモデルでは <code>thinking</code> のブロックも無効になります。刈り込みと圧縮は、なるべく API の機能に任せます。</p>
   <p>要約は細部を落とします。<b>後で要る決定や数字は、圧縮の前に記憶（ファイル）へ書き出して</b>おきます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「窓の大きいモデルなら、刈り込みも圧縮も要らない」</span>
@@ -111,7 +111,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

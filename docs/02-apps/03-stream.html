@@ -80,11 +80,11 @@
   <tbody>
     <tr><td data-l="差分の種類"><code>text_delta</code></td><td data-l="何の断片か">本文</td><td data-l="組み立て方">届いた順につなげる</td></tr>
     <tr><td data-l="差分の種類"><code>input_json_delta</code></td><td data-l="何の断片か">道具の引数（JSON の文字列の切れ端）</td><td data-l="組み立て方">ブロックの終わり（<code>content_block_stop</code>）まで待ってから、JSON として読む</td></tr>
-    <tr><td data-l="差分の種類"><code>thinking_delta</code></td><td data-l="何の断片か">考えた内容</td><td data-l="組み立て方">つなげる。終わりの直前に、署名（<code>signature_delta</code>）が届く</td></tr>
+    <tr><td data-l="差分の種類"><code>thinking_delta</code></td><td data-l="何の断片か">考えた内容</td><td data-l="組み立て方">つなげる。終わりの直前に、<code>signature_delta</code> が届く</td></tr>
   </tbody>
 </table>
 <p class="note">※ 引用を有効にすると、出典の断片（<code>citations_delta</code>）も届きます。途中には、何も運ばない <code>ping</code> のイベントも混ざります。</p>
-<p class="point"><b>ポイント</b>断片は、ブロックの番号（<code>index</code>）ごとにつなげる。止まった理由は最後の <code>message_delta</code> で届くので、途中の断片を見て分岐しない。</p>
+<p class="point"><b>ポイント</b>断片は、ブロックの <code>index</code> ごとにつなげる。<code>stop_reason</code> は最後の <code>message_delta</code> で届くので、途中の断片を見て分岐しない。</p>
 
 <h3 class="sub" id="stream-sdk">組み立ては SDK に任せる</h3>
 <p class="goal"><b>ゴール</b>断片を自分で組み立てずに済む書き方を言える。</p>
@@ -98,7 +98,7 @@
     msg = stream.get_final_message()<span class="n">2</span></pre>
   <ol class="ann">
     <li><span class="n">1</span><span>本文の断片だけを、届いた順に受け取る。</span></li>
-    <li><span class="n">2</span><span>組み立て済みの応答を1つ受け取る。止まった理由と使用量も、ここで見る。</span></li>
+    <li><span class="n">2</span><span>組み立て済みの応答を1つ受け取る。<code>stop_reason</code> と <code>usage</code> も、ここで見る。</span></li>
   </ol>
 </div>
 <div class="detail">
@@ -114,7 +114,7 @@
     <tbody>
       <tr><td data-l="手順">残す</td><td data-l="中身">それまでに受け取った分を保存する</td></tr>
       <tr><td data-l="手順">頼み直す</td><td data-l="中身">途中までの応答を示して「続きから書いて」と頼む、新しいリクエストを送る</td></tr>
-      <tr><td data-l="手順">限界</td><td data-l="中身">道具の依頼と考えた内容のブロックは、途中からは立て直せない。最後の文章のブロックから続ける</td></tr>
+      <tr><td data-l="手順">限界</td><td data-l="中身"><code>tool_use</code> と <code>thinking</code> のブロックは、途中からは立て直せない。最後の文章のブロックから続ける</td></tr>
     </tbody>
   </table>
   <p>イベントの種類は、今後増えることがあります。<b>知らない種類は、読み飛ばすように書きます</b>。</p>
@@ -135,7 +135,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

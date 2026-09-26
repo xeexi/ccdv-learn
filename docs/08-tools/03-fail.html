@@ -43,7 +43,7 @@
 <a class="itm toc-link on" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="toc-link toc-sub" href="#fail-approve">取り返しのつかない操作の前に、承認を挟む</a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
-<a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
+<a class="itm toc-link" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ Tools・Resources・Prompts</span></a>
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
 <a class="itm toc-link" href="../08-tools/07-builtin.html"><span class="itm-n">8-7</span><span class="itm-t">組み込みのツールか、自作か</span></a>
 <a class="itm toc-link" href="../08-tools/08-extend.html"><span class="itm-n">8-8</span><span class="itm-t">Skills か、MCP か</span></a>
@@ -73,7 +73,7 @@
   <span class="k">"is_error"</span>: <span class="v">true</span>,<span class="n">2</span>
   <span class="k">"content"</span>: <span class="s">"注文 A-1O24 は見つからない。英字の O と数字の 0 の取り違えかもしれない。"</span> }<span class="n">3</span></pre>
   <ol class="ann">
-    <li><span class="n">1</span><span>結果は、対応する呼び出しの id を付けて必ず返す。返さないと、次のリクエストがエラーになる。</span></li>
+    <li><span class="n">1</span><span>結果は、対応する <code>tool_use_id</code> を付けて必ず返す。返さないと、次のリクエストがエラーになる。</span></li>
     <li><span class="n">2</span><span>失敗したことを、<code>is_error</code> で示す。</span></li>
     <li><span class="n">3</span><span>何が起きたかと、直す手がかりを書く。Claude はそれを読み、引数を直したり別の手に切り替えたりする。</span></li>
   </ol>
@@ -111,7 +111,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -61,16 +61,16 @@
 </header>
 <p class="goal"><b>ゴール</b>指示と材料をどこに置くかで、効き方がどう変わるかを説明できる。</p>
 <p class="cast" data-cast="app,claude"><span class="c-blue">アプリ</span><span class="c-ar">→</span><span class="c-amber">Claude</span></p>
-<p class="lead">同じ文でも、どこに置くかで扱いが変わります。<code>system</code> はアプリを運営する側の声、<code>user</code> は利用者の声、ツールの結果は外から届いたデータとして読まれます。</p>
+<p class="lead">同じ文でも、どこに置くかで扱いが変わります。<code>system</code> はアプリを運営する側の声、<code>user</code> は利用者の声、<code>tool_result</code> は外から届いたデータとして読まれます。</p>
 <p class="task" data-s="prompt-engineering"><span class="tn">DOMAIN 6</span><b>Prompt Engineering</b></p>
 
 <table class="tbl">
   <thead><tr><th>置き場所</th><th>誰の声として読まれるか</th><th>置くもの</th></tr></thead>
   <tbody>
-    <tr><td data-l="置き場所"><code>system</code></td><td data-l="誰の声として読まれるか">アプリを運営する側</td><td data-l="置くもの">役割、最初から効かせたい指示、方針（ツールの結果はデータとして扱う、など）</td></tr>
+    <tr><td data-l="置き場所"><code>system</code></td><td data-l="誰の声として読まれるか">アプリを運営する側</td><td data-l="置くもの">役割、最初から効かせたい指示、方針（<code>tool_result</code> はデータとして扱う、など）</td></tr>
     <tr><td data-l="置き場所"><code>user</code></td><td data-l="誰の声として読まれるか">利用者</td><td data-l="置くもの">今回の依頼、利用者が渡した資料、質問</td></tr>
-    <tr><td data-l="置き場所">ツール結果</td><td data-l="誰の声として読まれるか">外から届いたデータ</td><td data-l="置くもの">ツールが返した内容。外から届いた信頼できない中身（受信したメール・Web の文など）は、ここに入れる</td></tr>
-    <tr><td data-l="置き場所">ツール説明</td><td data-l="誰の声として読まれるか">道具の説明書</td><td data-l="置くもの">いつ使うか、引数の意味</td></tr>
+    <tr><td data-l="置き場所"><code>tool_result</code></td><td data-l="誰の声として読まれるか">外から届いたデータ</td><td data-l="置くもの">ツールが返した内容。外から届いた信頼できない中身（受信したメール・Web の文など）は、ここに入れる</td></tr>
+    <tr><td data-l="置き場所"><code>description</code></td><td data-l="誰の声として読まれるか">道具の説明書</td><td data-l="置くもの">いつ使うか、引数の意味</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>役割と方針は <code>system</code>、今回の依頼と資料は <code>user</code>。外から来た中身には、指示の権限を与えない。</p>
@@ -79,10 +79,10 @@
 <p class="goal"><b>ゴール</b>役割と方針を system に置く理由を言える。</p>
 <div class="detail">
   <p><code>system</code> に役割を1文書くだけでも、振る舞いと口調が定まります。会話の最初から最後まで効かせたい方針も、ここに置きます。運営する側の指示と利用者の依頼がぶつかったときは、運営する側の指示が優先されます。</p>
-  <p>途中から効かせたい指示を足すために <code>system</code> の本文を書き換えると、<code>system</code> から後ろのキャッシュが外れます。新しいモデルでは、それより後の思考のブロックも無効になり、送るとエラーになることがあります。対応するモデルでは、会話の途中に <code>system</code> のメッセージを足す形を使えば、それまでの部分を使い回せます。<b>履歴は前の回を書き換えず、後ろに足すだけにする</b>のが、公式の勧める形です。</p>
+  <p>途中から効かせたい指示を足すために <code>system</code> の本文を書き換えると、<code>system</code> から後ろのキャッシュが外れます。新しいモデルでは、それより後の <code>thinking</code> のブロックも無効になり、送るとエラーになることがあります。対応するモデルでは、会話の途中に <code>system</code> のメッセージを足す形を使えば、それまでの部分を使い回せます。<b>履歴は前の回を書き換えず、後ろに足すだけにする</b>のが、公式の勧める形です。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「外から取ってきた文章も <code>system</code> に入れれば、確実に読ませられる」</span>
-    <span class="t o">実際は</span><span><code>system</code> に入れると、その文章に<b>運営する側の権限</b>を与えてしまう。信頼できない中身は、ツールの結果に入れて、データとして扱わせる。</span>
+    <span class="t o">実際は</span><span><code>system</code> に入れると、その文章に<b>運営する側の権限</b>を与えてしまう。信頼できない中身は、<code>tool_result</code> に入れて、データとして扱わせる。</span>
   </div>
 </div>
 
@@ -95,7 +95,7 @@
 <h3 class="sub" id="place-parts">部品ごとの置き場所</h3>
 <p class="goal"><b>ゴール</b>アプリを作る部品ごとに、どの指示をどこに置くかを選べる。</p>
 <div class="detail">
-  <p>Claude を使うアプリでは、指示は1か所ではなく部品に分かれて入ります。道具をいつ使うかはツールの説明に、方針は <code>system</code> に、今回の依頼は <code>user</code> に書きます。<b>自分の指示を、ツールの結果の中に混ぜない</b>のも決まりです。結果の中の指示は、Claude がデータとして疑ってかかるからです。</p>
+  <p>Claude を使うアプリでは、指示は1か所ではなく部品に分かれて入ります。道具をいつ使うかはツールの説明に、方針は <code>system</code> に、今回の依頼は <code>user</code> に書きます。<b>自分の指示を、<code>tool_result</code> の中に混ぜない</b>のも決まりです。結果の中の指示は、Claude がデータとして疑ってかかるからです。</p>
   <p>Claude Code なら、いつも効かせる約束は CLAUDE.md に、必要なときだけの手順は Skills に置きます（〈<a href="../03-claude-code/01-parts.html">Claude Code の部品</a>〉）。</p>
 </div>
 </section>
@@ -110,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

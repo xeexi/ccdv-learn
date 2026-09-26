@@ -85,12 +85,12 @@
 <h3 class="sub" id="wire-sse">SSE で届くもの</h3>
 <p class="goal"><b>ゴール</b>逐次で受け取ると、どんな順で何が届くかを言える。</p>
 <div class="detail">
-  <p><code>"stream": true</code> を付けて呼ぶと、1つの HTTP 応答の中に<b>イベントが順に流れてきます</b>。始まり、ブロックの始まり、本文の差分の繰り返し、ブロックの終わり、止まった理由と使用量、終わり、という順です。</p>
+  <p><code>"stream": true</code> を付けて呼ぶと、1つの HTTP 応答の中に<b>イベントが順に流れてきます</b>。<code>message_start</code>、<code>content_block_start</code>、本文の差分（<code>content_block_delta</code>）の繰り返し、<code>content_block_stop</code>、<code>stop_reason</code> と <code>usage</code> を運ぶ <code>message_delta</code>、<code>message_stop</code> の順です。</p>
   <pre class="code">event: message_start
 event: content_block_start
 event: content_block_delta   <span class="c"># 本文の差分。これが何度も来る</span>
 event: content_block_stop
-event: message_delta         <span class="c"># stop_reason と使用量</span>
+event: message_delta         <span class="c"># stop_reason と usage</span>
 event: message_stop</pre>
   <p>差分をつなぎ合わせて元の応答を組み立てる方法と、途中で切れたときの立て直しは〈<a href="../02-apps/03-stream.html">逐次で受け取る</a>〉で扱います。</p>
 </div>
@@ -119,7 +119,7 @@ event: message_stop</pre>
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

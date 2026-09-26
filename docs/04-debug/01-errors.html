@@ -79,16 +79,16 @@
 <h3 class="sub" id="errors-200">200 で返る失敗</h3>
 <p class="goal"><b>ゴール</b>HTTP では成功なのに、仕事としては失敗している応答を見分けられる。</p>
 <table class="tbl">
-  <thead><tr><th>止まった理由</th><th>起きていること</th><th>次の手</th></tr></thead>
+  <thead><tr><th><code>stop_reason</code></th><th>起きていること</th><th>次の手</th></tr></thead>
   <tbody>
-    <tr><td data-l="止まった理由"><code>max_tokens</code></td><td data-l="起きていること">上限で切れた</td><td data-l="次の手">上限を上げるか、続きを頼む。そのまま使わない</td></tr>
-    <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断った</td><td data-l="次の手">同じモデルに送り直しても、たいてい断られる。<code>stop_details</code> で断った分野を見て、別のモデルで送り直すか人に回し、記録する</td></tr>
-    <tr><td data-l="止まった理由"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いた</td><td data-l="次の手">切れた応答として扱う。入力を減らしてから続ける</td></tr>
-    <tr><td data-l="止まった理由"><code>pause_turn</code></td><td data-l="起きていること">サーバ側の道具の途中</td><td data-l="次の手">応答をそのまま足して、送り直す</td></tr>
+    <tr><td data-l="stop_reason"><code>max_tokens</code></td><td data-l="起きていること">上限で切れた</td><td data-l="次の手">上限を上げるか、続きを頼む。そのまま使わない</td></tr>
+    <tr><td data-l="stop_reason"><code>refusal</code></td><td data-l="起きていること">安全のために断った</td><td data-l="次の手">同じモデルに送り直しても、たいてい断られる。<code>stop_details</code> で断った分野を見て、別のモデルで送り直すか人に回し、記録する</td></tr>
+    <tr><td data-l="stop_reason"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いた</td><td data-l="次の手">切れた応答として扱う。入力を減らしてから続ける</td></tr>
+    <tr><td data-l="stop_reason"><code>pause_turn</code></td><td data-l="起きていること">サーバ側の道具の途中</td><td data-l="次の手">応答をそのまま足して、送り直す</td></tr>
   </tbody>
 </table>
 <div class="detail">
-  <p><code>refusal</code> は HTTP の <code>200</code> で返るので、<b>エラーの率だけを見張っていると気づけません</b>。止まった理由の内訳を、別の記録として見張ります（〈<a href="../02-apps/12-lifecycle.html">作って終わりではない</a>〉）。</p>
+  <p><code>refusal</code> は HTTP の <code>200</code> で返るので、<b>エラーの率だけを見張っていると気づけません</b>。<code>stop_reason</code> の内訳を、別の記録として見張ります（〈<a href="../02-apps/12-lifecycle.html">作って終わりではない</a>〉）。</p>
 </div>
 
 <h3 class="sub" id="errors-retry">再試行の決まり</h3>
@@ -121,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -92,14 +92,14 @@
   <thead><tr><th>ファイル</th><th>重なり方</th></tr></thead>
   <tbody>
     <tr><td data-l="ファイル"><code>CLAUDE.md</code></td><td data-l="重なり方">上書きせず、見つかったものを全部つなげて読む。作業している場所に近いものほど後ろに入る</td></tr>
-    <tr><td data-l="ファイル"><code>settings.json</code></td><td data-l="重なり方">強いほうが勝つ。強い順に、組織 ＞ 起動時の指定 ＞ ローカル ＞ チーム ＞ 個人。許可の一覧のような配列は、つなげて使う</td></tr>
+    <tr><td data-l="ファイル"><code>settings.json</code></td><td data-l="重なり方">強いほうが勝つ。強い順に、組織 ＞ 起動時の指定 ＞ ローカル ＞ チーム ＞ 個人。<code>allow</code> の一覧のような配列は、つなげて使う</td></tr>
   </tbody>
 </table>
 <div class="detail">
-  <p>権限の規則は、禁止（<code>deny</code>）→ 確認（<code>ask</code>）→ 許可（<code>allow</code>）の順に見て、最初に当たったものが効きます。</p>
+  <p>権限の規則は、<code>deny</code> → <code>ask</code> → <code>allow</code> の順に見て、最初に当たったものが効きます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「個人の設定のほうが、チームの設定より強い」</span>
-    <span class="t o">実際は</span><span>強さは<b>その場に近いか</b>で決まる。ローカル（<code>.claude/settings.local.json</code>）はチームより強いが、個人（<code>~/.claude/settings.json</code>）はいちばん弱い。ただし権限の規則は別で、どの階層の禁止（deny）も、ほかの階層の許可より先に効く。</span>
+    <span class="t o">実際は</span><span>強さは<b>その場に近いか</b>で決まる。ローカル（<code>.claude/settings.local.json</code>）はチームより強いが、個人（<code>~/.claude/settings.json</code>）はいちばん弱い。ただし権限の規則は別で、どの階層の <code>deny</code> も、ほかの階層の <code>allow</code> より先に効く。</span>
   </div>
 </div>
 
@@ -122,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -66,7 +66,7 @@
 <p class="task" data-s="cost-tokens"><span class="tn">DOMAIN 5</span><b>Cost and Token Management</b></p>
 
 <div class="figbox" style="padding:16px 18px">
-  <p class="codelabel">応答に付く使用量</p>
+  <p class="codelabel">応答に付く <code>usage</code></p>
   <pre class="code"><span class="k">"usage"</span>: {
   <span class="k">"input_tokens"</span>: <span class="v">1200</span>,<span class="n">1</span>
   <span class="k">"cache_creation_input_tokens"</span>: <span class="v">0</span>,<span class="n">2</span>
@@ -79,7 +79,7 @@
     <li><span class="n">3</span><span>出力。<b>考えた分（思考）も、ここに含まれる</b>。</span></li>
   </ol>
 </div>
-<p class="point"><b>ポイント</b>使用量は応答ごとに返ってくる。これを記録しておけば、見積もりは推測ではなく実測から出せる。</p>
+<p class="point"><b>ポイント</b><code>usage</code> は応答ごとに返ってくる。これを記録しておけば、見積もりは推測ではなく実測から出せる。</p>
 
 <h3 class="sub" id="cost-model">見積もりの式</h3>
 <p class="goal"><b>ゴール</b>1件あたりと1か月あたりの費用を、使用量と単価から出せる。</p>
@@ -107,7 +107,7 @@
 <h3 class="sub" id="cost-count">送る前に数える</h3>
 <p class="goal"><b>ゴール</b>送る前にトークン数を知る方法と、その注意を言える。</p>
 <div class="detail">
-  <p>送る前に数えたいときは、トークン数を数える API（<code>POST /v1/messages/count_tokens</code>）に、送る予定の中身をそのまま渡します。<b>数はモデルごとに違う</b>ので、実際に使うモデルを指定して数えます。他社のトークナイザで数えると、Claude の数とはずれます。数える API の数も見積もりで、実際とはわずかにずれることがあります。送った後は、応答の使用量が実際の数です（出力のうち考えた分は <code>output_tokens_details</code> の <code>thinking_tokens</code> に出ます）。</p>
+  <p>送る前に数えたいときは、トークン数を数える API（<code>POST /v1/messages/count_tokens</code>）に、送る予定の中身をそのまま渡します。<b>数はモデルごとに違う</b>ので、実際に使うモデルを指定して数えます。他社のトークナイザで数えると、Claude の数とはずれます。数える API の数も見積もりで、実際とはわずかにずれることがあります。送った後は、応答の <code>usage</code> が実際の数です（出力のうち考えた分は <code>output_tokens_details</code> の <code>thinking_tokens</code> に出ます）。</p>
 </div>
 <p class="note">※ 単価はモデルごとに違い、改定もあるので、この教材には書きません。公式の料金表で確かめます。</p>
 </section>
@@ -122,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

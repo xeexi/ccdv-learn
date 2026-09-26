@@ -90,7 +90,7 @@
 <p class="goal"><b>ゴール</b>Files API を使う理由と、数え方の注意を言える。</p>
 <div class="detail">
   <p>Files API にファイルを一度上げると、以後は ID を書くだけで、画像（<code>image</code>）や文書（<code>document</code>）のブロックに使えます。大きな資料を毎回送り直さずに済みます。上げるだけなら料金はかからず、<b>メッセージで使った分が、入力トークンとして数えられます</b>。ファイルは、上げるときに期限を付けなければ、消すまで残ります。</p>
-  <p>資料の渡し方と、資料の読み方は別の話です。長い資料は質問より先に置き（〈<a href="../06-prompt/01-place.html">指示は system に、材料は user に</a>〉）、出典を示させたいなら文書ブロックで引用の機能を使います。引用は構造化出力と一緒には使えず、文字を取り出せない PDF（画像だけのスキャンなど）には出典を付けられません。</p>
+  <p>資料の渡し方と、資料の読み方は別の話です。長い資料は質問より先に置き（〈<a href="../06-prompt/01-place.html">指示は system に、材料は user に</a>〉）、出典を示させたいなら <code>document</code> のブロックで引用の機能を使います。引用は構造化出力と一緒には使えず、文字を取り出せない PDF（画像だけのスキャンなど）には出典を付けられません。</p>
 </div>
 
 <h3 class="sub" id="data-vendor">他社のクラウド経由で呼ぶ</h3>
@@ -124,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

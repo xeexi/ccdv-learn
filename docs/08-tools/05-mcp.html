@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>8-5　MCP サーバが出すもの ─ ツール・リソース・プロンプト ─ Domain 8 ─ CCDV-F 学習ノート</title>
+<title>8-5　MCP サーバが出すもの ─ Tools・Resources・Prompts ─ Domain 8 ─ CCDV-F 学習ノート</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
 <a class="itm toc-link" href="../08-tools/02-dispatch.html"><span class="itm-n">8-2</span><span class="itm-t">実行するのはアプリ ─ 呼び出しの配り方</span></a>
 <a class="itm toc-link" href="../08-tools/03-fail.html"><span class="itm-n">8-3</span><span class="itm-t">失敗の返し方と、承認の挟み方</span></a>
 <a class="itm toc-link itm-quiz" href="../08-tools/04-q1.html"><span class="itm-n">8-4</span><span class="itm-t">理解度チェック ─ ツールの実装</span></a>
-<a class="itm toc-link on" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ ツール・リソース・プロンプト</span></a>
+<a class="itm toc-link on" href="../08-tools/05-mcp.html"><span class="itm-n">8-5</span><span class="itm-t">MCP サーバが出すもの ─ Tools・Resources・Prompts</span></a>
 <a class="toc-link toc-sub" href="#mcp-three">3つの提供物 ─ 誰が使うと決めるか</a>
 <a class="toc-link toc-sub" href="#mcp-author">作って、アプリにつなぐ</a>
 <a class="itm toc-link" href="../08-tools/06-transport.html"><span class="itm-n">8-6</span><span class="itm-t">MCP のつなぎ方と置き場所</span></a>
@@ -56,7 +56,7 @@
 <!-- ▼ 本文 ─ ここだけを編集する。この前後は tools/reindex.mjs が書き出す -->
 <section class="sec" id="mcp">
 <header class="sec-head">
-  <h2>8-5　MCP サーバが出すもの ─ ツール・リソース・プロンプト</h2>
+  <h2>8-5　MCP サーバが出すもの ─ Tools・Resources・Prompts</h2>
 </header>
 <p class="goal"><b>ゴール</b>MCP サーバの3つの提供物を区別し、アプリからどう使われるかを説明できる。</p>
 <p class="cast" data-cast="mixed"></p>
@@ -74,27 +74,27 @@
 </figure></div>
 
 <h3 class="sub" id="mcp-three">3つの提供物 ─ 誰が使うと決めるか</h3>
-<p class="goal"><b>ゴール</b>ツール・リソース・プロンプトを、使うと決める主体で見分けられる。</p>
+<p class="goal"><b>ゴール</b>Tools・Resources・Prompts を、使うと決める主体で見分けられる。</p>
 <table class="tbl">
   <thead><tr><th>提供物</th><th>使うと決めるのは</th><th>中身</th><th>例</th></tr></thead>
   <tbody>
-    <tr><td data-l="提供物"><b>ツール</b></td><td data-l="使うと決めるのは">モデル</td><td data-l="中身">動作を行う関数。Claude が呼ぶ</td><td data-l="例">API への書き込み、ファイルの作成</td></tr>
-    <tr><td data-l="提供物"><b>リソース</b></td><td data-l="使うと決めるのは">アプリ</td><td data-l="中身">URI で名指せる資料。アプリが文脈に添える</td><td data-l="例">ファイルの中身、変更の履歴</td></tr>
-    <tr><td data-l="提供物"><b>プロンプト</b></td><td data-l="使うと決めるのは">利用者</td><td data-l="中身">引数を取る定型の指示。利用者が選んで呼ぶ</td><td data-l="例">スラッシュコマンド、メニューの項目</td></tr>
+    <tr><td data-l="提供物"><b>Tools</b></td><td data-l="使うと決めるのは">モデル</td><td data-l="中身">動作を行う関数。Claude が呼ぶ</td><td data-l="例">API への書き込み、ファイルの作成</td></tr>
+    <tr><td data-l="提供物"><b>Resources</b></td><td data-l="使うと決めるのは">アプリ</td><td data-l="中身">URI で名指せる資料。アプリが文脈に添える</td><td data-l="例">ファイルの中身、変更の履歴</td></tr>
+    <tr><td data-l="提供物"><b>Prompts</b></td><td data-l="使うと決めるのは">利用者</td><td data-l="中身">引数を取る定型の指示。利用者が選んで呼ぶ</td><td data-l="例">スラッシュコマンド、メニューの項目</td></tr>
   </tbody>
 </table>
-<p class="point"><b>ポイント</b>ツールはモデルが、リソースはアプリが、プロンプトは利用者が「使う」と決める。1つのサーバが3つとも出せる。</p>
+<p class="point"><b>ポイント</b>Tools はモデルが、Resources はアプリが、Prompts は利用者が「使う」と決める。1つのサーバが3つとも出せる。</p>
 
 <h3 class="sub" id="mcp-author">作って、アプリにつなぐ</h3>
 <p class="goal"><b>ゴール</b>MCP サーバを作ってから、アプリで使えるようになるまでの流れを言える。</p>
 <div class="detail">
-  <p>サーバは、公式の SDK（Python・TypeScript など）で書きます。関数に説明を付けてツールとして登録すれば、名前・説明・入力の形が、ツールの定義と同じ要領で公開されます。つなぐ側では、手元のサーバなら起動するコマンドを、遠くのサーバなら URL を、設定に書きます。</p>
+  <p>サーバは、公式の SDK（Python・TypeScript など）で書きます。関数に説明を付けて Tools として登録すれば、<code>name</code>・<code>description</code>・<code>inputSchema</code> が、ツールの定義と同じ要領で公開されます。つなぐ側では、手元のサーバなら起動するコマンドを、遠くのサーバなら URL を、設定に書きます。</p>
   <table class="tbl">
     <thead><tr><th>つなぐ側</th><th>設定のしかた</th></tr></thead>
     <tbody>
-      <tr><td data-l="つなぐ側">Claude Code</td><td data-l="設定のしかた"><code>claude mcp add</code> で登録する。道具は <code>mcp__サーバ名__ツール名</code> という名前で見え、リソースは <code>@</code> で、プロンプトはスラッシュコマンドとして呼べる</td></tr>
-      <tr><td data-l="つなぐ側">Messages API</td><td data-l="設定のしかた">MCP コネクタで、遠くのサーバの URL を渡す（ベータ）。使えるのはツールの呼び出しだけで、手元の stdio のサーバはつなげない</td></tr>
-      <tr><td data-l="つなぐ側">自作アプリ</td><td data-l="設定のしかた">MCP の SDK でクライアントを持ち、サーバの道具の一覧を読んで、Claude へのツールの定義として渡す</td></tr>
+      <tr><td data-l="つなぐ側">Claude Code</td><td data-l="設定のしかた"><code>claude mcp add</code> で登録する。道具は <code>mcp__サーバ名__ツール名</code> という名前で見え、Resources は <code>@</code> で、Prompts はスラッシュコマンドとして呼べる</td></tr>
+      <tr><td data-l="つなぐ側">Messages API</td><td data-l="設定のしかた">MCP コネクタで、遠くのサーバの URL を渡す（ベータ）。使えるのは Tools の呼び出しだけで、手元の stdio のサーバはつなげない</td></tr>
+      <tr><td data-l="つなぐ側">自作アプリ</td><td data-l="設定のしかた">MCP の SDK でクライアントを持ち、サーバの Tools の一覧を読んで、Claude へのツールの定義として渡す</td></tr>
     </tbody>
   </table>
 </div>
@@ -110,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

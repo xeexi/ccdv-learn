@@ -85,7 +85,7 @@
   <thead><tr><th>縛るもの</th><th>指定</th><th>保証されること</th></tr></thead>
   <tbody>
     <tr><td data-l="縛るもの">応答の本文</td><td data-l="指定"><code>output_config.format</code></td><td data-l="保証されること">指定した JSON Schema の形で返る</td></tr>
-    <tr><td data-l="縛るもの">ツール引数</td><td data-l="指定">ツールの定義に <code>strict: true</code></td><td data-l="保証されること">引数が、定義した入力の形になる</td></tr>
+    <tr><td data-l="縛るもの">ツール引数</td><td data-l="指定">ツールの定義に <code>strict: true</code></td><td data-l="保証されること">引数が、定義した <code>input_schema</code> の形になる</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>形は API の指定で保証する。ただし保証されるのは形だけで、中身の正しさまでは保証しない。</p>
@@ -102,11 +102,11 @@
 <div class="detail">
   <p>形の保証があっても、途中で止まった応答は形どおりになりません。出力を読む前に、応答の <code>stop_reason</code> を確かめます。</p>
   <table class="tbl">
-    <thead><tr><th>止まった理由</th><th>起きていること</th></tr></thead>
+    <thead><tr><th><code>stop_reason</code></th><th>起きていること</th></tr></thead>
     <tbody>
-      <tr><td data-l="止まった理由"><code>max_tokens</code></td><td data-l="起きていること">上限で打ち切られていて、JSON が途中で終わっていることがある</td></tr>
-      <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断っていて、形どおりの出力になっていないことがある</td></tr>
-      <tr><td data-l="止まった理由"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いて、JSON が途中で終わっていることがある</td></tr>
+      <tr><td data-l="stop_reason"><code>max_tokens</code></td><td data-l="起きていること">上限で打ち切られていて、JSON が途中で終わっていることがある</td></tr>
+      <tr><td data-l="stop_reason"><code>refusal</code></td><td data-l="起きていること">安全のために断っていて、形どおりの出力になっていないことがある</td></tr>
+      <tr><td data-l="stop_reason"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いて、JSON が途中で終わっていることがある</td></tr>
     </tbody>
   </table>
   <p>JSON は必ずパーサで読みます。文字列の照合や正規表現で拾うと、書き方の小さな違いで壊れます。形の保証にも1つ例外があり、<code>enum</code> の値は<b>大文字小文字だけが違う形</b>で返ることがあります。英字の値は大文字小文字を区別せずに比べ、大文字小文字だけで違う値は作りません。</p>
@@ -124,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

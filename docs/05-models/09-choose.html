@@ -101,9 +101,9 @@
   <table class="tbl">
     <thead><tr><th>変化</th><th>例</th><th>備え</th></tr></thead>
     <tbody>
-      <tr><td data-l="変化"><b>エラー</b></td><td data-l="例">古い書き方の指定を受け付けない（予算を決める思考、<code>temperature</code> の指定、応答の書き出しを先に埋める指定、ツールの使用を強制する指定）</td><td data-l="備え">まず1件だけ送って確かめる</td></tr>
+      <tr><td data-l="変化"><b>エラー</b></td><td data-l="例">古い書き方の指定を受け付けない（予算を決める思考、<code>temperature</code> の指定、応答の書き出しを先に埋める指定、<code>tool_choice</code> でツールの使用を強制する指定）</td><td data-l="備え">まず1件だけ送って確かめる</td></tr>
       <tr><td data-l="変化"><b>無言の変化</b></td><td data-l="例">既定値が変わる（思考の表示、既定の effort）。同じプロンプトの効き方も変わり、強い口調の指示が効きすぎることもある</td><td data-l="備え">自分の用途の評価セットで、旧版と比べる</td></tr>
-      <tr><td data-l="変化"><b>数え方</b></td><td data-l="例">トークンの区切り方が変わり、同じ文でもトークン数が増減する</td><td data-l="備え">トークン数を数え直し、出力の上限と費用の見積もりを直す</td></tr>
+      <tr><td data-l="変化"><b>数え方</b></td><td data-l="例">トークンの区切り方が変わり、同じ文でもトークン数が増減する</td><td data-l="備え">トークン数を数え直し、<code>max_tokens</code> と費用の見積もりを直す</td></tr>
     </tbody>
   </table>
   <p>備えの土台は、版を固定しておくことです。モデル ID は版ごとに固定された名前なので、<b>いつ替えるかをこちらで決められます</b>（〈<a href="../02-apps/20-version.html">版を固定する</a>〉）。</p>
@@ -121,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=7c2238bd"></script>
-<script src="../assets/search-index.js?v=6a87f16c"></script>
+<script src="../assets/quiz-data.js?v=c71f1303"></script>
+<script src="../assets/search-index.js?v=d3dcacee"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
