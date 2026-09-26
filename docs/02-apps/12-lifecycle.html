@@ -52,6 +52,7 @@
 <a class="itm toc-link on" href="../02-apps/12-lifecycle.html"><span class="itm-n">2-12</span><span class="itm-t">作って終わりではない ─ システムのライフサイクル</span></a>
 <a class="toc-link toc-sub" href="#lifecycle-claude">Claude のアプリで特に要ること</a>
 <a class="toc-link toc-sub" href="#lifecycle-ops">運用で見張るもの</a>
+<a class="toc-link toc-sub" href="#lifecycle-judge">どの手も正しく見えるとき ─ 条件で決める</a>
 <a class="itm toc-link itm-quiz" href="../02-apps/13-q3.html"><span class="itm-n">2-13</span><span class="itm-t">理解度チェック ─ 要件とライフサイクル</span></a>
 <a class="itm toc-link" href="../02-apps/14-surface.html"><span class="itm-n">2-14</span><span class="itm-t">入口ごとに、指示の読まれ方が違う</span></a>
 <a class="itm toc-link" href="../02-apps/15-boundary.html"><span class="itm-n">2-15</span><span class="itm-t">指示とデータの境目</span></a>
@@ -126,6 +127,21 @@
     <span class="t o">実際は</span><span>モデルの廃止や入れ替えで、挙動は変わる。<b>運用のあいだも評価を回し続け</b>、乗り換えに備える。</span>
   </div>
 </div>
+
+<h3 class="sub" id="lifecycle-judge">どの手も正しく見えるとき ─ 条件で決める</h3>
+<p class="goal"><b>ゴール</b>ライフサイクルの各段階で、要件に書かれた条件から手を1つに絞れる。</p>
+<div class="detail">
+  <p>どの段階にも、それだけを見れば正しい手がいくつもあります。決め手は、<b>要件に書かれた条件</b>です。</p>
+  <table class="tbl">
+    <thead><tr><th>段階</th><th>要件の書き方の例</th><th>選ぶ手と決め手</th></tr></thead>
+    <tbody>
+      <tr><td data-l="段階">進め方</td><td data-l="要件の書き方の例">規制で、要件と設計は着手前に承認を受け、後からの変更にも審査が要る</td><td data-l="選ぶ手と決め手">ウォーターフォール。変えるたびに審査が要るので、先に固めてから順に進める</td></tr>
+      <tr><td data-l="段階">導入</td><td data-l="要件の書き方の例">全員に一度に出すほうが早いが、問題が出たときの影響を小さく抑えたい</td><td data-l="選ぶ手と決め手">一部から広げ、前の版に戻せるようにする。早さより、影響の小ささが要件</td></tr>
+      <tr><td data-l="段階">保守</td><td data-l="要件の書き方の例">廃止まで期限がある。新しいモデルは評価の点数が同じだが、応答の書きぶりが変わる</td><td data-l="選ぶ手と決め手">応答を読む下流の処理まで確かめてから、一部ずつ切り替える。点数が同じでも、読む側が崩れれば本番は壊れる</td></tr>
+      <tr><td data-l="段階">運用</td><td data-l="要件の書き方の例">プロンプトを直した後、出来が落ちていないかを知りたい</td><td data-l="選ぶ手と決め手">評価の点数を、直した前後で比べる。エラーの件数が増えていなくても、出来は落ちうる</td></tr>
+    </tbody>
+  </table>
+</div>
 </section>
 <!-- ▲ 本文 -->
 <nav class="secpager btm"><a class="pgv prev" href="../02-apps/11-require.html" title="前へ（← キー）"><span class="vh">前へ</span></a><a class="pgv next" href="../02-apps/13-q3.html" title="次へ（→ キー）"><span class="vh">次へ</span></a></nav>
@@ -138,7 +154,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=fb4bf3f7"></script>
-<script src="../assets/search-index.js?v=d779389b"></script>
+<script src="../assets/quiz-data.js?v=e8349348"></script>
+<script src="../assets/search-index.js?v=4517d26c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

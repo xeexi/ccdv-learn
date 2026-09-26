@@ -366,11 +366,13 @@ head('[11] スキルの参照（札 ⇄ COVER）');
    Out-of-Scope リストが無い試験なので、「厚く教えすぎ」「薄すぎ」は重みとの比で見る。
    節の本文の文字数を、その節の札のスキルに等分し、**ドメインの中で**重みの比と比べる
    （書きかけのドメインがあっても使えるように、ドメイン内で正規化する）。
-   比が RATIO_MAX 倍を超えるか、1/RATIO_MAX を下回ったら落とす。 */
+   比が RATIO_MAX 倍を超えるか、1/RATIO_MAX を下回ったら落とす。
+   RATIO_MAX は、全ドメインを書き終えた時点の実測（0.56〜1.89 倍）のすぐ外に置いた（§7 #38）。
+   いちばん厚いスキルがさらに厚くなる・いちばん薄いスキルがさらに薄くなる崩れを捕まえるため。 */
 head('[12] 分量の釣り合い（スキルの重みとの比）');
 {
   const n0 = ng; let n = 0;
-  const RATIO_MAX = 2.5;
+  const RATIO_MAX = 2.0;
   const len = {};
   order.filter(s => !s.quiz && s.skills.length).forEach(s => {
     const c = textOf(s.body).replace(/\s+/g, '').length;
