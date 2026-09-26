@@ -62,11 +62,14 @@
   <tbody>
     <tr><td data-l="状態"><code>400</code></td><td data-l="種類"><code>invalid_request_error</code></td><td data-l="次の手">リクエストの形の誤り。直してから送る</td></tr>
     <tr><td data-l="状態"><code>401</code></td><td data-l="種類"><code>authentication_error</code></td><td data-l="次の手">鍵が無いか、正しくない。鍵を確かめる</td></tr>
+    <tr><td data-l="状態"><code>402</code></td><td data-l="種類"><code>billing_error</code></td><td data-l="次の手">請求や支払いの問題。支払いの情報を確かめる</td></tr>
     <tr><td data-l="状態"><code>403</code></td><td data-l="種類"><code>permission_error</code></td><td data-l="次の手">その鍵には許されていない。権限を確かめる</td></tr>
     <tr><td data-l="状態"><code>404</code></td><td data-l="種類"><code>not_found_error</code></td><td data-l="次の手">宛先やモデルの ID を確かめる</td></tr>
+    <tr><td data-l="状態"><code>409</code></td><td data-l="種類"><code>conflict_error</code></td><td data-l="次の手">相手の今の状態とぶつかった。ぶつかりを解いてから再試行する</td></tr>
     <tr><td data-l="状態"><code>413</code></td><td data-l="種類"><code>request_too_large</code></td><td data-l="次の手">大きすぎる。中身を減らすか分ける</td></tr>
-    <tr><td data-l="状態"><code>429</code></td><td data-l="種類"><code>rate_limit_error</code></td><td data-l="次の手">送りすぎ。間を空けて再試行する</td></tr>
+    <tr><td data-l="状態"><code>429</code></td><td data-l="種類"><code>rate_limit_error</code></td><td data-l="次の手">送りすぎ。間を空けて再試行する。ただし月の支出の上限に達したときは <code>retry-after</code> が付かず、待っても通らない</td></tr>
     <tr><td data-l="状態"><code>500</code></td><td data-l="種類"><code>api_error</code></td><td data-l="次の手">受けた側の不調。間を空けて再試行する</td></tr>
+    <tr><td data-l="状態"><code>504</code></td><td data-l="種類"><code>timeout_error</code></td><td data-l="次の手">処理の途中で時間切れ。長い処理は逐次（ストリーミング）で受ける</td></tr>
     <tr><td data-l="状態"><code>529</code></td><td data-l="種類"><code>overloaded_error</code></td><td data-l="次の手">混雑。間を空けて再試行する</td></tr>
   </tbody>
 </table>
@@ -78,7 +81,8 @@
   <thead><tr><th>止まった理由</th><th>起きていること</th><th>次の手</th></tr></thead>
   <tbody>
     <tr><td data-l="止まった理由"><code>max_tokens</code></td><td data-l="起きていること">上限で切れた</td><td data-l="次の手">上限を上げるか、続きを頼む。そのまま使わない</td></tr>
-    <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断った</td><td data-l="次の手">同じまま送り直しても、たいてい断られる。別の経路へ回し、記録する</td></tr>
+    <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断った</td><td data-l="次の手">同じモデルに送り直しても、たいてい断られる。<code>stop_details</code> で断った分野を見て、別のモデルで送り直すか人に回し、記録する</td></tr>
+    <tr><td data-l="止まった理由"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いた</td><td data-l="次の手">切れた応答として扱う。入力を減らしてから続ける</td></tr>
     <tr><td data-l="止まった理由"><code>pause_turn</code></td><td data-l="起きていること">サーバ側の道具の途中</td><td data-l="次の手">応答をそのまま足して、送り直す</td></tr>
   </tbody>
 </table>
@@ -116,7 +120,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

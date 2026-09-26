@@ -91,7 +91,7 @@
   </tbody>
 </table>
 <div class="detail">
-  <p>Claude Code で設定した指示や機能が効かないときは、たいていファイルが読み込まれていないか、別の場所から読まれているか、別のファイルに上書きされています。<code>/memory</code> で読み込まれている CLAUDE.md を確かめ、<code>--safe-mode</code> と比べます。</p>
+  <p>Claude Code で設定した指示や機能が効かないときは、たいていファイルが読み込まれていないか、別の場所から読まれているか、別のファイルに上書きされています。<code>/context</code> で、このセッションに実際に読み込まれた CLAUDE.md と rules を確かめ、<code>--safe-mode</code> と比べます（<code>/memory</code> は置き場所ごとのファイルを一覧して開く手で、読み込まれたかは分かりません）。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「おかしな答えが出たら、まずプロンプトを書き足して直す」</span>
     <span class="t o">実際は</span><span>原因が道具の失敗や資料の抜けなら、プロンプトをいくら直しても治らない。<b>記録で入力と道具の結果を先に確かめる</b>。</span>
@@ -109,7 +109,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

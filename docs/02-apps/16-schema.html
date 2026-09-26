@@ -81,7 +81,7 @@
     <span class="k">"enum"</span>: [<span class="s">"物品"</span>, <span class="s">"役務"</span>, <span class="s">"その他"</span>] },<span class="n">2</span>
   <span class="k">"detail"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span> },
   <span class="k">"due_date"</span>: { <span class="k">"type"</span>: [<span class="s">"string"</span>, <span class="s">"null"</span>],
-    <span class="k">"description"</span>: <span class="s">"YYYY-MM-DD。無ければ null"</span> } },<span class="n">3</span>
+    <span class="k">"format"</span>: <span class="s">"date"</span>, <span class="k">"description"</span>: <span class="s">"無ければ null"</span> } },<span class="n">3</span>
 <span class="k">"required"</span>: [<span class="s">"amount_jpy"</span>, <span class="s">"category"</span>]<span class="n">4</span></pre>
   <ol class="ann">
     <li><span class="n">1</span><span>型と単位を、型と名前で絞る。「1,200円」のような文字列は入らない。</span></li>
@@ -97,7 +97,7 @@
     <tr><td data-l="決まり">閉じる</td><td data-l="中身">決まった選択肢は <code>enum</code> にする。表記の揺れが消える</td></tr>
     <tr><td data-l="決まり">逃げ道</td><td data-l="中身">「その他」や「無い」を選べるようにする</td></tr>
     <tr><td data-l="決まり">名前</td><td data-l="中身">曖昧な名前を避ける（<code>user</code> より <code>user_id</code>）。単位や形式は、名前か説明に書く</td></tr>
-    <tr><td data-l="決まり">指示と組む</td><td data-l="中身">日付の書き方のように型で縛れない揺れは、そろえ方を指示に書く</td></tr>
+    <tr><td data-l="決まり">指示と組む</td><td data-l="中身">日付は <code>"format": "date"</code> で形をそろえられる。型でも形式でも縛れない揺れ（会社名の表記など）は、そろえ方を指示に書く</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>形の設計は、正しい値の形と逃げ道の両方を決めること。逃げ道が無いと、Claude はそれらしい値で埋める。</p>
@@ -132,7 +132,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

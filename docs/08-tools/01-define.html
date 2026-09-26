@@ -82,7 +82,7 @@
     <li><span class="n">4</span><span>本当に必要な引数だけを <code>required</code> にする。</span></li>
   </ol>
 </div>
-<p class="point"><b>ポイント</b>Claude が見ているのは、名前・説明・入力の形の3つだけ。選び間違いの多くは、説明の書き方で直る。</p>
+<p class="point"><b>ポイント</b>Claude が選ぶ手がかりは、名前・説明・入力の形（必要なら入力の例）。選び間違いの多くは、説明の書き方で直る。</p>
 
 <h3 class="sub" id="define-call">呼ばれると、応答は tool_use で止まる</h3>
 <p class="goal"><b>ゴール</b>ツールを渡したときに、応答がどう変わるかを言える。</p>
@@ -108,7 +108,7 @@
     <tr><td data-l="起きること">取り違え</td><td data-l="直し方">説明に、違いと使い分けを書く。役目が重なるなら1つにまとめる</td></tr>
     <tr><td data-l="起きること">数の多さ</td><td data-l="直し方">その仕事に要るものだけに絞る。多いときは、必要な定義だけを探して読み込ませる（tool search）</td></tr>
     <tr><td data-l="起きること">細かすぎ</td><td data-l="直し方">いつも続けて使う操作は、1つの道具にまとめる</td></tr>
-    <tr><td data-l="起きること">引数の誤り</td><td data-l="直し方">型と <code>enum</code> で取りうる値を絞り、引数の説明に例を書く。<code>strict: true</code> を付けると、引数が形どおりになることを保証できる</td></tr>
+    <tr><td data-l="起きること">引数の誤り</td><td data-l="直し方">型と <code>enum</code> で取りうる値を絞る。入力が複雑なら、形に合った入力の例を <code>input_examples</code> で渡す。<code>strict: true</code> を付けると、引数が形どおりになることを保証できる</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>ツールの組は「少なく、重ならず、名前と説明で見分けがつく」形にそろえる。</p>
@@ -124,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

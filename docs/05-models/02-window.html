@@ -89,12 +89,13 @@
 <h3 class="sub" id="window-share">入力と出力が、同じ枠を食い合う</h3>
 <p class="goal"><b>ゴール</b>窓に入るものを挙げ、長い会話で起きることと打つ手を言える。</p>
 <div class="detail">
-  <p>窓に入るのは、指示（<code>system</code>）・ツールの定義・これまでの会話・今回の入力と、これから書く出力（考えた分を含む）です。<b>入力が大きいほど、出力に使える残りは減ります。</b></p>
+  <p>窓に入るのは、指示（<code>system</code>）・ツールの定義・これまでの会話・今回の入力と、これから書く出力（考えた分を含む）です。新しいモデルでは、前の回に考えた分（<code>thinking</code> のブロック）も履歴に残り、次の回の<b>入力として数えられます</b>。<b>入力が大きいほど、出力に使える残りは減ります。</b></p>
   <table class="tbl">
     <thead><tr><th>起きること</th><th>どこで分かるか</th><th>打つ手</th></tr></thead>
     <tbody>
-      <tr><td data-l="起きること">窓を超える</td><td data-l="どこで分かるか">リクエストがエラーで返る</td><td data-l="打つ手">古い部分を刈り込む・要約する（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
-      <tr><td data-l="起きること">出力切れ</td><td data-l="どこで分かるか">出力が途中で打ち切られる。応答の <code>stop_reason</code> が、上限に達したことを示す</td><td data-l="打つ手">出力の上限を見直す・入力を減らす</td></tr>
+      <tr><td data-l="起きること">窓を超える</td><td data-l="どこで分かるか">入力だけで窓を超えると、リクエストがエラーで返る</td><td data-l="打つ手">古い部分を刈り込む・要約する（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）</td></tr>
+      <tr><td data-l="起きること">上限切れ</td><td data-l="どこで分かるか">出力が途中で打ち切られ、<code>stop_reason</code> が <code>max_tokens</code>。指定した出力の上限に達した</td><td data-l="打つ手">出力の上限を上げる。入力を減らしても直らない</td></tr>
+      <tr><td data-l="起きること">窓切れ</td><td data-l="どこで分かるか">出力が途中で打ち切られ、<code>stop_reason</code> が <code>model_context_window_exceeded</code>。書く途中で窓の端に届いた</td><td data-l="打つ手">入力を減らす。切れた応答として扱う</td></tr>
       <tr><td data-l="起きること">重くなる</td><td data-l="どこで分かるか">往復のたびに遅く、高くなる。使用量のトークン数が、回ごとに増える</td><td data-l="打つ手">同じ前半を使い回す（〈<a href="11-cache.html">プロンプトキャッシュ</a>〉）</td></tr>
     </tbody>
   </table>
@@ -116,7 +117,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

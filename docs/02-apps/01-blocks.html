@@ -129,7 +129,7 @@
 <h3 class="sub" id="blocks-thinking">考えた内容のブロックと、道具</h3>
 <p class="goal"><b>ゴール</b>考えた内容のブロックを、道具の往復でどう扱うかを言える。</p>
 <div class="detail">
-  <p>考えさせる設定のとき、応答には <code>thinking</code> ブロックが入ります。道具を使う往復を続けるときは、<b>このブロックも含めて、返ってきた <code>content</code> をそのまま履歴に戻します</b>。中身を書き換えたり一部だけを消したりすると、リクエストが拒まれることがあります。画面に表示するのは構いません。</p>
+  <p>考えさせる設定のとき、応答には <code>thinking</code> ブロックが入ります。道具を使う往復を続けるときは、<b>このブロックも含めて、返ってきた <code>content</code> をそのまま履歴に戻します</b>。中身を書き換えたり一部だけを消したりすると、リクエストが拒まれることがあります。新しいモデルでは、ブロックそのものに手を加えなくても、<b>それより前の履歴</b>（<code>system</code>・ツールの定義・前のメッセージ）を書き換えるとブロックが無効になり、拒まれることがあります。履歴は後ろに足すだけにします。画面に表示するのは構いません。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「履歴を軽くするため、考えた内容のブロックは消して送り直せばよい」</span>
     <span class="t o">実際は</span><span>道具の往復の途中では、<b>手を加えずに戻す</b>のが決まり。古い部分を減らしたいなら、刈り込みの機能を使う（〈<a href="../06-prompt/05-prune.html">窓を守る</a>〉）。</span>
@@ -147,7 +147,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

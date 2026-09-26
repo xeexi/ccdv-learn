@@ -101,7 +101,7 @@
       <tr><td data-l="範囲"><code>local</code></td><td data-l="有効にした記録の場所"><code>.claude/settings.local.json</code></td><td data-l="効くところ">自分だけ・そのリポジトリだけ</td></tr>
     </tbody>
   </table>
-  <p>チームで同じプラグインを使うなら、リポジトリの <code>.claude/settings.json</code> に、マーケットプレイス（<code>extraKnownMarketplaces</code>）と有効にするプラグイン（<code>enabledPlugins</code>）を書いて配ります。</p>
+  <p>チームで同じプラグインを使うなら、リポジトリの <code>.claude/settings.json</code> に、マーケットプレイス（<code>extraKnownMarketplaces</code>）と有効にするプラグイン（<code>enabledPlugins</code>）を書いて配ります。マーケットプレイスが登録されるのは、各メンバーがそのフォルダを信頼した後です。プラグインの中身が外（GitHub など）にあるものは、設定を書くだけでは入らず、各メンバーが一度入れる操作をします。会社の全員に配るなら、管理者が配る設定（managed settings）に同じ2つを書きます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「プラグインは Claude への指示を足すだけなので、入れても危険はない」</span>
     <span class="t o">実際は</span><span>フックや MCP サーバを含められ、<b>自分の権限で任意のコードを動かせる</b>。信頼できる出どころのものだけを入れる。</span>
@@ -119,7 +119,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

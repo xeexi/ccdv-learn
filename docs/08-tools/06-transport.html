@@ -80,7 +80,7 @@
 <div class="detail">
   <p>stdio では、標準出力がそのままやり取りの通り道です。<b>サーバが標準出力にログを書くと、やり取りが壊れます</b>。ログは標準エラーに出します。</p>
   <p>ネットワーク越しのサーバは、どこからでも呼ばれうる入口になります。認証を付け、受け取ったトークンが自分宛てかを確かめます。手元で HTTP のサーバを動かすときは、外から届かないアドレス（<code>127.0.0.1</code>）で待ち受けます。</p>
-  <p>古い方式（HTTP と SSE を組み合わせたもの）は非推奨で、新しく作るサーバは Streamable HTTP を使います。公式の方式はこの2つですが、ソケット（Unix ドメインソケットや TCP）の上に独自のつなぎ方を作ることも、仕様上は認められています。</p>
+  <p>古い方式（HTTP と SSE を組み合わせたもの）は非推奨で、新しく作るサーバは Streamable HTTP を使います。公式の方式はこの2つですが、ソケット（Unix ドメインソケットや TCP）の上に独自のつなぎ方を作ることも、仕様上は認められています。その場合は、stdio と同じ「1行に1つの JSON-RPC」の形を使うよう勧められています。</p>
 </div>
 
 <h3 class="sub" id="transport-scope">どこに置き、誰と共有するか</h3>
@@ -106,7 +106,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

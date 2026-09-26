@@ -68,8 +68,8 @@
   <thead><tr><th>置き場所</th><th>誰の声として読まれるか</th><th>置くもの</th></tr></thead>
   <tbody>
     <tr><td data-l="置き場所"><code>system</code></td><td data-l="誰の声として読まれるか">アプリを運営する側</td><td data-l="置くもの">役割、最初から効かせたい指示、方針（ツールの結果はデータとして扱う、など）</td></tr>
-    <tr><td data-l="置き場所"><code>user</code></td><td data-l="誰の声として読まれるか">利用者</td><td data-l="置くもの">今回の依頼、資料、質問</td></tr>
-    <tr><td data-l="置き場所">ツール結果</td><td data-l="誰の声として読まれるか">外から届いたデータ</td><td data-l="置くもの">ツールが返した内容。信頼できない中身は、ここに入れる</td></tr>
+    <tr><td data-l="置き場所"><code>user</code></td><td data-l="誰の声として読まれるか">利用者</td><td data-l="置くもの">今回の依頼、利用者が渡した資料、質問</td></tr>
+    <tr><td data-l="置き場所">ツール結果</td><td data-l="誰の声として読まれるか">外から届いたデータ</td><td data-l="置くもの">ツールが返した内容。外から届いた信頼できない中身（受信したメール・Web の文など）は、ここに入れる</td></tr>
     <tr><td data-l="置き場所">ツール説明</td><td data-l="誰の声として読まれるか">道具の説明書</td><td data-l="置くもの">いつ使うか、引数の意味</td></tr>
   </tbody>
 </table>
@@ -79,7 +79,7 @@
 <p class="goal"><b>ゴール</b>役割と方針を system に置く理由を言える。</p>
 <div class="detail">
   <p><code>system</code> に役割を1文書くだけでも、振る舞いと口調が定まります。会話の最初から最後まで効かせたい方針も、ここに置きます。運営する側の指示と利用者の依頼がぶつかったときは、運営する側の指示が優先されます。</p>
-  <p>途中から効かせたい指示を足すために <code>system</code> の本文を書き換えると、キャッシュがすべて外れます。対応するモデルでは、会話の途中に <code>system</code> のメッセージを足す形を使えば、それまでの部分を使い回せます。</p>
+  <p>途中から効かせたい指示を足すために <code>system</code> の本文を書き換えると、<code>system</code> から後ろのキャッシュが外れます。新しいモデルでは、それより後の思考のブロックも無効になり、送るとエラーになることがあります。対応するモデルでは、会話の途中に <code>system</code> のメッセージを足す形を使えば、それまでの部分を使い回せます。<b>履歴は前の回を書き換えず、後ろに足すだけにする</b>のが、公式の勧める形です。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「外から取ってきた文章も <code>system</code> に入れれば、確実に読ませられる」</span>
     <span class="t o">実際は</span><span><code>system</code> に入れると、その文章に<b>運営する側の権限</b>を与えてしまう。信頼できない中身は、ツールの結果に入れて、データとして扱わせる。</span>
@@ -110,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

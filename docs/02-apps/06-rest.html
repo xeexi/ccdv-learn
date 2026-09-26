@@ -92,12 +92,12 @@
   <thead><tr><th>範囲</th><th>意味</th><th>例と、次の手</th></tr></thead>
   <tbody>
     <tr><td data-l="範囲"><code>2xx</code></td><td data-l="意味">成功</td><td data-l="例と、次の手"><code>200</code> など。本文を読む</td></tr>
-    <tr><td data-l="範囲"><code>4xx</code></td><td data-l="意味">送った側の誤り</td><td data-l="例と、次の手"><code>400</code> 形の誤り、<code>401</code> 認証、<code>403</code> 権限、<code>404</code> 見つからない。直してから送る。<code>429</code>（送りすぎ）だけは、間を空ければ通る</td></tr>
+    <tr><td data-l="範囲"><code>4xx</code></td><td data-l="意味">送った側の誤り</td><td data-l="例と、次の手"><code>400</code> 形の誤り、<code>401</code> 認証、<code>403</code> 権限、<code>404</code> 見つからない。直してから送る。<code>429</code>（送りすぎ）は、たいてい間を空ければ通る</td></tr>
     <tr><td data-l="範囲"><code>5xx</code></td><td data-l="意味">受けた側の不調</td><td data-l="例と、次の手">間を空けて再試行してよい</td></tr>
   </tbody>
 </table>
 <div class="detail">
-  <p><code>429</code> の応答には、待つ秒数（<code>retry-after</code>）が付くことがあります。待たずに送り直すと、同じ理由で断られ続けます。Claude の API に特有のエラーと立て直し方は〈<a href="../04-debug/01-errors.html">エラーの種類と、立て直し方</a>〉で扱います。</p>
+  <p><code>429</code> の応答には、待つ秒数（<code>retry-after</code>）が付くことがあります。待たずに送り直すと、同じ理由で断られ続けます。ただし Claude の API では、月の支出の上限に達したときも <code>429</code> が返ります。このときは <code>retry-after</code> が付かず、上限が戻るまで待っても通りません。Claude の API に特有のエラーと立て直し方は〈<a href="../04-debug/01-errors.html">エラーの種類と、立て直し方</a>〉で扱います。</p>
 </div>
 
 <h3 class="sub" id="rest-json">JSON の形</h3>
@@ -133,7 +133,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

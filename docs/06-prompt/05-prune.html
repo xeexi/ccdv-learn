@@ -91,7 +91,8 @@
 <h3 class="sub" id="prune-compact">会話を圧縮する</h3>
 <p class="goal"><b>ゴール</b>圧縮で失われるものと、その備えを言える。</p>
 <div class="detail">
-  <p>圧縮は、それまでの会話を要約に置き換えて、窓を空けます。API では、上限に近づいたところで自動で要約する機能（compaction、ベータ）があり、Claude Code では <code>/compact</code> で自分から、または上限の手前で自動で行われます。</p>
+  <p>圧縮は、それまでの会話を要約に置き換えて、窓を空けます。API の機能（compaction、ベータ）には、<b>アプリが決めたときに要約させる</b>方式と、上限に近づいたところで自動で要約する方式があり、公式は使える所では前者を勧めています。Claude Code では <code>/compact</code> で自分から、または上限の手前で自動で行われます。</p>
+  <p>アプリの側で履歴の一部をその場で要約して書き換えると、キャッシュが外れ、新しいモデルでは思考のブロックも無効になります。刈り込みと圧縮は、なるべく API の機能に任せます。</p>
   <p>要約は細部を落とします。<b>後で要る決定や数字は、圧縮の前に記憶（ファイル）へ書き出して</b>おきます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「窓の大きいモデルなら、刈り込みも圧縮も要らない」</span>
@@ -110,7 +111,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

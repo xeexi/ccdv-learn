@@ -102,7 +102,7 @@
 <h3 class="sub" id="dispatch-config">外のシステムにつなぐ設定</h3>
 <p class="goal"><b>ゴール</b>外のシステムへの接続の情報を、どこに置くかを言える。</p>
 <div class="detail">
-  <p>ツールの中身が社内の API やデータベースを呼ぶとき、<b>接続先・鍵・待ち時間の上限は、アプリ側の設定に置きます</b>。ツールの定義やプロンプトには書きません。Claude が見るのは名前・説明・入力の形だけで、鍵を知る必要はありません。</p>
+  <p>ツールの中身が社内の API やデータベースを呼ぶとき、<b>接続先・鍵・待ち時間の上限は、アプリ側の設定に置きます</b>。ツールの定義やプロンプトには書きません。Claude が見るのはツールの定義（名前・説明・入力の形と、入力の例）だけで、鍵を知る必要はありません。</p>
   <p>同じ接続を複数のアプリで使い回したいなら、ツールを MCP サーバとして切り出します（〈<a href="05-mcp.html">MCP サーバが出すもの</a>〉）。</p>
 </div>
 <p class="point"><b>ポイント</b>Claude は頼むだけで、実行も鍵もアプリの側にある。サーバ側の道具だけは、Anthropic が実行する。</p>
@@ -118,7 +118,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

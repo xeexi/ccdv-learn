@@ -78,7 +78,7 @@
   <thead><tr><th>入口</th><th>前から入っている指示</th><th>こちらの指示の入り方</th></tr></thead>
   <tbody>
     <tr><td data-l="入口">API</td><td data-l="前から入っている指示">無い（Client SDK で呼んでも同じ）。道具を渡したときだけ、道具を使うための指示が足される</td><td data-l="こちらの指示の入り方">アプリが system と messages を毎回書く。会話の履歴もアプリが送る</td></tr>
-    <tr><td data-l="入口">claude.ai</td><td data-l="前から入っている指示">Web と Desktop のアプリの会話。Anthropic が用意した system プロンプトがある</td><td data-l="こちらの指示の入り方">プロジェクトの指示（そのプロジェクトの会話だけに効く）・個人の設定・スタイル。記憶もプロジェクトごと</td></tr>
+    <tr><td data-l="入口">claude.ai</td><td data-l="前から入っている指示">Web と Desktop のアプリの会話。Anthropic が用意した system プロンプトがある</td><td data-l="こちらの指示の入り方">アカウント全体の指示・プロジェクトの指示（そのプロジェクトの会話だけに効く）・Skills（口調や書式もこれで変える）。記憶もプロジェクトごと</td></tr>
     <tr><td data-l="入口">Claude Code</td><td data-l="前から入っている指示">Claude Code 自身の system プロンプト（利用者には見えない）</td><td data-l="こちらの指示の入り方">CLAUDE.md が、system の後に <b>user のメッセージとして</b>入る。道具の結果は会話に積まれる</td></tr>
     <tr><td data-l="入口">Agent SDK</td><td data-l="前から入っている指示">最小限の system プロンプト（道具の使い方だけ）</td><td data-l="こちらの指示の入り方">自分の system を書くか、Claude Code のものを指定して追記する。設定ファイルを読むかも選べる</td></tr>
   </tbody>
@@ -113,7 +113,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

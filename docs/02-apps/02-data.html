@@ -89,20 +89,21 @@
 <h3 class="sub" id="data-files">Files API で、一度上げて使い回す</h3>
 <p class="goal"><b>ゴール</b>Files API を使う理由と、数え方の注意を言える。</p>
 <div class="detail">
-  <p>Files API にファイルを一度上げると、以後は ID を書くだけで、画像（<code>image</code>）や文書（<code>document</code>）のブロックに使えます。大きな資料を毎回送り直さずに済みます。上げるだけなら料金はかからず、<b>メッセージで使った分が、入力トークンとして数えられます</b>。ファイルは、消すまで残ります。</p>
+  <p>Files API にファイルを一度上げると、以後は ID を書くだけで、画像（<code>image</code>）や文書（<code>document</code>）のブロックに使えます。大きな資料を毎回送り直さずに済みます。上げるだけなら料金はかからず、<b>メッセージで使った分が、入力トークンとして数えられます</b>。ファイルは、上げるときに期限を付けなければ、消すまで残ります。</p>
   <p>資料の渡し方と、資料の読み方は別の話です。長い資料は質問より先に置き（〈<a href="../06-prompt/01-place.html">指示は system に、材料は user に</a>〉）、出典を示させたいなら文書ブロックで引用の機能を使います。</p>
 </div>
 
 <h3 class="sub" id="data-vendor">他社のクラウド経由で呼ぶ</h3>
-<p class="goal"><b>ゴール</b>Amazon Bedrock・Google Cloud・Microsoft Foundry 経由で呼ぶときの違いを言える。</p>
+<p class="goal"><b>ゴール</b>Amazon Bedrock・Google Cloud・Microsoft Foundry、Claude Platform on AWS 経由で呼ぶときの違いを言える。</p>
 <div class="detail">
   <p>Claude は、Anthropic の API のほかに、他社のクラウドからも呼べます。社内の契約や請求、認証の仕組みを1つのクラウドにまとめたいときに使います。SDK には各クラウド用のクライアントがあり、呼び出しの形（<code>messages.create</code>）は同じです。</p>
+  <p>経路は、運営する者で2つに分かれます。Amazon Bedrock・Google Cloud・Microsoft Foundry は、<b>そのクラウドの会社が推論を運営</b>します。Claude Platform on AWS は、AWS のアカウントと請求から入りますが、<b>運営するのは Anthropic</b> で、機能はたいてい Claude の API と同じ日に届きます。</p>
   <table class="tbl">
     <thead><tr><th>違い</th><th>中身</th></tr></thead>
     <tbody>
       <tr><td data-l="違い">認証</td><td data-l="中身">Anthropic の API キーではなく、そのクラウドの認証と権限の仕組みを使う</td></tr>
-      <tr><td data-l="違い">ID</td><td data-l="中身">モデルの ID の書き方が、クラウドごとに違う</td></tr>
-      <tr><td data-l="違い">機能</td><td data-l="中身">新しい機能やベータの機能は、使えないか、遅れて届くことがある。Batch や Files API が無い経路もある</td></tr>
+      <tr><td data-l="違い">ID</td><td data-l="中身">モデルの ID の書き方が、クラウドごとに違う（Claude Platform on AWS は Claude の API と同じ）</td></tr>
+      <tr><td data-l="違い">機能</td><td data-l="中身">他社が運営する経路では、新しい機能やベータの機能は、使えないか、遅れて届くことがある。Batch は Claude の API と Claude Platform on AWS でしか使えない</td></tr>
       <tr><td data-l="違い">請求</td><td data-l="中身">そのクラウドの請求にまとまる</td></tr>
     </tbody>
   </table>
@@ -123,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

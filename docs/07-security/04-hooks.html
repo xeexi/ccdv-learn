@@ -57,7 +57,7 @@
 </header>
 <p class="goal"><b>ゴール</b>取り返しのつかない操作を、フックで確実に止める形を説明できる。</p>
 <p class="cast" data-cast="claude,hook,tool"><span class="c-amber">Claude</span><span class="c-ar">→</span><span class="c-blue">フック</span><span class="c-ar">→</span><span class="c-blue">ツール</span></p>
-<p class="lead">ファイルの一括削除や、履歴を書き換える push のような取り返しのつかない操作は、頼んで避けさせるのではなく、実行の手前で止めます。<code>PreToolUse</code> のフックは道具が動く前に呼ばれ、止めると決めた呼び出しを必ず止めます（フックの基本は〈<a href="../01-agents/11-hooks.html">決まった処理はフックで</a>〉）。</p>
+<p class="lead">ファイルの一括削除や、履歴を書き換える push のような取り返しのつかない操作は、頼んで避けさせるのではなく、実行の手前で止めます。<code>PreToolUse</code> のフックは道具が動く前に呼ばれ、止めると決めた呼び出しを止めます（フックの基本は〈<a href="../01-agents/11-hooks.html">決まった処理はフックで</a>〉）。</p>
 <p class="task" data-s="hooks"><span class="tn">DOMAIN 7</span><b>Claude Hooks</b></p>
 
 <div class="figbox" style="padding:16px 18px">
@@ -65,7 +65,7 @@
   <pre class="code">{ <span class="k">"hooks"</span>: { <span class="k">"PreToolUse"</span>: [{
     <span class="k">"matcher"</span>: <span class="s">"Bash"</span>,<span class="n">1</span>
     <span class="k">"hooks"</span>: [{ <span class="k">"type"</span>: <span class="s">"command"</span>,
-      <span class="k">"command"</span>: <span class="s">".claude/hooks/guard.sh"</span> }] }] } }</pre>
+      <span class="k">"command"</span>: <span class="s">"${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.sh"</span> }] }] } }</pre>
   <p class="codelabel">.claude/hooks/guard.sh ─ 呼ばれるスクリプト</p>
   <pre class="code">cmd=$(jq -r <span class="s">'.tool_input.command'</span>)<span class="n">2</span>
 <span class="k">case</span> <span class="s">"$cmd"</span> <span class="k">in</span>
@@ -75,13 +75,14 @@
 <span class="k">esac</span>
 exit <span class="v">0</span><span class="n">4</span></pre>
   <ol class="ann">
-    <li><span class="n">1</span><span><code>matcher</code> が見るのは道具の名前。コマンドの中身は、フックの中で見る。</span></li>
+    <li><span class="n">1</span><span><code>matcher</code> が見るのは道具の名前。中身で絞る <code>if</code> 欄は確実ではないので、止める判断はフックの中で見る。</span></li>
     <li><span class="n">2</span><span>実行されようとしている引数が、標準入力に JSON で届く。</span></li>
     <li><span class="n">3</span><span>2 で終えると止まり、標準エラーの文が Claude に届く。Claude はそれを読んで、別の進め方を考える。</span></li>
     <li><span class="n">4</span><span>0 は「許可」ではなく「意見なし」。いつもの規則とモードの判定に戻る。</span></li>
   </ol>
 </div>
-<p class="point"><b>ポイント</b>止めるのは、フックの <code>exit 2</code>（または拒否の判定）。止めるフックは許可の規則より強く、プロンプトの頼みごとと違って必ず効く。</p>
+<p class="point"><b>ポイント</b>止めるのは、フックの <code>exit 2</code>（または拒否の判定）。止めるフックは許可の規則より強く、プロンプトの頼みごとと違って、動けば確実に効く。</p>
+<p class="note">※ <code>2</code> 以外で終わる・スクリプトが無い・時間切れのときは、止めずに素通しになります。本当に止まるかを試しておきます。</p>
 
 <h3 class="sub" id="hookstop-rules">フックと権限の規則</h3>
 <p class="goal"><b>ゴール</b>フックの判定と権限の規則が重なったとき、どちらが効くかを言える。</p>
@@ -118,7 +119,7 @@ exit <span class="v">0</span><span class="n">4</span></pre>
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

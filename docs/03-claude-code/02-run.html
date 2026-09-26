@@ -61,15 +61,16 @@
 <table class="tbl">
   <thead><tr><th>モード</th><th>確認なしで動くもの</th><th>向く場面</th></tr></thead>
   <tbody>
-    <tr><td data-l="モード"><code>default</code></td><td data-l="確認なしで動くもの">読み取りだけ</td><td data-l="向く場面">1つずつ自分で確かめたい</td></tr>
+    <tr><td data-l="モード"><code>default</code><br><span class="n">画面では Manual</span></td><td data-l="確認なしで動くもの">読み取りだけ</td><td data-l="向く場面">1つずつ自分で確かめたい</td></tr>
     <tr><td data-l="モード"><code>acceptEdits</code></td><td data-l="確認なしで動くもの">読み取り・ファイルの編集・よく使うファイル操作</td><td data-l="向く場面">見ながら直させる</td></tr>
-    <tr><td data-l="モード"><code>plan</code></td><td data-l="確認なしで動くもの">読み取り。変更はしない</td><td data-l="向く場面">変える前に調べて、計画を出させる</td></tr>
+    <tr><td data-l="モード"><code>plan</code></td><td data-l="確認なしで動くもの">読み取り（auto が使えるときは、分類器が認めたコマンドも）。ソースの変更は、計画が承認されるまでしない</td><td data-l="向く場面">変える前に調べて、計画を出させる</td></tr>
     <tr><td data-l="モード"><code>auto</code></td><td data-l="確認なしで動くもの">ほぼすべて。裏で別のモデル（分類器）が見て、危ない操作だけを止める</td><td data-l="向く場面">長い仕事で、確認の手間を減らす</td></tr>
     <tr><td data-l="モード"><code>dontAsk</code></td><td data-l="確認なしで動くもの">読み取りと、先に許可した道具だけ。確認が要るものは断る</td><td data-l="向く場面">締めた CI やスクリプト</td></tr>
     <tr><td data-l="モード"><code>bypassPermissions</code></td><td data-l="確認なしで動くもの">すべて</td><td data-l="向く場面">隔離したコンテナや VM の中だけ</td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>人が見ていない実行ほど、確認なしで許す範囲を狭くする。すべてを許すのは、隔離した環境の中だけ。</p>
+<p class="note">※ どのモードで始まるかは、使い方とプランで違います。端末で使う Pro・Max・Team のプランは <code>auto</code>、<code>-p</code>・Agent SDK・Enterprise のプラン・Console の API キーは <code>default</code> で始まります。プロジェクトの設定ファイル（<code>.claude/settings.json</code> など）に書いた <code>auto</code> と <code>bypassPermissions</code> は効きません。</p>
 
 <h3 class="sub" id="run-headless">対話なしで動かす</h3>
 <p class="goal"><b>ゴール</b>対話なしの実行の書き方と、CI での注意を言える。</p>
@@ -139,7 +140,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

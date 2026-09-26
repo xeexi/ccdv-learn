@@ -102,6 +102,7 @@
 <p class="goal"><b>ゴール</b>考えた分のトークンが、出力として数えられることを言える。</p>
 <div class="detail">
   <p>考えた内容は、応答の中に <code>thinking</code> という種類のブロックとして返ります。新しいモデルでは既定で<b>中身が空のまま</b>返り、要約を見たいときだけ表示を指定します。<b>表示するかどうかに関係なく、考えた分は出力トークンとして数えられ、課金されます。</b>出力の上限（<code>max_tokens</code>）も、考えた分と回答の合計に掛かります。</p>
+  <p>新しいモデルでは、返した <code>thinking</code> のブロックが次の回の履歴に残り、<b>次の回からは入力トークンとして数えられます</b>（中身が空に見えても、ブロックには考えた内容が暗号化して入っています）。考えた分は、書いた回に出力として、次の回からは入力として、窓と費用に効きます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「fast mode は、小さなモデルに切り替えて速くする機能」</span>
     <span class="t o">実際は</span><span><b>同じモデルのまま</b>出力を速くする。そのぶん単価が高い。</span>
@@ -120,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -102,7 +102,7 @@ answers = <span class="k">await</span> asyncio.gather(
   <thead><tr><th>気をつけること</th><th>中身</th></tr></thead>
   <tbody>
     <tr><td data-l="気をつけること">利用上限</td><td data-l="中身">1分あたりのリクエスト数やトークン数に上限がある。超えると <code>429</code> で断られる</td></tr>
-    <tr><td data-l="気をつけること">再試行</td><td data-l="中身"><code>429</code> や <code>5xx</code> は、SDK が間を空けて再試行する。自前の再試行と重ねない（〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉）</td></tr>
+    <tr><td data-l="気をつけること">再試行</td><td data-l="中身"><code>429</code> や <code>5xx</code> は、SDK が間を空けて再試行する。自前の再試行と重ねない。月の支出の上限による <code>429</code> は、再試行しても通らない（〈<a href="../05-models/06-sdk.html">SDK は REST を包んでいる</a>〉）</td></tr>
     <tr><td data-l="気をつけること">失敗</td><td data-l="中身">1件の失敗で全体を止めないよう、結果ごとに成否を見る</td></tr>
     <tr><td data-l="気をつけること">待てるなら</td><td data-l="中身">すぐ要らない大量の処理は、Batch に回すほうが安い（〈<a href="04-batch.html">まとめて安く</a>〉）</td></tr>
   </tbody>
@@ -126,7 +126,7 @@ answers = <span class="k">await</span> asyncio.gather(
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=e8349348"></script>
-<script src="../assets/search-index.js?v=4517d26c"></script>
+<script src="../assets/quiz-data.js?v=1082b992"></script>
+<script src="../assets/search-index.js?v=85291c97"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
