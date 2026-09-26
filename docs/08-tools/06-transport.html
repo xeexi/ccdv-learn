@@ -79,7 +79,7 @@
 <p class="goal"><b>ゴール</b>それぞれのつなぎ方で守ることを言える。</p>
 <div class="detail">
   <p>stdio では、標準出力がそのままやり取りの通り道です。<b>サーバが標準出力にログを書くと、やり取りが壊れます</b>。ログは標準エラーに出します。</p>
-  <p>ネットワーク越しのサーバは、どこからでも呼ばれうる入口になります。認証を付け、受け取ったトークンが自分宛てかを確かめます。手元で HTTP のサーバを動かすときは、外から届かないアドレス（<code>127.0.0.1</code>）で待ち受けます。</p>
+  <p>ネットワーク越しのサーバは、どこからでも呼ばれうる入口になります。認証を付け、受け取ったトークンが自分宛てかを確かめます。接続ごとに <code>Origin</code> ヘッダも確かめます（仕様上の必須）。手元で HTTP のサーバを動かすときは、外から届かないアドレス（<code>127.0.0.1</code>）で待ち受けます。</p>
   <p>古い方式（HTTP と SSE を組み合わせたもの）は非推奨で、新しく作るサーバは Streamable HTTP を使います。公式の方式はこの2つですが、ソケット（Unix ドメインソケットや TCP）の上に独自のつなぎ方を作ることも、仕様上は認められています。その場合は、stdio と同じ「1行に1つの JSON-RPC」の形を使うよう勧められています。</p>
 </div>
 
@@ -89,7 +89,7 @@
   <thead><tr><th>範囲</th><th>置き場所</th><th>効くところ</th></tr></thead>
   <tbody>
     <tr><td data-l="範囲"><b>local</b></td><td data-l="置き場所">既定。自分の設定（<code>~/.claude.json</code>）の、そのプロジェクトの欄</td><td data-l="効くところ">自分だけ・そのプロジェクトだけ</td></tr>
-    <tr><td data-l="範囲"><b>project</b></td><td data-l="置き場所">プロジェクト直下の <code>.mcp.json</code></td><td data-l="効くところ">バージョン管理で、チーム全員に配れる。使う前に承認を求められる</td></tr>
+    <tr><td data-l="範囲"><b>project</b></td><td data-l="置き場所">プロジェクト直下の <code>.mcp.json</code></td><td data-l="効くところ">バージョン管理で、チーム全員に配れる。対話のセッションでは、使う前に承認を求められる</td></tr>
     <tr><td data-l="範囲"><b>user</b></td><td data-l="置き場所">自分の設定（<code>~/.claude.json</code>）</td><td data-l="効くところ">自分の、すべてのプロジェクト</td></tr>
   </tbody>
 </table>
@@ -106,7 +106,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

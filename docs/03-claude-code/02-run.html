@@ -80,9 +80,9 @@
   --allowedTools <span class="s">"Read,Edit,Bash"</span> \<span class="n">2</span>
   --output-format json<span class="n">3</span></pre>
   <ol class="ann">
-    <li><span class="n">1</span><span><code>-p</code> で、1回の依頼を対話なしで実行して終わる。<code>--bare</code> を付けると、フック・Skills・MCP サーバ・CLAUDE.md などを読み込まない。</span></li>
+    <li><span class="n">1</span><span><code>-p</code> で、1回の依頼を対話なしで実行して終わる。<code>--bare</code> を付けると、フック・Skills・MCP サーバ・CLAUDE.md などを読み込まない（ログインの情報も読まないので、<code>ANTHROPIC_API_KEY</code> が要る。将来は <code>-p</code> の既定になる予定）。</span></li>
     <li><span class="n">2</span><span>確認なしで使わせる道具。人が承認できないので、先に決める。</span></li>
-    <li><span class="n">3</span><span>結果の形。<code>json</code> なら答えに費用やセッションの ID が付き、<code>stream-json</code> なら出来事が1行ずつ逐次で届く。</span></li>
+    <li><span class="n">3</span><span>結果の形。<code>json</code> なら答えに費用やセッションの ID が付き、<code>stream-json</code> なら出来事が1行ずつ逐次で届く。入力の側も <code>--input-format stream-json</code> で、逐次に送り込める。</span></li>
   </ol>
 </div>
 <div class="detail">
@@ -116,6 +116,7 @@
   <tbody>
     <tr><td data-l="コマンド"><code>--continue</code></td><td data-l="すること">直前の会話を続ける。<code>--resume</code> なら一覧から選ぶ</td></tr>
     <tr><td data-l="コマンド"><code>--fork-session</code></td><td data-l="すること">続けるときに付けると、元の会話を残したまま、別の ID で枝分かれする</td></tr>
+    <tr><td data-l="コマンド"><code>/branch</code></td><td data-l="すること">会話の途中から枝を作り、元の会話を残したまま別の進め方を試す</td></tr>
     <tr><td data-l="コマンド"><code>/compact</code></td><td data-l="すること">会話を要約して窓を空ける。何を残すかを指示できる</td></tr>
     <tr><td data-l="コマンド"><code>/model</code></td><td data-l="すること">モデルを切り替える</td></tr>
     <tr><td data-l="コマンド"><code>/permissions</code></td><td data-l="すること">許可・確認・禁止の規則を見て直す</td></tr>
@@ -125,7 +126,7 @@
   <p>自分で作るコマンドは、Skills として <code>.claude/skills/名前/SKILL.md</code> に書けば <code>/名前</code> で呼べます（古い形の <code>.claude/commands/</code> も使えます）。会話を分ける・捨てる判断は〈<a href="../02-apps/17-session.html">セッションとプラグインを管理する</a>〉で扱いました。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「CI では、止まらないように <code>bypassPermissions</code> で動かせばよい」</span>
-    <span class="t o">実際は</span><span>人が見ていない場所で、すべてを許すことになる。<b>使う道具だけを許し</b>、それ以外は断らせる（<code>dontAsk</code> や <code>--allowedTools</code>）。</span>
+    <span class="t o">実際は</span><span>人が見ていない場所で、すべてを許すことになる。<b>使う道具だけを許し</b>、それ以外は断らせる（<code>dontAsk</code> や <code>--allowedTools</code>）。答える人がいない実行では <code>--permission-prompts none</code> を付けると、確認の要る操作は待たずに断られる。</span>
   </div>
 </div>
 </section>
@@ -140,7 +141,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -87,8 +87,8 @@
 <h3 class="sub" id="version-model">モデルの ID と、引退</h3>
 <p class="goal"><b>ゴール</b>モデル ID と別名の違いと、引退への備えを言える。</p>
 <div class="detail">
-  <p>Claude のモデル ID は、それぞれ固定された版を指します。同じ ID なら、中のモデルは変わりません。古い世代には、最新の日付つきの版を指す短い別名もあります。Claude Code の <code>opus</code> や <code>sonnet</code> のような別名は、時とともに指す先が変わるので、固定したいなら ID を書くか、対応する環境変数で指定します。</p>
-  <p>モデルは、提供中 → 非推奨（引退の日と代わりのモデルが示される）→ 引退、と進みます。<b>引退したモデルへのリクエストは失敗します</b>。</p>
+  <p>Claude のモデル ID は、それぞれ固定された版を指します。同じ ID なら、中のモデル（重み）は変わりません。ただし周りの提供の仕組みの更新で、挙動がわずかに変わることはあります。古い世代には、最新の日付つきの版を指す短い別名もあります。Claude Code の <code>opus</code> や <code>sonnet</code> のような別名は、時とともに指す先が変わるので、固定したいなら ID を書くか、対応する環境変数で指定します。</p>
+  <p>モデルは、提供中 → 更新の止まった旧版（Legacy）→ 非推奨（引退の日と代わりのモデルが示される）→ 引退、と進みます。公開済みのモデルの引退は、少なくとも60日前に知らされます。<b>引退したモデルへのリクエストは失敗します</b>。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「モデル ID を固定しておけば、いつまでも同じモデルを使い続けられる」</span>
     <span class="t o">実際は</span><span>固定しても、引退すれば呼べなくなる。非推奨の知らせを追い、乗り換えを評価で確かめる（〈<a href="12-lifecycle.html">作って終わりではない</a>〉）。</span>
@@ -99,7 +99,7 @@
 <p class="goal"><b>ゴール</b>プロンプトとプラグインを、壊さずに更新する方法を言える。</p>
 <div class="detail">
   <p>プロンプトは、コードと同じリポジトリで管理し、変えるたびに<b>前の版と同じテストで比べ</b>ます（〈<a href="../06-prompt/03-refine.html">直しながら寄せる</a>〉）。どの版のプロンプトを、どのモデルに送ったかを記録しておくと、挙動が変わったときに原因をたどれます。Managed Agents では、モデル・system・道具の組（agent）そのものに版が付きます。</p>
-  <p>プラグインは、<code>plugin.json</code> の <code>version</code> を上げて配ります。<b>version を変えずに中身だけ更新しても、利用者は手元に残った古い写しを使い続けます</b>。ほかのプラグインに頼るなら、依存（<code>dependencies</code>）として、試した版の範囲（<code>^2.0</code> など）を書きます。</p>
+  <p>プラグインは、<code>plugin.json</code> の <code>version</code> を上げて配ります。<b>version を書いたまま変えずに中身だけ更新しても、利用者は手元に残った古い写しを使い続けます</b>（version を書かなければ、コミットごとの SHA が版になり、コミットのたびに更新が届きます）。ほかのプラグインに頼るなら、依存（<code>dependencies</code>）として、試した版の範囲（<code>^2.0</code> など）を書きます。</p>
 </div>
 </section>
 <!-- ▲ 本文 -->
@@ -113,7 +113,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -118,7 +118,7 @@
 <p class="goal"><b>ゴール</b>キャッシュが得になる条件と、効いているかの確かめ方を言える。</p>
 <div class="detail">
   <p>置いたキャッシュは<b>既定で5分</b>残り、読み出されるたびに延びます。間が空くなら、1時間の指定もできます。書き込みは通常の入力より割高、読み出しは大幅に割安なので、<b>同じ前半を繰り返し使うほど得</b>になります。一度しか使わない部分に区切りを置くと、割増だけを払います。</p>
-  <p>短すぎる前半は、区切りを付けても<b>黙ってキャッシュされません</b>（最小の長さはモデルで決まります）。効いているかは、応答の使用量の <code>cache_read_input_tokens</code> で確かめます。繰り返し送っているのに 0 のままなら、どこかで前半が変わっています。</p>
+  <p>短すぎる前半は、区切りを付けても<b>黙ってキャッシュされません</b>（最小の長さはモデルで決まります）。効いているかは、応答の使用量の <code>cache_read_input_tokens</code> で確かめます。繰り返し送っているのに 0 のままなら、どこかで前半が変わっています。どこで変わったかは、API のキャッシュ診断（cache diagnostics）に前の応答と比べさせて調べられます。会話が長くなったら、区切りを後ろへ置き直します（区切りからさかのぼって探すのは20ブロックまでです）。</p>
 </div>
 <p class="point"><b>ポイント</b>変わらないものを前に、変わるものを後ろに並べ、共通部分の終わりに区切りを置く。効いているかは推測せず、使用量で確かめる。</p>
 </section>
@@ -133,7 +133,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

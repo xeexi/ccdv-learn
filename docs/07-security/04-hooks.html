@@ -101,7 +101,7 @@ exit <span class="v">0</span><span class="n">4</span></pre>
 <h3 class="sub" id="hookstop-trust">フック自体の危うさ</h3>
 <p class="goal"><b>ゴール</b>フックを動かすときに気をつけることを言える。</p>
 <div class="detail">
-  <p>フックは、<b>自分の権限で任意のコマンドを動かします</b>。見知らぬリポジトリの <code>.claude/settings.json</code> に書かれたフックは、対話なしの実行（<code>-p</code>）や Agent SDK では、信頼の確認なしに動きます。CI では設定を読まない実行（<code>--bare</code>）を使うか、リポジトリの設定を確かめてから動かします（〈<a href="../03-claude-code/02-run.html">Claude Code の動かし方</a>〉）。</p>
+  <p>フックは、<b>自分の権限で任意のコマンドを動かします</b>。見知らぬリポジトリの <code>.claude/settings.json</code> に書かれたフックは、対話なしの実行（<code>-p</code>）や Agent SDK では、信頼の確認なしに動きます。CI ではフックや CLAUDE.md などを読まない実行（<code>--bare</code>）を使うか、リポジトリの設定を確かめてから動かします（〈<a href="../03-claude-code/02-run.html">Claude Code の動かし方</a>〉）。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「フックは Claude が判断して呼ぶので、Claude が言いくるめられると止まらない」</span>
     <span class="t o">実際は</span><span>フックを呼ぶのは Claude Code（アプリ）。<b>Claude がどう判断しても</b>、止めると決めた呼び出しは止まる。</span>
@@ -119,7 +119,7 @@ exit <span class="v">0</span><span class="n">4</span></pre>
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

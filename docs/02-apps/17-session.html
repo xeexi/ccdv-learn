@@ -99,6 +99,7 @@
       <tr><td data-l="範囲"><code>user</code></td><td data-l="有効にした記録の場所"><code>~/.claude/settings.json</code></td><td data-l="効くところ">自分の、すべてのプロジェクト</td></tr>
       <tr><td data-l="範囲"><code>project</code></td><td data-l="有効にした記録の場所"><code>.claude/settings.json</code></td><td data-l="効くところ">リポジトリを使う全員（git で共有）</td></tr>
       <tr><td data-l="範囲"><code>local</code></td><td data-l="有効にした記録の場所"><code>.claude/settings.local.json</code></td><td data-l="効くところ">自分だけ・そのリポジトリだけ</td></tr>
+      <tr><td data-l="範囲"><code>managed</code></td><td data-l="有効にした記録の場所">組織の管理用の設定</td><td data-l="効くところ">組織が入れる。利用者は無効にも削除もできない</td></tr>
     </tbody>
   </table>
   <p>チームで同じプラグインを使うなら、リポジトリの <code>.claude/settings.json</code> に、マーケットプレイス（<code>extraKnownMarketplaces</code>）と有効にするプラグイン（<code>enabledPlugins</code>）を書いて配ります。マーケットプレイスが登録されるのは、各メンバーがそのフォルダを信頼した後です。プラグインの中身が外（GitHub など）にあるものは、設定を書くだけでは入らず、各メンバーが一度入れる操作をします。会社の全員に配るなら、管理者が配る設定（managed settings）に同じ2つを書きます。</p>
@@ -119,7 +120,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

@@ -92,7 +92,7 @@ content-type: application/json
     <li><span class="n">1</span><span>メソッド1つが、エンドポイント1つに対応する。<code>messages.create</code> は <code>POST /v1/messages</code>。</span></li>
     <li><span class="n">2</span><span>認証は API キーのヘッダで行う。<code>anthropic-version</code> は、やり取りの形式の版。</span></li>
     <li><span class="n">3</span><span>本文で必須なのは <code>model</code>・<code>max_tokens</code>・<code>messages</code> の3つ。モデルもヘッダではなく本文で指定する。</span></li>
-    <li><span class="n">4</span><span>答えは <code>content</code> の中にブロックの配列で入る。止まった理由と使用量は、その外側に付く。</span></li>
+    <li><span class="n">4</span><span>答えは <code>content</code> の中にブロックの配列で入る。考えさせるモデルでは先頭に <code>thinking</code> のブロックが来ることがあるので、<code>content[0]</code> と決め打ちせず、種類（<code>type</code>）で探す。止まった理由と使用量は、その外側に付く。</span></li>
   </ol>
 </div>
 <p class="point"><b>ポイント</b>SDK の呼び出し1回は、API への JSON の往復1回（<code>POST /v1/messages</code>）。SDK を外しても、同じ JSON を送れば同じように動く。</p>
@@ -129,7 +129,7 @@ content-type: application/json
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

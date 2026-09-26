@@ -60,11 +60,11 @@
 <table class="tbl">
   <thead><tr><th>部品</th><th>置き場所</th><th>読まれる時</th><th>書くもの</th></tr></thead>
   <tbody>
-    <tr><td data-l="部品">CLAUDE.md</td><td data-l="置き場所"><code>./CLAUDE.md</code> など</td><td data-l="読まれる時">毎回、会話の最初に</td><td data-l="書くもの">いつも守る決まり（ビルドの手順・書き方・構成）</td></tr>
+    <tr><td data-l="部品">CLAUDE.md</td><td data-l="置き場所"><code>./CLAUDE.md</code> など（<code>AGENTS.md</code> も読む）</td><td data-l="読まれる時">毎回、会話の最初に</td><td data-l="書くもの">いつも守る決まり（ビルドの手順・書き方・構成）</td></tr>
     <tr><td data-l="部品">Rules</td><td data-l="置き場所"><code>.claude/rules/*.md</code></td><td data-l="読まれる時">毎回。<code>paths</code> を付けると、合うファイルを読んだ時だけ</td><td data-l="書くもの">話題ごと・場所ごとの決まり</td></tr>
     <tr><td data-l="部品">Skills</td><td data-l="置き場所"><code>.claude/skills/名前/SKILL.md</code></td><td data-l="読まれる時">名前と説明は毎回、本文は要る時</td><td data-l="書くもの">何段もある手順や参照資料。<code>/名前</code> でも呼べる</td></tr>
     <tr><td data-l="部品">Commands</td><td data-l="置き場所"><code>.claude/commands/*.md</code></td><td data-l="読まれる時"><code>/名前</code> で呼んだ時</td><td data-l="書くもの">定型の頼み方。いまは Skills と同じ扱いで、古い形として残る</td></tr>
-    <tr><td data-l="部品">Agents</td><td data-l="置き場所"><code>.claude/agents/*.md</code></td><td data-l="読まれる時">Claude が任せると決めた時（別の窓で動く）</td><td data-l="書くもの">子の役割・使える道具・モデル</td></tr>
+    <tr><td data-l="部品">Agents</td><td data-l="置き場所"><code>.claude/agents/*.md</code></td><td data-l="読まれる時">Claude が任せると決めた時か、<code>@</code> で名指しした時（別の窓で動く）</td><td data-l="書くもの">子の役割・使える道具・モデル</td></tr>
     <tr><td data-l="部品">記憶</td><td data-l="置き場所"><code>~/.claude/projects/…/memory/</code></td><td data-l="読まれる時">索引（<code>MEMORY.md</code>）の先頭を毎回、細部は要る時</td><td data-l="書くもの">Claude が学んだこと。<b>Claude 自身が書く</b></td></tr>
   </tbody>
 </table>
@@ -115,7 +115,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

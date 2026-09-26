@@ -84,7 +84,7 @@
   <tbody>
     <tr><td data-l="部品">Agent</td><td data-l="中身">モデル・system・道具・MCP・Skills の組。一度作り、ID で使い回す</td></tr>
     <tr><td data-l="部品">Environment</td><td data-l="中身">どこで動かすか。Anthropic のクラウドのサンドボックスか、自前のサンドボックスか</td></tr>
-    <tr><td data-l="部品">Session</td><td data-l="中身">1つの仕事を進める、動いているエージェント。会話とファイルはサーバ側に残る</td></tr>
+    <tr><td data-l="部品">Session</td><td data-l="中身">1つの仕事を進める、動いているエージェント。クラウドのサンドボックスなら、会話とファイルはサーバ側に残る</td></tr>
     <tr><td data-l="部品">Events</td><td data-l="中身">アプリとエージェントのやり取り。指示を送り、進み具合を SSE で受け取る</td></tr>
   </tbody>
 </table>
@@ -94,8 +94,8 @@
 <table class="tbl">
   <thead><tr><th>形</th><th>向くとき</th></tr></thead>
   <tbody>
-    <tr><td data-l="形">全部任せる</td><td data-l="向くとき">数分から数時間かかる仕事や、非同期の仕事。ループ・サンドボックス・道具の実行の層を、自分で作りたくない</td></tr>
-    <tr><td data-l="形">実行は手元</td><td data-l="向くとき">外に出せないデータや、社内のネットワークにしか無いサービスを使う。自社の監査の下で動かしたい</td></tr>
+    <tr><td data-l="形">全部任せる</td><td data-l="向くとき">数分から数時間かかる仕事や、非同期の仕事。ループ・サンドボックス・道具の実行の層を、自分で作りたくない。定期的に動かす仕組み（scheduled deployments）もある</td></tr>
+    <tr><td data-l="形">実行は手元</td><td data-l="向くとき">外に出せないデータや、社内のネットワークにしか無いサービスを使う。自社の監査の下で動かしたい。道具の入力と結果、Skills と記憶の中身は、Anthropic 側を通る</td></tr>
     <tr><td data-l="形">全部自前</td><td data-l="向くとき">ループそのものを自分の基盤で動かす必要がある。1周ごとの動きを細かく決めたい</td></tr>
   </tbody>
 </table>
@@ -111,7 +111,7 @@
 <p class="goal"><b>ゴール</b>Agent SDK を自前で動かすときの前提を言える。</p>
 <div class="detail">
   <p>Agent SDK は、裏で Claude Code の本体を別のプロセスとして起動し、そのプロセスがシェル・作業ディレクトリ・セッションのファイルを持ちます。<b>状態を持たない API の中継とは違い</b>、動いているエージェントの数だけ、ファイルとプロセスを抱えた環境が要ります。</p>
-  <p>ふつうはコンテナで隔離し、仕事1つごとにコンテナを作って捨てる形か、コンテナを置いたまま仕事を受け続ける形を選びます。</p>
+  <p>ふつうはコンテナで隔離します。型は4つです。仕事1つごとにコンテナを作って捨てる形、コンテナを置いたまま仕事を受け続ける形、捨てるコンテナでも保存先から会話を戻して続ける中間の形、1つのコンテナで複数のエージェントを動かす形です。会話の記録は手元のディスクに残るので、別のホストで再開するなら、記録の保存先（<code>SessionStore</code>）を用意します。</p>
 </div>
 </section>
 <!-- ▲ 本文 -->
@@ -125,7 +125,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

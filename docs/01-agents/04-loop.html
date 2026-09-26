@@ -94,6 +94,7 @@
   <thead><tr><th>値</th><th>意味</th><th>アプリがすること</th></tr></thead>
   <tbody>
     <tr><td data-l="値"><code>tool_use</code></td><td data-l="意味">道具を頼んだ</td><td data-l="アプリがすること">実行して結果を返し、ループを続ける</td></tr>
+    <tr><td data-l="値"><code>stop_sequence</code></td><td data-l="意味">指定した止める文字列に達した</td><td data-l="アプリがすること">決めておいた区切りとして扱う</td></tr>
     <tr><td data-l="値"><code>end_turn</code></td><td data-l="意味">言い終えた</td><td data-l="アプリがすること">完了として、答えを使う</td></tr>
     <tr><td data-l="値"><code>max_tokens</code></td><td data-l="意味">出力の上限で切れた</td><td data-l="アプリがすること">そのまま使わない。上限を見直すか、続きを頼む</td></tr>
     <tr><td data-l="値"><code>refusal</code></td><td data-l="意味">安全のために断った</td><td data-l="アプリがすること">完了として扱わない。<code>stop_details</code> で断った分野を見て、別のモデルで送り直すか、人に回す</td></tr>
@@ -127,7 +128,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

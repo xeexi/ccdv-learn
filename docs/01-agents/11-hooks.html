@@ -76,7 +76,7 @@
       <span class="k">"command"</span>: <span class="s">"${CLAUDE_PROJECT_DIR}/.claude/hooks/format.sh"</span> }]<span class="n">3</span>
   }] } }</pre>
   <ol class="ann">
-    <li><span class="n">1</span><span>いつ動かすか。道具が動いた後（<code>PostToolUse</code>）。</span></li>
+    <li><span class="n">1</span><span>いつ動かすか。道具が成功した後（<code>PostToolUse</code>）。失敗した後は、別のイベント（<code>PostToolUseFailure</code>）。</span></li>
     <li><span class="n">2</span><span>どの道具のときか。ファイルを編集・作成したときだけ。</span></li>
     <li><span class="n">3</span><span>何を動かすか。道具の名前と引数が JSON で渡るので、編集されたファイルを整形する。スクリプトはプロジェクトの根（<code>${CLAUDE_PROJECT_DIR}</code>）から指すと、どのディレクトリで動いても見つかる。</span></li>
   </ol>
@@ -91,7 +91,7 @@
     <tr><td data-l="イベント"><code>SessionStart</code></td><td data-l="動く時点">始まったとき・再開したとき</td><td data-l="使いどころ">最新の状態や決まりごとを、文脈に足す</td></tr>
     <tr><td data-l="イベント"><code>UserPromptSubmit</code></td><td data-l="動く時点">利用者の入力を受けたとき</td><td data-l="使いどころ">入力を確かめる。要る情報を足す</td></tr>
     <tr><td data-l="イベント"><code>PreToolUse</code></td><td data-l="動く時点">道具が動く前</td><td data-l="使いどころ">止める。引数を書き換える</td></tr>
-    <tr><td data-l="イベント"><code>PostToolUse</code></td><td data-l="動く時点">道具が動いた後</td><td data-l="使いどころ">整形・検査・記録</td></tr>
+    <tr><td data-l="イベント"><code>PostToolUse</code></td><td data-l="動く時点">道具が成功した後</td><td data-l="使いどころ">整形・検査・記録</td></tr>
     <tr><td data-l="イベント"><code>Stop</code></td><td data-l="動く時点">答え終えようとしたとき</td><td data-l="使いどころ">条件を満たすまで、終わらせずに続けさせる</td></tr>
   </tbody>
 </table>
@@ -109,7 +109,7 @@
 <h3 class="sub" id="hooks-sdk">Agent SDK では関数で書く</h3>
 <p class="goal"><b>ゴール</b>Agent SDK でフックを書く形を言える。</p>
 <div class="detail">
-  <p>Agent SDK でも、同じイベントにフックを掛けられます。こちらは<b>自分のコードの中の関数</b>で、呼び出しの情報（道具の名前・引数など）を受け取り、許可・拒否・入力の書き換え・文脈の追加を返します。設定ファイルに書いたコマンドのフックも読み込まれます。</p>
+  <p>Agent SDK でも、同じイベントにフックを掛けられます（<code>SessionStart</code> と <code>SessionEnd</code> を関数で掛けられるのは TypeScript だけで、Python では設定ファイルのコマンドのフックで掛けます）。こちらは<b>自分のコードの中の関数</b>で、呼び出しの情報（道具の名前・引数など）を受け取り、許可・拒否・入力の書き換え・文脈の追加を返します。設定ファイルに書いたコマンドのフックも読み込まれます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「CLAUDE.md に『編集したら必ず整形する』と書けば、毎回整形される」</span>
     <span class="t o">実際は</span><span>頼みごとなので、抜けることがある。<b>毎回必ずなら、編集の後に動くフックに置く</b>。</span>
@@ -128,7 +128,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

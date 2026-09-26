@@ -79,7 +79,7 @@
         <td data-l="書き方"><code>"output_config": {"effort": "low"}</code></td></tr>
     <tr><td data-l="手"><b>fast mode</b><br><span class="n">同じモデルを速く</span></td>
         <td data-l="決めること">出力の速さ。<b>速くなる代わりに、単価が上がる</b></td>
-        <td data-l="書き方"><code>"speed": "fast"</code><br><span class="n">研究プレビュー。使えるモデルと提供先が限られる</span></td></tr>
+        <td data-l="書き方"><code>"speed": "fast"</code><br><span class="n">研究プレビュー。申し込みと beta のヘッダが要り、使えるモデルと提供先が限られる。Batch では使えない</span></td></tr>
   </tbody>
 </table>
 <p class="point"><b>ポイント</b>いまの形は「考えることはモデルに任せ（adaptive）、力の入れ具合を effort で決める」。fast mode は賢さではなく速さを買う手で、費用は上がる。</p>
@@ -87,7 +87,7 @@
 <h3 class="sub" id="think-effort">まず動かすのは effort</h3>
 <p class="goal"><b>ゴール</b>effort を上げる場面と下げる場面を言える。</p>
 <div class="detail">
-  <p>effort を下げると、考える量が減り、ツールの呼び出しもまとまり、前置きや確認の文も短くなります。<b>同じモデルのまま、品質と、費用・待ち時間のかね合いを動かせる</b>のが effort です。公式も、モデルを替えるより effort を調整するほうが効くことが多いとしています。</p>
+  <p>effort を下げると、考える量が減り、ツールの呼び出しもまとまり、前置きや確認の文も短くなりやすくなります。<b>同じモデルのまま、品質と、費用・待ち時間のかね合いを動かせる</b>のが effort です。公式も、モデルを替えるより effort を調整するほうが効くことが多いとしています。</p>
   <table class="tbl">
     <thead><tr><th>向き</th><th>向いている仕事</th></tr></thead>
     <tbody>
@@ -95,13 +95,13 @@
       <tr><td data-l="向き">下げる</td><td data-l="向いている仕事"><code>low</code>・<code>medium</code> に。分類や短い応答、待ち時間に厳しい処理、子エージェント（〈<a href="../06-prompt/06-isolate.html">文脈を分ける</a>〉）の単純な仕事</td></tr>
     </tbody>
   </table>
-  <p>既定の段階はモデルによって違います。<b>挙動をそろえたいなら、既定に頼らず明示します。</b></p>
+  <p>既定の段階はモデルによって違い、effort に対応していない（小さい区分の）モデルもあります。<b>挙動をそろえたいなら、既定に頼らず明示します。</b></p>
 </div>
 
 <h3 class="sub" id="think-bill">考えた分は、見えなくても払う</h3>
 <p class="goal"><b>ゴール</b>考えた分のトークンが、出力として数えられることを言える。</p>
 <div class="detail">
-  <p>考えた内容は、応答の中に <code>thinking</code> という種類のブロックとして返ります。新しいモデルでは既定で<b>中身が空のまま</b>返り、要約を見たいときだけ表示を指定します。<b>表示するかどうかに関係なく、考えた分は出力トークンとして数えられ、課金されます。</b>出力の上限（<code>max_tokens</code>）も、考えた分と回答の合計に掛かります。</p>
+  <p>考えた内容は、応答の中に <code>thinking</code> という種類のブロックとして返ります。新しいモデルでは既定で<b>中身が空のまま</b>返り、要約を見たいときだけ表示を指定します（進み具合の短い知らせだけを返す指定もあります）。<b>表示するかどうかに関係なく、考えた分は出力トークンとして数えられ、課金されます。</b>出力の上限（<code>max_tokens</code>）も、考えた分と回答の合計に掛かります。</p>
   <p>新しいモデルでは、返した <code>thinking</code> のブロックが次の回の履歴に残り、<b>次の回からは入力トークンとして数えられます</b>（中身が空に見えても、ブロックには考えた内容が暗号化して入っています）。考えた分は、書いた回に出力として、次の回からは入力として、窓と費用に効きます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「fast mode は、小さなモデルに切り替えて速くする機能」</span>
@@ -121,7 +121,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

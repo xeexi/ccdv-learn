@@ -88,7 +88,7 @@
   <tbody>
     <tr><td data-l="手">道具</td><td data-l="中身">仕事に要る道具だけを渡す。読むだけで足りるなら、書き込む道具は渡さない</td></tr>
     <tr><td data-l="手">規則</td><td data-l="中身">禁止・確認・許可の規則で、道具と引数を絞る。規則は Claude ではなく Claude Code が強制する</td></tr>
-    <tr><td data-l="手">隔離</td><td data-l="中身">サンドボックスで、ファイルとネットワークの届く範囲を閉じる。インジェクションで Claude の判断が破られても効く</td></tr>
+    <tr><td data-l="手">隔離</td><td data-l="中身">サンドボックスで、ファイルとネットワークの届く範囲を閉じる。インジェクションで Claude の判断が破られても効く。効くのはシェルのコマンドとその子のプロセスで、ファイルを読む・編集する道具や Web の取得は権限の規則で守るので、両方を組む</td></tr>
     <tr><td data-l="手">人の役割</td><td data-l="中身">人にも要る役割だけを与える（使うだけ・鍵を作れる・設定を変えられる、など）</td></tr>
   </tbody>
 </table>
@@ -110,7 +110,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

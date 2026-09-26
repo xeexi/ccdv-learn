@@ -106,9 +106,10 @@
     <tbody>
       <tr><td data-l="止まった理由"><code>max_tokens</code></td><td data-l="起きていること">上限で打ち切られていて、JSON が途中で終わっていることがある</td></tr>
       <tr><td data-l="止まった理由"><code>refusal</code></td><td data-l="起きていること">安全のために断っていて、形どおりの出力になっていないことがある</td></tr>
+      <tr><td data-l="止まった理由"><code>model_context_window_exceeded</code></td><td data-l="起きていること">書く途中で窓の端に届いて、JSON が途中で終わっていることがある</td></tr>
     </tbody>
   </table>
-  <p>JSON は必ずパーサで読みます。文字列の照合や正規表現で拾うと、書き方の小さな違いで壊れます。</p>
+  <p>JSON は必ずパーサで読みます。文字列の照合や正規表現で拾うと、書き方の小さな違いで壊れます。形の保証にも1つ例外があり、<code>enum</code> の値は<b>大文字小文字だけが違う形</b>で返ることがあります。英字の値は大文字小文字を区別せずに比べ、大文字小文字だけで違う値は作りません。</p>
 </div>
 <p class="note">※ 応答の書き出しをこちらで先に埋めて形を誘導する方法（prefill）は、新しいモデルでは受け付けられません。形を決めたいときは、構造化出力を使います。</p>
 </section>
@@ -123,7 +124,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>

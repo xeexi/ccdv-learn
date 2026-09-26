@@ -79,7 +79,7 @@
   <thead><tr><th>範囲</th><th>CLAUDE.md</th><th>settings.json</th><th>共有</th></tr></thead>
   <tbody>
     <tr><td data-l="範囲">組織</td><td data-l="CLAUDE.md">管理用の場所（OS ごとに決まっている）</td><td data-l="settings.json">管理用の設定</td><td data-l="共有">全員に効き、利用者は外せない</td></tr>
-    <tr><td data-l="範囲">チーム</td><td data-l="CLAUDE.md"><code>./CLAUDE.md</code></td><td data-l="settings.json"><code>.claude/settings.json</code></td><td data-l="共有">git に入れて共有する</td></tr>
+    <tr><td data-l="範囲">チーム</td><td data-l="CLAUDE.md"><code>./CLAUDE.md</code> か <code>./.claude/CLAUDE.md</code></td><td data-l="settings.json"><code>.claude/settings.json</code></td><td data-l="共有">git に入れて共有する</td></tr>
     <tr><td data-l="範囲">個人</td><td data-l="CLAUDE.md"><code>~/.claude/CLAUDE.md</code></td><td data-l="settings.json"><code>~/.claude/settings.json</code></td><td data-l="共有">自分の、すべてのプロジェクトに効く</td></tr>
     <tr><td data-l="範囲">ローカル</td><td data-l="CLAUDE.md"><code>./CLAUDE.local.md</code></td><td data-l="settings.json"><code>.claude/settings.local.json</code></td><td data-l="共有">自分だけ。git に入れない</td></tr>
   </tbody>
@@ -99,14 +99,15 @@
   <p>権限の規則は、禁止（<code>deny</code>）→ 確認（<code>ask</code>）→ 許可（<code>allow</code>）の順に見て、最初に当たったものが効きます。</p>
   <div class="myth">
     <span class="t">誤解</span><span>「個人の設定のほうが、チームの設定より強い」</span>
-    <span class="t o">実際は</span><span>強さは<b>その場に近いか</b>で決まる。ローカル（<code>.claude/settings.local.json</code>）はチームより強いが、個人（<code>~/.claude/settings.json</code>）はいちばん弱い。</span>
+    <span class="t o">実際は</span><span>強さは<b>その場に近いか</b>で決まる。ローカル（<code>.claude/settings.local.json</code>）はチームより強いが、個人（<code>~/.claude/settings.json</code>）はいちばん弱い。ただし権限の規則は別で、どの階層の禁止（deny）も、ほかの階層の許可より先に効く。</span>
   </div>
 </div>
 
 <h3 class="sub" id="config-keep">共有するファイルを保つ</h3>
 <p class="goal"><b>ゴール</b>共有する設定ファイルを、どう保つかを言える。</p>
 <div class="detail">
-  <p>CLAUDE.md は、読み込まれるたびに窓を使います。短く具体的に保ち、守られない決まりが出てきたら、長すぎて埋もれていないか、書き方が曖昧でないかを見直します。公式も、<b>CLAUDE.md をコードのように扱う</b>ことを勧めています。変えるときは、コードと同じようにレビューを通します。</p>
+  <p>CLAUDE.md は、読み込まれるたびに窓を使います。短く具体的に保ち、守られない決まりが出てきたら、長すぎて埋もれていないか、書き方が曖昧でないかを見直します。公式も、<b>CLAUDE.md をコードのように扱う</b>ことを勧めています。git に入れ、うまくいかないときに見直し、定期的に削り、変えたら Claude の振る舞いが実際に変わるかで確かめます。</p>
+  <p>ほかのエージェント向けに <code>AGENTS.md</code> を置いたリポジトリでは、Claude Code はそれもプロジェクトの指示として読みます。ファイルの種類ごとの決まりは、<code>.claude/rules/</code> に分けて置けます。</p>
   <p><code>.claude/settings.local.json</code> は、Claude Code が作ったなら git の対象から外されます。手で作ったときと、<code>CLAUDE.local.md</code> は、自分で <code>.gitignore</code> に足します。</p>
 </div>
 </section>
@@ -121,7 +122,7 @@
     <div class="modal-foot"><kbd>Esc</kbd> で閉じる</div>
   </div>
 </div>
-<script src="../assets/quiz-data.js?v=1082b992"></script>
-<script src="../assets/search-index.js?v=85291c97"></script>
+<script src="../assets/quiz-data.js?v=7c2238bd"></script>
+<script src="../assets/search-index.js?v=6a87f16c"></script>
 <script src="../assets/app.js?v=2b56021b"></script>
 </body></html>
